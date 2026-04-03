@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="stone">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segment Scenarios — Magazine Layout Explorer</title>
+  <style>
+    /* ===== Reset & Page ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :focus-visible {
+      outline: 2px solid var(--smtc-foreground-content-neutral-primary, #272320);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    body {
+      font-family: var(--text-style-default-regular-fontfamily, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif);
+      background: #ffffff;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Page Header ===== */
+    .page-header {
+      padding: 24px 40px 16px;
+      border-bottom: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.08));
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .page-header__top {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+    }
+    .page-header__left { flex: 1; }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      margin-top: 4px;
+    }
+
+    /* ===== Badge Toggle ===== */
+    .badge-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 10px;
+      border-radius: var(--smtc-corner-ctrl-sm-rest, 8px);
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      transition: background 0.15s;
+    }
+    .badge-toggle:hover {
+      background: var(--mai-smtc-background-card-on-primary-alt-selected, #e5e0dc);
+    }
+    .badge-toggle__switch {
+      width: 28px; height: 16px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.15);
+      position: relative;
+      transition: background 0.2s;
+    }
+    .badge-toggle__switch.on { background: var(--smtc-foreground-content-neutral-primary, #272320); }
+    .badge-toggle__switch::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: white;
+      transition: transform 0.2s;
+    }
+    .badge-toggle__switch.on::after { transform: translateX(12px); }
+    .badge-toggle__label {
+      font-size: 11px; font-weight: 600;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+
+    /* ===== App Layout ===== */
+    .app-container {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ===== Segment Tabs (top bar) ===== */
+    .segment-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+    .segment-tabs::-webkit-scrollbar { display: none; }
+    .segment-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--smtc-corner-ctrl-rest, 12px);
+      cursor: pointer;
+      transition: background 0.15s;
+      border: 1.5px solid transparent;
+      background: transparent;
+      white-space: nowrap;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .segment-tab:hover {
+      background: var(--bing-smtc-background-card-on-primary-alt-hover, rgba(0,0,0,0.03));
+    }
+    .segment-tab.active {
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+      border-color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .segment-tab__icon { font-size: 16px; }
+    .segment-tab__nav-badge {
+      font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+      background: var(--smtc-foreground-content-neutral-primary, #272320);
+      color: white; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+
+    /* ===== Intention Sidebar ===== */
+    .intention-sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.08));
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: #ffffff;
+      overflow-y: auto;
+    }
+    .intention-sidebar__header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px 8px;
+      justify-content: space-between;
+    }
+    .intention-sidebar__label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.5));
+    }
+    .intention-sidebar__hint {
+      font-size: 10px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.35));
+      padding: 0 12px 8px;
+    }
+
+    /* ===== Content Area ===== */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 40px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ===== Intention List ===== */
+    .intention-list {
+      display: flex; flex-direction: column; gap: 2px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .intention-list__item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px;
+      border-radius: var(--smtc-corner-ctrl-rest, 12px);
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      border: 1.5px solid transparent;
+      user-select: none;
+    }
+    .intention-list__item:hover {
+      background: var(--bing-smtc-background-card-on-primary-alt-hover, rgba(0,0,0,0.03));
+    }
+    .intention-list__item.active {
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+      border-color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .intention-list__item.highlighted {
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+    }
+    .intention-list__rank {
+      font-size: 12px; font-weight: 700; width: 20px; text-align: center; flex-shrink: 0;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.35));
+    }
+    .intention-list__item.active .intention-list__rank {
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .intention-list__label {
+      font-size: 13px; font-weight: 600; line-height: 18px; flex: 1; min-width: 0;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .intention-type-badge {
+      font-size: 9px; font-weight: 600;
+      padding: 2px 6px; border-radius: 5px;
+      text-transform: uppercase; letter-spacing: 0.3px;
+      display: inline-block; flex-shrink: 0;
+    }
+    .intention-type-badge--informational { background: #e8f0fe; color: #1a73e8; }
+    .intention-type-badge--navigational { background: #e6f4ea; color: #1e8e3e; }
+    .intention-type-badge--transactional { background: #fef7e0; color: #e37400; }
+    .intention-primary-badge {
+      font-size: 9px; font-weight: 700;
+      color: white;
+      background: var(--smtc-foreground-content-neutral-primary, #272320);
+      padding: 2px 5px; border-radius: 4px;
+      display: inline-block; flex-shrink: 0;
+    }
+
+    /* Expandable intention detail (inline) */
+    .intention-list__item-detail {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease, opacity 0.2s ease;
+      opacity: 0;
+      margin: 0 4px;
+    }
+    .intention-list__item-detail.expanded {
+      max-height: 500px;
+      opacity: 1;
+    }
+    .intention-list__item-detail__inner {
+      padding: 10px 12px 14px;
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+      border-radius: 0 0 12px 12px;
+      margin-top: -2px;
+    }
+    .intention-list__item-detail__bullets {
+      list-style: disc;
+      margin: 0; padding: 0 0 0 16px;
+      display: flex; flex-direction: column; gap: 5px;
+      font-size: 12px; line-height: 17px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+    }
+    .intention-list__item-detail__bullets strong {
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      font-weight: 600;
+    }
+
+    /* ===== Magazine Section ===== */
+    .magazine-section { display: flex; flex-direction: column; gap: 16px; }
+    .magazine-header {
+      display: flex; align-items: center; gap: 12px; padding: 0 4px;
+    }
+    .magazine-header__query {
+      font-size: 18px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .magazine-header__template {
+      font-size: 12px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      margin-left: auto;
+    }
+
+    /* Intention badges as overlay (outside cards to avoid overflow clipping) */
+    .badge-overlay {
+      position: absolute; top: 0; left: 0;
+      width: 1208px; height: 424px;
+      pointer-events: none;
+      transform-origin: top left;
+    }
+    .card-intent-badge {
+      position: absolute;
+      display: flex; gap: 4px; z-index: 10;
+      pointer-events: auto;
+    }
+    .card-intent-badge--hidden { display: none; }
+    .card-intent-badge__item {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 7px; border-radius: 5px;
+      background: rgba(39,35,32,0.8); color: white;
+      backdrop-filter: blur(4px);
+      cursor: default;
+      position: relative;
+    }
+    .card-intent-badge__item--primary { background: rgba(30,142,62,0.85); }
+    /* Tooltip */
+    .card-intent-badge__item .badge-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--smtc-foreground-content-neutral-primary, #272320);
+      color: white;
+      font-size: 11px; font-weight: 500;
+      padding: 4px 10px; border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .card-intent-badge__item .badge-tooltip::after {
+      content: '';
+      position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .card-intent-badge__item:hover .badge-tooltip { opacity: 1; }
+
+    /* Card highlighting on intention hover */
+    .slot-wrapper {
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .slot-wrapper.highlighted {
+      box-shadow: 0 0 0 3px var(--smtc-foreground-content-neutral-primary, #272320);
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      z-index: 5;
+    }
+
+    /* Pulse animation for initial discovery */
+    @keyframes pulse-highlight {
+      0% { box-shadow: 0 0 0 0 rgba(39,35,32,0.3); }
+      50% { box-shadow: 0 0 0 4px rgba(39,35,32,0.15); }
+      100% { box-shadow: 0 0 0 0 rgba(39,35,32,0); }
+    }
+    .slot-wrapper.pulse { animation: pulse-highlight 0.8s ease-out; }
+
+    /* ===== Grid Templates ===== */
+
+    /* Scale magazine to fit container */
+    .magazine-wrapper {
+      position: relative;
+      overflow: visible;
+    }
+    .magazine-scaler {
+      display: inline-block;
+      position: relative;
+    }
+
+    /* --- Template 3: Hero Left (5×4 + 3×4 + 3×2 + 3×2 = 44u) --- */
+    .magazine-grid--hero-left {
+      display: flex;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 1208px; height: 424px;
+      transform-origin: top left;
+    }
+    .magazine-grid--hero-left .slot-a { width: 536px; height: 424px; flex-shrink: 0; }
+    .magazine-grid--hero-left .slot-b { width: 312px; height: 424px; flex-shrink: 0; }
+    .magazine-grid--hero-left .slot-cd {
+      display: flex; flex-direction: column;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 312px; flex-shrink: 0;
+    }
+    .magazine-grid--hero-left .slot-c,
+    .magazine-grid--hero-left .slot-d { width: 312px; height: 200px; }
+
+    /* --- Template 6: Photo Left (3×4 + 5×4 + 3×2 + 3×2 = 44u) --- */
+    .magazine-grid--photo-left {
+      display: flex;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 1208px; height: 424px;
+      transform-origin: top left;
+    }
+    .magazine-grid--photo-left .slot-a { width: 312px; height: 424px; flex-shrink: 0; }
+    .magazine-grid--photo-left .slot-b { width: 536px; height: 424px; flex-shrink: 0; }
+    .magazine-grid--photo-left .slot-cd {
+      display: flex; flex-direction: column;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 312px; flex-shrink: 0;
+    }
+    .magazine-grid--photo-left .slot-c,
+    .magazine-grid--photo-left .slot-d { width: 312px; height: 200px; }
+
+    /* ===== Professor Photo Card (3×4 full-bleed image) ===== */
+    .professor-photo {
+      width: 100%; height: 100%; position: relative; overflow: hidden;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+    }
+    .professor-photo img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+    }
+    .professor-photo__caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 16px 16px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      color: white;
+    }
+    .professor-photo__name {
+      font-size: 18px; font-weight: 700; line-height: 24px;
+    }
+    .professor-photo__role {
+      font-size: 13px; line-height: 18px; opacity: 0.85; margin-top: 2px;
+    }
+
+    /* --- Template 5: Hero & Stack (5×4 + 4× 3×2 = 44u) --- */
+    .magazine-grid--hero-stack {
+      display: grid;
+      grid-template-columns: 536px 312px 312px;
+      grid-template-rows: 200px 200px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 1208px; height: 424px;
+      transform-origin: top left;
+    }
+    .magazine-grid--hero-stack .slot-a { grid-column: 1; grid-row: 1 / 3; height: 424px; }
+    .magazine-grid--hero-stack .slot-b { grid-column: 2; grid-row: 1; }
+    .magazine-grid--hero-stack .slot-c { grid-column: 3; grid-row: 1; }
+    .magazine-grid--hero-stack .slot-d { grid-column: 2; grid-row: 2; }
+    .magazine-grid--hero-stack .slot-e { grid-column: 3; grid-row: 2; }
+
+    /* --- Template 1: Dashboard Mix (4×4 + 2×4 + 3×2 + 2×2 + 5×2 = 44u) --- */
+    .magazine-grid--dashboard-mix {
+      display: grid;
+      grid-template-columns: 424px 200px 312px 200px;
+      grid-template-rows: 200px 200px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 1208px; height: 424px;
+      transform-origin: top left;
+    }
+    .magazine-grid--dashboard-mix .slot-a { grid-column: 1; grid-row: 1 / 3; height: 424px; }
+    .magazine-grid--dashboard-mix .slot-b { grid-column: 2; grid-row: 1 / 3; height: 424px; }
+    .magazine-grid--dashboard-mix .slot-c { grid-column: 3; grid-row: 1; }
+    .magazine-grid--dashboard-mix .slot-d { grid-column: 4; grid-row: 1; }
+    .magazine-grid--dashboard-mix .slot-e { grid-column: 3 / 5; grid-row: 2; }
+
+    /* --- Template 5: Hero Map (5×4 + 3×4 + 3×2 + 3×2 / 8×2 + 3×2 = 66u, two rows) --- */
+    .magazine-grid--hero-map {
+      display: grid;
+      grid-template-columns: 536px 312px 312px;
+      grid-template-rows: 200px 200px 200px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 1208px; height: 648px;
+      transform-origin: top left;
+    }
+    .magazine-grid--hero-map .slot-a { grid-column: 1; grid-row: 1 / 3; height: 424px; }
+    .magazine-grid--hero-map .slot-b { grid-column: 2; grid-row: 1 / 3; height: 424px; }
+    .magazine-grid--hero-map .slot-c { grid-column: 3; grid-row: 1; }
+    .magazine-grid--hero-map .slot-d { grid-column: 3; grid-row: 2; }
+    .magazine-grid--hero-map .slot-e { grid-column: 1 / 3; grid-row: 3; }
+    .magazine-grid--hero-map .slot-f { grid-column: 3; grid-row: 3; }
+
+    /* ===== Answer Bar Card (bottom-row wide card) ===== */
+    .answer-bar {
+      display: flex;
+      height: 100%;
+      background: white;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1));
+      overflow: hidden;
+    }
+    .answer-bar__image {
+      width: 160px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .answer-bar__image img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .answer-bar__info {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      min-width: 0;
+    }
+    .answer-bar__title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .answer-bar__title {
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .answer-bar__verified {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+    }
+    .answer-bar__url {
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      text-decoration: none;
+    }
+    .answer-bar__url:hover { text-decoration: underline; }
+    .answer-bar__rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .answer-bar__rating-icon {
+      color: #e74c3c;
+    }
+    .answer-bar__rating-link {
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      text-decoration: none;
+    }
+    .answer-bar__rating-link:hover { text-decoration: underline; }
+    .answer-bar__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+    }
+    .answer-bar__meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .answer-bar__meta-icon {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .answer-bar__meta-label {
+      font-weight: 600;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .answer-bar__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .answer-bar__action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 20px;
+      border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+      text-decoration: none;
+      min-width: 120px;
+    }
+    .answer-bar__action-btn--primary {
+      background: var(--bing-smtc-background-ctrl-brand-rest, #322d29);
+      color: var(--smtc-foreground-ctrl-on-brand-rest, white);
+    }
+    .answer-bar__action-btn--primary:hover {
+      background: var(--bing-smtc-background-ctrl-brand-hover, #463f3a);
+    }
+    .answer-bar__action-btn--secondary {
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .answer-bar__action-btn--secondary:hover {
+      background: var(--mai-smtc-background-card-on-primary-alt-selected, #e5e0dc);
+    }
+
+    /* ===== Map Card ===== */
+    .map-card {
+      width: 100%; height: 100%;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      overflow: hidden;
+      position: relative;
+    }
+    .map-card img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .map-card__pin {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -100%);
+      width: 28px; height: 36px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    /* --- Template 4: Hero Wide (6×4 + 2×2 + 3×2 + 5×2 = 44u) --- */
+    .magazine-grid--hero-wide {
+      display: grid;
+      grid-template-columns: 648px 200px 312px;
+      grid-template-rows: 200px 200px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
+      width: 1208px; height: 424px;
+      transform-origin: top left;
+    }
+    .magazine-grid--hero-wide .slot-a { grid-column: 1; grid-row: 1 / 3; height: 424px; }
+    .magazine-grid--hero-wide .slot-b { grid-column: 2; grid-row: 1; }
+    .magazine-grid--hero-wide .slot-c { grid-column: 3; grid-row: 1; }
+    .magazine-grid--hero-wide .slot-d { grid-column: 2 / 4; grid-row: 2; }
+
+    /* ===== Card Shell ===== */
+    .card {
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      overflow: hidden; display: flex; flex-direction: column; position: relative;
+    }
+    .card--padded { padding: var(--mai-smtc-padding-card-default, 20px); }
+    /* Tighter padding for small cards in hero-wide template */
+    .magazine-grid--hero-wide .slot-b .card--padded { padding: 12px 16px; }
+    .card--full { width: 100%; height: 100%; }
+    /* Answer-bar and map slots manage their own background/radius */
+    .magazine-grid--hero-map .slot-e.card,
+    .magazine-grid--hero-map .slot-f.card { background: transparent; padding: 0; }
+
+    /* ===== Hero Composite Card ===== */
+    .hero-composite { display: flex; flex-direction: column; height: 100%; }
+
+    /* ===== Nav Anchor Card (Cocaurus review style) ===== */
+    .nav-anchor { display: flex; flex-direction: column; justify-content: space-between; height: 100%; background: white; border-radius: var(--mai-smtc-corner-card-default, 24px); border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1)); padding: 20px; }
+    .nav-anchor__images {
+      display: flex; gap: 2px; overflow: hidden;
+      border-radius: var(--bing-smtc-corner-flyout-popover-rest, 16px);
+      height: 180px; flex-shrink: 0;
+    }
+    .nav-anchor__img-main { flex: 2; min-width: 0; position: relative; overflow: hidden; }
+    .nav-anchor__img-side { flex: 1; min-width: 0; position: relative; overflow: hidden; }
+    .nav-anchor__images img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .nav-anchor__img-btn {
+      position: absolute; bottom: 8px; right: 8px;
+      display: flex; align-items: center; gap: 2px;
+      background: rgba(0,0,0,0.6); color: white;
+      padding: 4px 8px 4px 4px; border-radius: 9999px;
+      font-size: 13px; line-height: 20px; border: 1px solid rgba(0,0,0,0.1);
+    }
+    .nav-anchor__img-btn .bing-icon { fill: white; }
+    .nav-anchor__info {
+      display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+      padding-top: 8px;
+    }
+    .nav-anchor__attribution {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .nav-anchor__favicon {
+      width: 28px; height: 28px; border-radius: 100px; flex-shrink: 0;
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #f5f5f5);
+      border: 0.667px solid rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; font-size: 16px;
+    }
+    .nav-anchor__favicon img { width: 18px; height: 18px; object-fit: cover; }
+    .nav-anchor__attr-text { display: flex; flex-direction: column; }
+    .nav-anchor__site-name {
+      font-size: 14px; line-height: 22px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.8));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .nav-anchor__site-url {
+      font-size: 13px; line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .nav-anchor__title {
+      font-size: 24px; line-height: 32px; font-weight: 400;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      cursor: pointer; text-decoration: none;
+    }
+    .nav-anchor__title:hover { text-decoration: underline; }
+    .nav-anchor__images img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+    .nav-anchor__img-main:hover img,
+    .nav-anchor__img-side:hover img { transform: scale(1.05); }
+    .nav-anchor__desc {
+      font-size: 14px; line-height: 22px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .nav-anchor__desc--4line {
+      -webkit-line-clamp: 4;
+    }
+    .nav-anchor__links { display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; overflow: hidden; }
+    .nav-anchor__link {
+      display: flex; align-items: center; gap: 4px;
+      height: 38px; padding: 0 12px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      border: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.1));
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      cursor: pointer; text-decoration: none; background: transparent;
+    }
+    .nav-anchor__link:hover {
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+    }
+    .nav-anchor__link .bing-icon { flex-shrink: 0; }
+    /* Nav anchor card with logo variant (luxury brands) */
+    .nav-anchor__logo {
+      width: 84px; height: 84px;
+      border-radius: 9999px;
+      background: white;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: -5px 4px 12px 0px rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: -68px;
+      margin-left: 16px;
+      margin-bottom: -16px;
+      position: relative; z-index: 3;
+      pointer-events: none;
+    }
+    .nav-anchor__logo img {
+      width: 76px; height: 76px;
+      border-radius: 9999px;
+      object-fit: cover;
+      display: block;
+    }
+    .nav-anchor--with-logo .nav-anchor__info { padding-top: 8px; }
+    /* Nav anchor card controls its own background — make card shell transparent */
+    .card:has(.nav-anchor) { background: transparent; }
+
+    .hero-composite__image { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+    .hero-composite__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-composite__body {
+      padding: 16px 20px 20px; display: flex; flex-direction: column;
+      gap: 8px; flex-shrink: 0;
+    }
+    .hero-composite__entity-row { display: flex; align-items: center; gap: 8px; }
+    .hero-composite__entity-name {
+      font-size: 18px; line-height: 24px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .hero-composite__entity-type {
+      font-size: 11px; line-height: 14px; font-weight: 600;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      padding: 2px 8px; border-radius: var(--smtc-corner-ctrl-sm-rest, 12px); flex-shrink: 0;
+    }
+    .hero-composite__desc {
+      font-size: 13px; line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .hero-composite__site-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px;
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      border-radius: var(--smtc-corner-ctrl-rest, 12px);
+      cursor: pointer; text-decoration: none; transition: background 0.15s; margin-top: 4px;
+    }
+    .hero-composite__site-link:hover {
+      background: var(--mai-smtc-background-card-on-primary-alt-selected, #e5e0dc);
+    }
+    .hero-composite__site-favicon {
+      width: 20px; height: 20px; border-radius: 4px;
+      background: white; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0; overflow: hidden;
+    }
+    .hero-composite__site-info { display: flex; flex-direction: column; gap: 0; min-width: 0; flex: 1; }
+    .hero-composite__site-name {
+      font-size: 14px; line-height: 20px; font-weight: 600;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3f3935);
+    }
+    .hero-composite__site-url {
+      font-size: 11px; line-height: 14px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .hero-composite__site-arrow {
+      font-size: 14px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.5));
+      flex-shrink: 0;
+    }
+    .hero-composite__also-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+    .hero-composite__also-link {
+      font-size: 12px; line-height: 16px; padding: 4px 10px;
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      border-radius: var(--smtc-corner-ctrl-sm-rest, 12px);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3f3935);
+      cursor: pointer; text-decoration: none; font-weight: 500;
+    }
+    .hero-composite__also-link:hover {
+      background: var(--mai-smtc-background-card-on-primary-alt-selected, #e5e0dc);
+    }
+
+    /* ===== News Article Card (bento 3×2 style: header + body + continue reading + source) ===== */
+    .news-card { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+    .news-card__header {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .news-card__body {
+      font-size: 14px; line-height: 22px; font-weight: 400;
+      color: var(--smtc-foreground-content-neutral-secondary, rgba(0,0,0,0.8));
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-card__continue {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 13px; line-height: 20px; font-weight: 400;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      cursor: pointer; text-decoration: none;
+    }
+    .news-card__continue:hover { text-decoration: underline; }
+    .news-card__continue-arrow { font-size: 12px; }
+    .news-card__source {
+      display: flex; align-items: center; gap: 4px; margin-top: auto;
+      font-size: 11px; line-height: 13px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .news-card__source-favicon {
+      width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0;
+      background: var(--bing-smtc-background-ctrl-neutral-rest, rgba(0,0,0,0.1));
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .news-card__source-dot {
+      width: 3px; height: 3px; border-radius: 50%;
+      background: currentColor; opacity: 0.6;
+    }
+
+    /* ===== Image Card ===== */
+    .image-card { position: relative; overflow: hidden; }
+    .image-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-card__caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 32px 16px 12px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      color: white; font-size: 12px; line-height: 16px; font-weight: 600;
+    }
+
+    /* ===== ACF Image Card (5-image grid for 5×4) ===== */
+    .image-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      width: 100%; height: 100%;
+    }
+    .image-card__content {
+      position: relative;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+    }
+    .image-card__grid--rows {
+      display: flex;
+      flex-direction: column;
+      gap: var(--smtc-gap-between-content-xxx-small, 2px);
+      width: 100%; height: 100%;
+    }
+    .image-card__row {
+      display: flex;
+      gap: var(--smtc-gap-between-content-xxx-small, 2px);
+      flex: 1 0 0;
+      min-height: 0;
+    }
+    .image-card__row--hero { flex: 1.5 0 0; }
+    .image-card__image {
+      flex: 1 0 0;
+      overflow: hidden;
+      position: relative;
+      min-width: 0;
+    }
+    .image-card__image img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      transition: transform 0.3s;
+    }
+    .image-card__image:hover img { transform: scale(1.05); }
+    .image-card__image-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 16px 10px 6px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.45));
+      color: white;
+      font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px);
+      font-weight: 600; line-height: 14px;
+      pointer-events: none;
+    }
+    .image-card__brand-overlay {
+      position: absolute; top: 12px; left: 14px; z-index: 2;
+      font-size: 20px; font-weight: 700; color: white;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+      letter-spacing: 2px;
+    }
+
+    /* ===== Image + Site Links Combo Card (3×4) ===== */
+    .image-site-card {
+      display: flex; flex-direction: column;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+    }
+    .image-site-card__image {
+      flex: 0 0 180px;
+      overflow: hidden; position: relative;
+    }
+    .image-site-card__image img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .image-site-card__body {
+      flex: 1;
+      display: flex; flex-direction: column;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
+      padding: var(--smtc-padding-ctrl-lg-text-top, 12px) var(--smtc-padding-ctrl-lg-horizontal-default, 16px) var(--smtc-padding-ctrl-lg-text-bottom, 12px);
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+    }
+    .image-site-card__site-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .image-site-card__favicon {
+      width: 20px; height: 20px; border-radius: var(--smtc-corner-ctrl-sm-rest, 4px);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .image-site-card__favicon img { width: 100%; height: 100%; object-fit: cover; }
+    .image-site-card__site-info { display: flex; flex-direction: column; }
+    .image-site-card__site-name {
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
+      line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .image-site-card__site-url {
+      font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px);
+      line-height: 14px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.5));
+    }
+    .image-site-card__links {
+      display: flex; flex-direction: column; gap: 0; flex: 1;
+    }
+    .image-site-card__link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.06));
+      text-decoration: none; color: inherit; cursor: pointer;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
+      font-weight: 500;
+      line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3f3935);
+    }
+    .image-site-card__link:last-child { border-bottom: none; }
+    .image-site-card__link:hover {
+      background: var(--bing-smtc-background-card-on-primary-alt-hover, rgba(0,0,0,0.03));
+      margin: 0 -8px; padding-left: 8px; padding-right: 8px;
+      border-radius: var(--smtc-corner-ctrl-sm-rest, 12px);
+    }
+    .image-site-card__link-arrow {
+      margin-left: auto;
+      font-size: 14px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
+    }
+
+    /* ===== Overview Card ===== */
+    .overview-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); height: 100%; }
+    .overview-card__label {
+      font-size: 11px; line-height: 13px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .overview-card__title {
+      font-size: 16px; line-height: 24px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .overview-card__intro {
+      font-size: 14px; line-height: 22px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+      flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    /* Wide overview in photo-left gets more breathing room */
+    .magazine-grid--photo-left .slot-b .overview-card__intro { -webkit-line-clamp: 8; }
+    .overview-card__facts {
+      display: flex; flex-direction: column; gap: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.08));
+    }
+    /* Wide overview: facts flow horizontally with wrap */
+    .overview-card__facts--row {
+      flex-direction: row; flex-wrap: wrap; gap: 4px 16px;
+    }
+    .overview-card__facts--row .overview-card__fact {
+      min-width: 140px;
+    }
+    .overview-card__fact { display: flex; gap: 8px; font-size: 13px; line-height: 20px; }
+    .overview-card__fact-label { color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6)); white-space: nowrap; }
+    .overview-card__fact-value { color: var(--smtc-foreground-content-neutral-primary, #272320); font-weight: 600; }
+    .overview-card__source {
+      display: flex; align-items: center; gap: 4px; margin-top: auto;
+      font-size: 11px; line-height: 13px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .overview-card__source-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
+    }
+
+    /* ===== List Card ===== */
+    .list-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); height: 100%; }
+    .list-card__header {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .list-card__items { display: flex; flex-direction: column; gap: 0; flex: 1; justify-content: space-between; }
+    .list-card__item {
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-x-small, 8px);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.06));
+      text-decoration: none; color: inherit; cursor: pointer;
+    }
+    .list-card__item:last-child { border-bottom: none; }
+    .list-card__item:hover {
+      background: var(--bing-smtc-background-card-on-primary-alt-hover, rgba(0,0,0,0.03));
+      margin: 0 -8px; padding-left: 8px; padding-right: 8px;
+      border-radius: var(--smtc-corner-ctrl-sm-rest, 12px);
+    }
+    .list-card__item-icon {
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 14px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, #6e6a67);
+    }
+    .bing-icon {
+      width: 16px; height: 16px; flex-shrink: 0;
+      fill: currentColor;
+    }
+    .list-card__item-text {
+      flex: 1; font-size: 14px; line-height: 22px;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .list-card__item-meta {
+      font-size: 12px; line-height: 16px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      flex-shrink: 0;
+    }
+
+    /* ===== Subdivided Card ===== */
+    .subdivided-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-xx-small, 4px); height: 100%; }
+    .subdivided-card__header {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      margin-bottom: 4px;
+    }
+    .subdivided-card__grid { display: grid; gap: var(--smtc-gap-between-content-xx-small, 4px); flex: 1; }
+    .subdivided-card__grid--2x2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .subdivided-card__cell {
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      border-radius: var(--mai-smtc-corner-list-card-nested-default, 8px);
+      padding: 12px 16px; display: flex; flex-direction: column; gap: 2px;
+      justify-content: center;
+    }
+    /* Tighter cells in small 2×2 slots (200px height cards) */
+    .magazine-grid--hero-wide .slot-b .subdivided-card__cell { padding: 8px 12px; }
+    .subdivided-card__cell-label {
+      font-size: 11px; line-height: 14px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .subdivided-card__cell-value {
+      font-size: 14px; line-height: 20px; font-weight: 600;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* ===== SERP Value Annotation ===== */
+
+    .serp-value {
+      font-size: 13px; line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.65));
+      padding: 4px 4px 0; font-style: italic;
+    }
+    .serp-value strong {
+      font-weight: 600; font-style: normal;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+
+    /* ===== Pole Slide (Tabs + Carousel) ===== */
+
+    .pole-slide {
+      display: flex;
+      flex-direction: column;
+      gap: var(--smtc-gap-between-content-medium, 16px);
+      margin-top: 24px;
+    }
+    .pole-slide__tabs {
+      display: flex;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
+      align-items: center;
+      overflow: hidden;
+    }
+    .pole-slide__tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 16px;
+      border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      background: var(--bing-smtc-background-ctrl-subtle-rest, #f8f4f1);
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--bing-smtc-foreground-ctrl-neutral-primary-rest, rgba(0,0,0,0.6));
+      cursor: pointer;
+      border: none;
+      white-space: nowrap;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .pole-slide__tab:hover {
+      background: var(--smtc-background-ctrl-subtle-hover, #efeae7);
+    }
+    .pole-slide__tab--active {
+      background: var(--smtc-background-ctrl-subtle-hover, #efeae7);
+      color: var(--smtc-foreground-ctrl-on-subtle-hover, #191919);
+      font-weight: 600;
+    }
+    .pole-slide__tab--active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 3px;
+      border-radius: var(--smtc-corner-circular, 9999px);
+      background: var(--smtc-foreground-ctrl-on-subtle-hover, #191919);
+    }
+
+    .pole-slide__container {
+      position: relative;
+    }
+    .pole-slide__track {
+      display: flex;
+      gap: var(--smtc-gap-between-content-medium, 16px);
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+      width: 1208px;
+      height: 114px;
+    }
+    .pole-slide__track::-webkit-scrollbar { display: none; }
+
+    .pole-slide__card {
+      display: flex;
+      gap: var(--smtc-gap-between-content-medium, 16px);
+      align-items: flex-start;
+      padding: 20px;
+      border: 1px solid var(--bing-smtc-stroke-ctrl-default, rgba(0,0,0,0.1));
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      width: 312px;
+      height: 114px;
+      flex-shrink: 0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.15s ease;
+      background: transparent;
+    }
+    .pole-slide__card:hover {
+      box-shadow: var(--smtc-shadow-card-hover, 0 2px 8px rgba(0,0,0,0.1));
+    }
+    .pole-slide__card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+    }
+    .pole-slide__card-title {
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, black);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      flex: 1;
+    }
+    .pole-slide__card-source {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pole-slide__card-favicon {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .pole-slide__card-favicon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .pole-slide__card-url {
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+    .pole-slide__card-img {
+      width: auto;
+      height: 100%;
+      aspect-ratio: 1;
+      flex-shrink: 0;
+      border-radius: var(--bing-smtc-corner-flyout-popover-rest, 16px);
+      overflow: hidden;
+      border: 1px solid var(--bing-smtc-background-ctrl-image-placeholder-default, rgba(0,0,0,0.1));
+    }
+    .pole-slide__card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      transform: scale(1.15);
+    }
+
+    /* Scroller button */
+    .pole-slide__scroller {
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+    .pole-slide__scroller-btn {
+      width: 36px;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--smtc-ctrl-fab-background-rest, white);
+      border: 1px solid var(--smtc-stroke-ctrl-on-neutral-rest, rgba(0,0,0,0.1));
+      border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 0 0 rgba(0,0,0,0.05);
+      cursor: pointer;
+      padding: 8px;
+    }
+    .pole-slide__scroller-btn:hover {
+      background: var(--smtc-background-ctrl-subtle-hover, #efeae7);
+    }
+    .pole-slide__scroller-btn svg {
+      width: 20px;
+      height: 20px;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .pole-slide__fade {
+      position: absolute;
+      right: 18px;
+      top: 0;
+      bottom: 4px;
+      width: 48px;
+      background: linear-gradient(to right, transparent, white);
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header__top">
+      <div class="page-header__left">
+        <h1 class="page-title">Segment Scenarios — Magazine Layout Explorer</h1>
+        <p class="page-subtitle">How search intentions shape magazine card composition across user segments</p>
+      </div>
+    </div>
+    <div class="segment-tabs" id="segmentTabs"></div>
+  </header>
+
+  <div class="app-container">
+    <aside class="intention-sidebar" id="intentionSidebar"></aside>
+    <main class="content" id="content"></main>
+  </div>
+
+<script>
+// ============================================================
+// DATA — Full intention analysis with Trigger / Intention / Next Action / SERP Value / Card Suggestion
+// ============================================================
+const SEGMENTS = {
+  government: {
+    id: "government",
+    label: "Government",
+    icon: "\u{1F3DB}\uFE0F",
+    description: "Official government entities",
+    hasStrongNavIntent: true,
+    intentions: [
+      {
+        rank: 1, label: "Visit official website", type: "navigational", isPrimary: true,
+        trigger: "Knows the entity, wants to reach the official site directly without typing the URL",
+        nextAction: "Click through to the official site homepage, then navigate to a specific section",
+        serpValue: "Nav anchor card provides site link + also-links (About, Member States, News, SDGs) — one-click to any section",
+        cardSuggestion: "Nav anchor card (5x4): dual-image + attribution + title link + outline also-links"
+      },
+      {
+        rank: 2, label: "Understand the entity", type: "informational", isPrimary: true,
+        trigger: "Heard about the entity in news or conversation, wants to quickly understand what it is and what it does",
+        nextAction: "Scan and absorb key facts on the SERP — most users leave satisfied without clicking out",
+        serpValue: "Overview card delivers a structured answer on the page — no click needed for basic understanding",
+        cardSuggestion: "Overview card (3x4): one-paragraph answer + structured facts (founded, members, HQ)"
+      },
+      {
+        rank: 3, label: "Get latest news / updates", type: "informational", isPrimary: false,
+        trigger: "Following a breaking international story or checking what the entity did today",
+        nextAction: "Scan headline, click 'Continue reading' to read the full article",
+        serpValue: "News card shows headline + snippet + source — quick scan to decide if worth clicking",
+        cardSuggestion: "News card (3x2): headline + body snippet + continue reading + source attribution"
+      },
+      {
+        rank: 4, label: "Find contact / location info", type: "navigational", isPrimary: false,
+        trigger: "Needs address, phone number, or office hours for a practical purpose (visit, call, mail)",
+        nextAction: "Note down the contact info or click to get directions",
+        serpValue: "Key facts card surfaces HQ location, members, secretary-general, founding date in scannable grid",
+        cardSuggestion: "Subdivided card (3x2): key facts in 2x2 grid (HQ, Members, Secretary-General, Founded)"
+      },
+      {
+        rank: 5, label: "Learn organizational structure", type: "informational", isPrimary: false,
+        trigger: "Researching how the entity is organized — which departments, agencies, or bodies exist",
+        nextAction: "Scan the also-links on the anchor card, potentially click through to a specific section",
+        serpValue: "Nav anchor also-links provide entry points to About, Member States, etc. — partially serves this intent",
+        cardSuggestion: "Partially covered by Nav anchor card also-links (no dedicated card)"
+      },
+      {
+        rank: 6, label: "Access services / resources", type: "transactional", isPrimary: false,
+        trigger: "Needs to complete a specific task — apply for something, download a form, access a portal",
+        nextAction: "Navigate to the specific service page to complete the task",
+        serpValue: "Service directory card provides labeled exit points — faster than navigating the gov site's own menu",
+        cardSuggestion: "Service directory card (5x4): 2-column grid of service categories with icons"
+      },
+      {
+        rank: 7, label: "Research history / background", type: "informational", isPrimary: false,
+        trigger: "Writing a paper, doing homework, or deeper research into the entity's origins",
+        nextAction: "Read the overview, then click through to Wikipedia or official history page for depth",
+        serpValue: "Overview card provides the starting framework; facts card gives specific dates and numbers",
+        cardSuggestion: "Covered by Overview + Subdivided cards (no dedicated card needed)"
+      }
+    ],
+    queries: [
+      {
+        label: "United Nations",
+        template: "hero-left",
+        templateDesc: "Hero Left \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72 + 3\u00D72 = 44u",
+        serpValue: "Answer on the page \u2014 the magazine IS the destination for informational government entity queries.",
+        slots: [
+          {
+            id: "a", type: "nav-anchor", servesIntentions: [1, 5],
+            html: `<div class="nav-anchor">
+              <div class="nav-anchor__images">
+                <div class="nav-anchor__img-main"><img src="images/government/un-headquarters.jpg" alt="UN Headquarters, New York"></div>
+                <div class="nav-anchor__img-side">
+                  <img src="images/government/un-general-assembly.jpg" alt="UN General Assembly">
+                  <div class="nav-anchor__img-btn">
+                    <svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 5C10 5.55228 9.55228 6 9 6C8.44772 6 8 5.55228 8 5C8 4.44772 8.44772 4 9 4C9.55228 4 10 4.44772 10 5ZM4.5 2C3.11929 2 2 3.11929 2 4.5V9.5C2 10.8807 3.11929 12 4.5 12H9.5C10.8807 12 12 10.8807 12 9.5V4.5C12 3.11929 10.8807 2 9.5 2H4.5ZM3 4.5C3 3.67157 3.67157 3 4.5 3H9.5C10.3284 3 11 3.67157 11 4.5V9.5C11 9.73157 10.9475 9.95088 10.8538 10.1467L8.20919 7.50207C7.54139 6.83427 6.45868 6.83427 5.79089 7.50207L3.1462 10.1467C3.05248 9.95092 3 9.73159 3 9.5V4.5ZM3.85333 10.8538L6.49799 8.20917C6.77526 7.9319 7.22481 7.9319 7.50208 8.20918L10.1467 10.8538C9.9509 10.9475 9.73158 11 9.5 11H4.5C4.26844 11 4.04914 10.9475 3.85333 10.8538ZM6.99994 14C6.18203 14 5.45586 13.6072 4.99976 13H9.49994C11.4329 13 12.9999 11.433 12.9999 9.5V3.99982C13.6072 4.45592 13.9999 5.18209 13.9999 6V9.5C13.9999 11.9853 11.9852 14 9.49994 14H6.99994Z" fill="currentColor"/></svg>
+                    All images
+                  </div>
+                </div>
+              </div>
+              <div class="nav-anchor__info">
+                <div class="nav-anchor__attribution">
+                  <div class="nav-anchor__favicon">\u{1F310}</div>
+                  <div class="nav-anchor__attr-text">
+                    <span class="nav-anchor__site-name">United Nations</span>
+                    <span class="nav-anchor__site-url">https://www.un.org</span>
+                  </div>
+                </div>
+                <a class="nav-anchor__title" href="https://www.un.org" target="_blank">United Nations</a>
+                <p class="nav-anchor__desc">The United Nations is an intergovernmental organization of 193 member states, maintaining international peace and security, developing friendly relations among nations, and promoting social progress and human rights since 1945.</p>
+                <div class="nav-anchor__links">
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> About</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Member States</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> News</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> SDGs</a>
+                </div>
+              </div>
+            </div>`
+          },
+          {
+            id: "b", type: "overview", servesIntentions: [2, 7],
+            html: `<div class="overview-card">
+              <span class="overview-card__label">OVERVIEW</span>
+              <h2 class="overview-card__title">About the United Nations</h2>
+              <p class="overview-card__intro">The United Nations is an intergovernmental organization established on October 24, 1945, to maintain international peace and security, develop friendly relations among nations, and promote social progress and human rights. It serves as a forum for its 193 member states to address global challenges including climate change, humanitarian crises, and international law.</p>
+              <div class="overview-card__facts">
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Founded</span><span class="overview-card__fact-value">October 24, 1945</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Members</span><span class="overview-card__fact-value">193 member states</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Secretary-General</span><span class="overview-card__fact-value">Ant\u00F3nio Guterres</span></div>
+              </div>
+              <div class="overview-card__source"><span>Wikipedia</span><span class="overview-card__source-dot"></span><span>un.org</span></div>
+            </div>`
+          },
+          {
+            id: "c", type: "subdivided", servesIntentions: [4, 7],
+            html: `<div class="subdivided-card">
+              <div class="subdivided-card__grid subdivided-card__grid--2x2">
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Headquarters</span><span class="subdivided-card__cell-value">New York City</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Members</span><span class="subdivided-card__cell-value">193 states</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Secretary-General</span><span class="subdivided-card__cell-value">Ant\u00F3nio Guterres</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Founded</span><span class="subdivided-card__cell-value">Oct 24, 1945</span></div>
+              </div>
+            </div>`
+          },
+          {
+            id: "d", type: "news", servesIntentions: [3],
+            html: `<div class="news-card">
+              <div class="news-card__header">Latest News</div>
+              <p class="news-card__body">UN General Assembly adopts landmark resolution on AI governance framework, calling for international cooperation on safety standards among all 193 member states. The resolution establishes principles for responsible use...</p>
+              <a class="news-card__continue">Continue reading <span class="news-card__continue-arrow">\u2192</span></a>
+              <div class="news-card__source"><div class="news-card__source-favicon"></div><span>UN News</span><span class="news-card__source-dot"></span><span>news.un.org</span></div>
+            </div>`
+          }
+        ]
+      }
+    ]
+  },
+
+  luxury: {
+    id: "luxury",
+    label: "Luxury",
+    icon: "\u{1F48E}",
+    description: "Luxury fashion brands",
+    hasStrongNavIntent: true,
+    intentions: [
+      {
+        rank: 1, label: "Browse products / see what they sell", type: "informational", isPrimary: true,
+        trigger: "Heard about the brand, seen an ad or celebrity post \u2014 wants to see what Gucci products look like",
+        nextAction: "Scan product imagery on SERP, then click through to browse specific items",
+        serpValue: "Image Collage card shows 5 real product photos \u2014 instant visual answer to 'what does Gucci sell?'",
+        cardSuggestion: "Nav anchor card with logo (5x4): dual-image + brand logo overlay + attribution + title link + also-links (Handbags, New In, Stores, About)"
+      },
+      {
+        rank: 2, label: "Visit official store / shop online", type: "navigational", isPrimary: true,
+        trigger: "Wants to buy or browse on the official site \u2014 typed the brand name as a URL shortcut",
+        nextAction: "Click through to the brand's e-commerce site to browse or purchase",
+        serpValue: "Link Directory card provides official site link + category shortcuts (Bags, Shoes, New In)",
+        cardSuggestion: "Link Directory (3x4): branded header + official link + shopping category links"
+      },
+      {
+        rank: 3, label: "Find store locations", type: "navigational", isPrimary: false,
+        trigger: "Plans to visit a physical store \u2014 traveling or looking for nearest boutique",
+        nextAction: "Find the nearest store address, check opening hours, or get directions",
+        serpValue: "List card surfaces top store locations with city names \u2014 immediate answer without navigating store locator",
+        cardSuggestion: "List card (3x2): top 3 store locations with city + flagship label"
+      },
+      {
+        rank: 4, label: "Read brand story / history", type: "informational", isPrimary: false,
+        trigger: "Research mode \u2014 writing about the brand, preparing for an interview, or genuinely curious",
+        nextAction: "Read the overview and absorb key facts (founded, parent company, creative director)",
+        serpValue: "Subdivided card delivers structured brand facts \u2014 satisfies curiosity without clicking",
+        cardSuggestion: "Subdivided card (3x2): 4-cell grid with Founded, HQ, Creative Director, Parent Company"
+      },
+      {
+        rank: 5, label: "Check prices / product details", type: "informational", isPrimary: false,
+        trigger: "Considering a purchase and wants to know what popular items cost before committing",
+        nextAction: "Scan price ranges for key products, then decide whether to click through to product page",
+        serpValue: "Not directly served by this magazine \u2014 product imagery gives visual context, links route to product pages",
+        cardSuggestion: "Covered by Nav anchor card also-links (Handbags, New In) + Link Directory card navigation links"
+      },
+      {
+        rank: 6, label: "Find deals / outlet info", type: "transactional", isPrimary: false,
+        trigger: "Wants luxury at a discount \u2014 looking for outlet stores, sales, or authenticated resale",
+        nextAction: "Navigate to outlet locator or third-party sites for discounted products",
+        serpValue: "Not directly served by this magazine \u2014 luxury brands rarely promote discounts in official contexts",
+        cardSuggestion: "Not included \u2014 would conflict with brand positioning"
+      },
+      {
+        rank: 7, label: "Check authenticity / customer service", type: "transactional", isPrimary: false,
+        trigger: "Bought or considering buying secondhand, needs to verify authenticity or get after-sales help",
+        nextAction: "Navigate to customer service page or authentication verification tool",
+        serpValue: "Link Directory card can include Customer Service as one of the navigation links",
+        cardSuggestion: "Covered by Link Directory card (optional link row)"
+      }
+    ],
+    queries: [
+      {
+        label: "Gucci",
+        template: "hero-left",
+        templateDesc: "Hero Left \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72\u00D72 = 44u",
+        serpValue: "Visual product showcase + direct navigation \u2014 the magazine answers 'what does Gucci sell' and routes to official shopping in one glance.",
+        slots: [
+          {
+            id: "a", type: "nav-anchor", servesIntentions: [1, 2],
+            html: `<div class="nav-anchor nav-anchor--with-logo">
+              <div class="nav-anchor__images">
+                <div class="nav-anchor__img-main"><img src="images/luxury/gucci-storefront.jpg" alt="Gucci Storefront"></div>
+                <div class="nav-anchor__img-side">
+                  <img src="images/luxury/gucci-valigeria-in-paris-7-1200x2133.jpg" alt="Gucci Valigeria Paris">
+                  <div class="nav-anchor__img-btn">
+                    <svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 5.5C3 4.11929 4.11929 3 5.5 3H10.5C11.8807 3 13 4.11929 13 5.5V10.5C13 11.8807 11.8807 13 10.5 13H5.5C4.11929 13 3 11.8807 3 10.5V5.5ZM5.5 4C4.67157 4 4 4.67157 4 5.5V7H7V4H5.5ZM8 4V7H12V5.5C12 4.67157 11.3284 4 10.5 4H8ZM12 8H8V12H10.5C11.3284 12 12 11.3284 12 10.5V8ZM7 12V8H4V10.5C4 11.3284 4.67157 12 5.5 12H7Z" fill="currentColor"/></svg> All images
+                  </div>
+                </div>
+              </div>
+              <div class="nav-anchor__logo"><img src="images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg" alt="Gucci Logo"></div>
+              <div class="nav-anchor__info">
+                <div class="nav-anchor__attribution">
+                  <div class="nav-anchor__favicon"><img src="images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg" alt="Gucci"></div>
+                  <div class="nav-anchor__attr-text">
+                    <span class="nav-anchor__site-name">Gucci Official</span>
+                    <span class="nav-anchor__site-url">https://www.gucci.com</span>
+                  </div>
+                </div>
+                <a class="nav-anchor__title" href="https://www.gucci.com" target="_blank">Gucci</a>
+                <p class="nav-anchor__desc nav-anchor__desc--4line">Italian luxury fashion house founded in 1921 by Guccio Gucci in Florence, Italy. Renowned worldwide for its leather goods, ready-to-wear collections, shoes, and the iconic interlocking GG monogram. Under the creative direction of Sabato De Sarno since 2023, the brand blends heritage craftsmanship with a refined modern sensibility, spanning fashion, accessories, fragrances, and home décor across over 500 stores globally.</p>
+              </div>
+            </div>`
+          },
+          {
+            id: "b", type: "overview", servesIntentions: [4, 5],
+            html: `<div class="overview-card">
+              <span class="overview-card__label">FASHION HOUSE</span>
+              <h2 class="overview-card__title">About Gucci</h2>
+              <p class="overview-card__intro">Italian high-end luxury fashion house founded in 1921 by Guccio Gucci in Florence. Known for leather goods, ready-to-wear, and the iconic interlocking GG monogram. Now under creative director Sabato De Sarno, blending heritage craftsmanship with modern aesthetics across fashion, accessories, and home décor.</p>
+              <div class="overview-card__facts">
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Founded</span><span class="overview-card__fact-value">1921, Florence</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Parent</span><span class="overview-card__fact-value">Kering Group</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Creative Director</span><span class="overview-card__fact-value">Sabato De Sarno</span></div>
+              </div>
+              <div class="overview-card__source"><span>Wikipedia</span><span class="overview-card__source-dot"></span><span>gucci.com</span></div>
+            </div>`
+          },
+          {
+            id: "c", type: "list", servesIntentions: [3],
+            html: `<div class="list-card">
+              <div class="list-card__header">Store Locations</div>
+              <div class="list-card__items">
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 7C9.5 6.17157 8.82843 5.5 8 5.5C7.17157 5.5 6.5 6.17157 6.5 7C6.5 7.82843 7.17157 8.5 8 8.5C8.82843 8.5 9.5 7.82843 9.5 7ZM14 7C14 9.8739 10.9028 13.0162 9.15886 14.5577C8.4905 15.1485 7.5095 15.1485 6.84114 14.5577C5.09724 13.0162 2 9.8739 2 7C2 3.68629 4.68629 1 8 1C11.3137 1 14 3.68629 14 7ZM13 7C13 4.23858 10.7614 2 8 2C5.23858 2 3 4.23858 3 7C3 8.10846 3.61464 9.39535 4.56972 10.6827C5.50366 11.9415 6.65694 13.0602 7.50343 13.8085C7.79356 14.065 8.20644 14.065 8.49657 13.8085C9.34306 13.0602 10.4963 11.9415 11.4303 10.6827C12.3854 9.39535 13 8.10846 13 7Z" fill="currentColor"/></svg></span><span class="list-card__item-text">5th Avenue, New York</span><span class="list-card__item-meta">Flagship</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 7C9.5 6.17157 8.82843 5.5 8 5.5C7.17157 5.5 6.5 6.17157 6.5 7C6.5 7.82843 7.17157 8.5 8 8.5C8.82843 8.5 9.5 7.82843 9.5 7ZM14 7C14 9.8739 10.9028 13.0162 9.15886 14.5577C8.4905 15.1485 7.5095 15.1485 6.84114 14.5577C5.09724 13.0162 2 9.8739 2 7C2 3.68629 4.68629 1 8 1C11.3137 1 14 3.68629 14 7ZM13 7C13 4.23858 10.7614 2 8 2C5.23858 2 3 4.23858 3 7C3 8.10846 3.61464 9.39535 4.56972 10.6827C5.50366 11.9415 6.65694 13.0602 7.50343 13.8085C7.79356 14.065 8.20644 14.065 8.49657 13.8085C9.34306 13.0602 10.4963 11.9415 11.4303 10.6827C12.3854 9.39535 13 8.10846 13 7Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Rodeo Drive, Beverly Hills</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 7C9.5 6.17157 8.82843 5.5 8 5.5C7.17157 5.5 6.5 6.17157 6.5 7C6.5 7.82843 7.17157 8.5 8 8.5C8.82843 8.5 9.5 7.82843 9.5 7ZM14 7C14 9.8739 10.9028 13.0162 9.15886 14.5577C8.4905 15.1485 7.5095 15.1485 6.84114 14.5577C5.09724 13.0162 2 9.8739 2 7C2 3.68629 4.68629 1 8 1C11.3137 1 14 3.68629 14 7ZM13 7C13 4.23858 10.7614 2 8 2C5.23858 2 3 4.23858 3 7C3 8.10846 3.61464 9.39535 4.56972 10.6827C5.50366 11.9415 6.65694 13.0602 7.50343 13.8085C7.79356 14.065 8.20644 14.065 8.49657 13.8085C9.34306 13.0602 10.4963 11.9415 11.4303 10.6827C12.3854 9.39535 13 8.10846 13 7Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Via Montenapoleone, Milan</span></a>
+              </div>
+            </div>`
+          },
+          {
+            id: "d", type: "list", servesIntentions: [7],
+            html: `<div class="list-card">
+              <div class="list-card__header">Customer Service</div>
+              <div class="list-card__items">
+                <a class="list-card__item" href="tel:+18774824827"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.28846 2.00193C3.63498 1.96498 3.97823 2.10047 4.20406 2.36508L5.69531 4.11179C5.93469 4.39229 5.9922 4.78075 5.84381 5.11834L5.05506 6.91422C4.97174 7.10373 4.98665 7.32175 5.09437 7.49835L7.05151 10.7075C7.16539 10.8942 7.36163 11.0154 7.57924 11.0335L9.59256 11.2008C9.95272 11.2307 10.2774 11.0118 10.3886 10.678L10.9805 8.89986C11.0983 8.54613 11.4208 8.30522 11.7929 8.28567L13.511 8.19544C13.7879 8.18091 14.0545 8.29879 14.2268 8.50926C15.0426 9.50708 15.4805 10.4131 15.1282 11.4654C14.5359 13.2351 12.5498 14.7649 10.5482 14.4516C8.30193 14.1001 5.3897 12.869 3.26051 10.7398C1.1313 8.61064 -0.0998148 5.69843 -0.451215 3.45218C-0.76449 1.45062 0.765326 -0.535547 2.53501 -0.127877C3.58728 -0.37122 4.49335 0.0426925 5.49118 0.858416C5.70165 1.03078 5.81953 1.29729 5.80499 1.57416L5.71477 3.29233C5.69521 3.66437 5.45431 3.98694 5.10057 4.10465L3.32248 4.69669C2.98866 4.80789 2.7698 5.13252 2.79968 5.49268L2.96691 7.50601C2.985 7.72362 3.10621 7.91986 3.29293 8.03374L6.50209 9.99088C6.67869 10.1086 6.89671 10.1235 7.08622 10.0402L8.8821 9.25143C9.21969 9.10305 9.60816 9.16055 9.88866 9.39993L11.6354 10.8912C11.8999 11.117 12.0354 11.4603 11.9985 11.8068C11.8703 12.9988 11.2186 14.1035 10.2001 14.6577C8.56368 15.5487 6.34373 15.1704 4.55272 13.6173L4.38237 13.4636C2.22504 11.4768 0.814709 8.7688 0.50393 6.46678C0.248424 4.57808 0.990074 2.59424 2.44234 2.15543L3.28846 2.00193Z" fill="currentColor"/></svg></span><span class="list-card__item-text">+1 (877) 482-4827</span><span class="list-card__item-meta">US toll-free</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.25 4.5C5.25 2.98122 6.48122 1.75 8 1.75C9.51878 1.75 10.75 2.98122 10.75 4.5C10.75 6.01878 9.51878 7.25 8 7.25C6.48122 7.25 5.25 6.01878 5.25 4.5ZM8 2.75C7.0335 2.75 6.25 3.5335 6.25 4.5C6.25 5.4665 7.0335 6.25 8 6.25C8.9665 6.25 9.75 5.4665 9.75 4.5C9.75 3.5335 8.9665 2.75 8 2.75ZM4.5 9.5C3.67157 9.5 3 10.1716 3 11V11.5C3 11.5 3 14.25 8 14.25C13 14.25 13 11.5 13 11.5V11C13 10.1716 12.3284 9.5 11.5 9.5H4.5ZM4 11C4 10.7239 4.22386 10.5 4.5 10.5H11.5C11.7761 10.5 12 10.7239 12 11V11.5C12 11.5 12 13.25 8 13.25C4 13.25 4 11.5 4 11.5V11Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Live Chat</span><span class="list-card__item-meta">gucci.com</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4.5C2 3.67157 2.67157 3 3.5 3H12.5C13.3284 3 14 3.67157 14 4.5V11.5C14 12.3284 13.3284 13 12.5 13H3.5C2.67157 13 2 12.3284 2 11.5V4.5ZM3.5 4C3.22386 4 3 4.22386 3 4.5V4.72318L8 8.27682L13 4.72318V4.5C13 4.22386 12.7761 4 12.5 4H3.5ZM13 5.88532L8.33699 9.20479C8.13575 9.34827 7.86425 9.34827 7.66301 9.20479L3 5.88532V11.5C3 11.7761 3.22386 12 3.5 12H12.5C12.7761 12 13 11.7761 13 11.5V5.88532Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Email Support</span><span class="list-card__item-meta">gucci.com/contact</span></a>
+              </div>
+            </div>`
+          }
+        ],
+        carousel: {
+          tabs: ["Handbags", "Heels", "Wallets", "Sneakers"],
+          activeTab: 0,
+          items: {
+            "Handbags": [
+              { title: "GG Marmont Small Shoulder Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-marmont-black.webp" },
+              { title: "Ophidia GG Medium Tote Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-ophidia-tote.png" },
+              { title: "Gucci Giglio Large Tote Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-giglio-tote.avif" },
+              { title: "GG Plus Tote Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-gg-tote.avif" },
+              { title: "Animalier Leather Shoulder Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-animalier-bag.jpg" }
+            ],
+            "Heels": [
+              { title: "GG Fringed Marmont Pumps", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/gucci-black-Gg-High-heel-Fringed-Marmont-Pumps-In-Black.webp" },
+              { title: "Leather Platform Pump", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/a7ede37ff273a5bc0c37e8758988869e.jpg" },
+              { title: "Patent Leather Slingback Heel", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/dd7cfa2527d18c4e2c377798daba3453.jpg" },
+              { title: "Horsebit Mid-Heel Pump", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/5bd53661d0813e1add14c32c8378cde8.jpg" },
+              { title: "GG Canvas Platform Sandal", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/OIP.webp" }
+            ],
+            "Wallets": [
+              { title: "GG Marmont Card Case Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1239063_2_enlarged.webp" },
+              { title: "Ophidia GG Continental Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1464371_1_enlarged.webp" },
+              { title: "GG Supreme Zip Around Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1661120_2_enlarged.webp" },
+              { title: "Interlocking G Bi-fold Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1684725_1_enlarged.webp" },
+              { title: "Horsebit 1955 Mini Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/OIP.webp" }
+            ],
+            "Sneakers": [
+              { title: "Ace Watersnake Embroidered Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/Gucci-Ace-Watersnake-Trimmed-Embroidered-Leather-Sneakers-Men-White.jpg" },
+              { title: "GG Canvas High-Top Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/gucci-blue-california-hightop-laceup-sneakers-product-1-8432734-629730683.webp" },
+              { title: "Screener Leather Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/272468.022_2.jpg" },
+              { title: "Run Trainer Low-Top Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/309598.022_3.jpg" },
+              { title: "Rhyton Logo Leather Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/R.jpeg" }
+            ]
+          }
+        }
+      }
+    ]
+  },
+
+  professor: {
+    id: "professor",
+    label: "University Professor",
+    icon: "\u{1F393}",
+    description: "Academic creators / educators",
+    hasStrongNavIntent: false,
+    intentions: [
+      {
+        rank: 1, label: "Find academic profile / bio", type: "informational", isPrimary: true,
+        trigger: "Heard the name in class, a podcast, or a recommendation \u2014 wants to know who this person is",
+        nextAction: "Scan bio and credentials on the SERP; may click to university profile or personal site",
+        serpValue: "Overview card delivers a structured academic bio \u2014 title, university, known works \u2014 in one glance",
+        cardSuggestion: "Hero-composite: photo + name + affiliation + personal site link; Overview card (3x4) with bio"
+      },
+      {
+        rank: 2, label: "Access courses / learning materials", type: "navigational", isPrimary: true,
+        trigger: "Wants to take this professor's course or find their teaching materials (slides, videos, code)",
+        nextAction: "Click through to course page (Coursera, YouTube, university site) and start learning",
+        serpValue: "List card shows direct links to courses and platforms \u2014 routes to the right learning path fast",
+        cardSuggestion: "List card (3x2): top courses with platform metadata (YouTube, Coursera, etc.)"
+      },
+      {
+        rank: 3, label: "Read research publications", type: "informational", isPrimary: false,
+        trigger: "Doing literature review, citing a paper, or evaluating research impact",
+        nextAction: "Navigate to Google Scholar, university page, or specific paper PDF",
+        serpValue: "Subdivided card shows publication count, h-index, key works \u2014 quick research profile",
+        cardSuggestion: "Subdivided card (3x2): academic stats (publications, h-index, citations)"
+      },
+      {
+        rank: 4, label: "Find contact / office hours", type: "navigational", isPrimary: false,
+        trigger: "Student or collaborator needs to reach the professor directly",
+        nextAction: "Email the professor, visit during office hours, or find the office location",
+        serpValue: "Contact info surfaced in subdivided card or facts section \u2014 saves navigating university directory",
+        cardSuggestion: "Covered by Subdivided card or Overview facts (department, university)"
+      },
+      {
+        rank: 5, label: "Watch lectures / tutorial videos", type: "navigational", isPrimary: false,
+        trigger: "Prefers video learning \u2014 wants to watch lectures or tutorials by this professor",
+        nextAction: "Click through to YouTube channel or lecture recording page",
+        serpValue: "List card includes video content links with subscriber/view counts as trust signal",
+        cardSuggestion: "Covered by List card \u2014 include YouTube channel with subscriber count"
+      },
+      {
+        rank: 6, label: "Check university affiliation", type: "informational", isPrimary: false,
+        trigger: "Verifying credentials \u2014 which university, what department, what title",
+        nextAction: "Confirm affiliation and move on (often part of evaluating whether to cite or trust their work)",
+        serpValue: "Overview card facts section shows university + department + title \u2014 instant verification",
+        cardSuggestion: "Covered by Overview card facts (University, Department, Title)"
+      },
+      {
+        rank: 7, label: "Find social media / personal site", type: "navigational", isPrimary: false,
+        trigger: "Wants to follow the professor's work on Twitter/X, GitHub, or their blog",
+        nextAction: "Click through to their personal site, GitHub, or social media profile",
+        serpValue: "Hero card also-links provide direct shortcuts to GitHub, YouTube, personal site",
+        cardSuggestion: "Covered by Hero also-links (GitHub, YouTube, personal site)"
+      }
+    ],
+    queries: [
+      {
+        label: "Daniel Shiffman",
+        template: "photo-left",
+        templateDesc: "Photo Left \u00B7 3\u00D74 + 5\u00D74 + 3\u00D72 + 3\u00D72 = 44u",
+        serpValue: "Photo anchors recognition, wide overview card gives comprehensive profile at a glance \u2014 students searching a professor need YouTube, course pages, or GitHub, not generic web results.",
+        slots: [
+          {
+            id: "a", type: "professor-photo", servesIntentions: [1],
+            html: `<div class="professor-photo">
+              <img src="images/professor/shiffman.JPG.preset.square.jpeg" alt="Daniel Shiffman">
+              <div class="professor-photo__caption">
+                <div class="professor-photo__name">Daniel Shiffman</div>
+                <div class="professor-photo__role">Associate Arts Professor, NYU ITP</div>
+              </div>
+            </div>`
+          },
+          {
+            id: "b", type: "overview", servesIntentions: [1, 6, 7],
+            html: `<div class="overview-card">
+              <span class="overview-card__label">EDUCATOR & CREATIVE CODER</span>
+              <h2 class="overview-card__title">Daniel Shiffman</h2>
+              <p class="overview-card__intro">Associate Arts Professor at NYU\u2019s Interactive Telecommunications Program (ITP) in the Tisch School of the Arts. Best known as the creator of The Coding Train, a YouTube channel with 1.9M+ subscribers where he teaches creative coding, generative art, and machine learning in an energetic, beginner-friendly style. Author of <em>The Nature of Code</em> and a core contributor to the Processing Foundation and p5.js.</p>
+              <div class="overview-card__facts">
+                <div class="overview-card__fact"><span class="overview-card__fact-label">University</span><span class="overview-card__fact-value">NYU Tisch School of the Arts</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Department</span><span class="overview-card__fact-value">ITP (Interactive Telecommunications)</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">YouTube</span><span class="overview-card__fact-value">The Coding Train \u2014 1.9M+ subscribers</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Known For</span><span class="overview-card__fact-value">The Nature of Code, p5.js, Processing</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Focus</span><span class="overview-card__fact-value">Creative coding, generative art, machine learning</span></div>
+              </div>
+              <div class="overview-card__source"><span>Wikipedia</span><span class="overview-card__source-dot"></span><span>shiffman.net</span></div>
+            </div>`
+          },
+          {
+            id: "c", type: "subdivided", servesIntentions: [3, 6],
+            html: `<div class="subdivided-card">
+              <div class="subdivided-card__grid subdivided-card__grid--2x2">
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Department</span><span class="subdivided-card__cell-value">ITP, Tisch</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Focus</span><span class="subdivided-card__cell-value">Creative Coding</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Books</span><span class="subdivided-card__cell-value">Nature of Code</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Open Source</span><span class="subdivided-card__cell-value">p5.js core</span></div>
+              </div>
+            </div>`
+          },
+          {
+            id: "d", type: "list", servesIntentions: [2, 5],
+            html: `<div class="list-card">
+              <div class="list-card__header">Popular Content</div>
+              <div class="list-card__items">
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 5.82056V10.1794C6.5 10.4293 6.77363 10.5828 6.98686 10.4525L10.246 8.46076C10.5906 8.2502 10.5906 7.74977 10.246 7.53921L6.98686 5.54751C6.77363 5.4172 6.5 5.57067 6.5 5.82056ZM4.5 3C3.11929 3 2 4.11929 2 5.5V10.5C2 11.8807 3.11929 13 4.5 13H11.5C12.8807 13 14 11.8807 14 10.5V5.5C14 4.11929 12.8807 3 11.5 3H4.5ZM3 5.5C3 4.67157 3.67157 4 4.5 4H11.5C12.3284 4 13 4.67157 13 5.5V10.5C13 11.3284 12.3284 12 11.5 12H4.5C3.67157 12 3 11.3284 3 10.5V5.5Z" fill="currentColor"/></svg></span><span class="list-card__item-text">The Coding Train</span><span class="list-card__item-meta">1.9M subs</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.80307 3.0431C10.0554 3.15525 10.1691 3.45073 10.0569 3.70307L6.05691 12.7031C5.94475 12.9554 5.64927 13.0691 5.39693 12.9569C5.14459 12.8448 5.03094 12.5493 5.14309 12.2969L9.14309 3.29693C9.25525 3.04459 9.55073 2.93094 9.80307 3.0431ZM4.33218 5.3763C4.53857 5.55976 4.55716 5.87579 4.3737 6.08218L2.66898 8L4.3737 9.91782C4.55716 10.1242 4.53857 10.4402 4.33218 10.6237C4.12579 10.8072 3.80975 10.7886 3.6263 10.5822L1.6263 8.33218C1.4579 8.14274 1.4579 7.85726 1.6263 7.66782L3.6263 5.41782C3.80975 5.21143 4.12579 5.19284 4.33218 5.3763ZM11.6678 5.3763C11.8742 5.19284 12.1902 5.21143 12.3737 5.41782L14.3737 7.66782C14.5421 7.85726 14.5421 8.14274 14.3737 8.33218L12.3737 10.5822C12.1902 10.7886 11.8742 10.8072 11.6678 10.6237C11.4614 10.4402 11.4428 10.1242 11.6263 9.91782L13.331 8L11.6263 6.08218C11.4428 5.87579 11.4614 5.55976 11.6678 5.3763Z" fill="currentColor"/></svg></span><span class="list-card__item-text">GitHub \u2014 CodingTrain</span><span class="list-card__item-meta">200+ repos</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.999512 7.99797C0.999512 4.13283 4.13283 0.999512 7.99797 0.999512C11.8631 0.999512 14.9964 4.13283 14.9964 7.99797C14.9964 11.8631 11.8631 14.9964 7.99797 14.9964C4.13283 14.9964 0.999512 11.8631 0.999512 7.99797ZM7.99797 1.99951L7.94859 1.99971C8.03989 2.17858 8.13987 2.39455 8.22996 2.63391C8.47304 3.27972 8.69358 4.22548 8.30098 5.06149C7.93927 5.83172 7.31604 6.0312 6.85055 6.15147L6.78328 6.16881C6.33064 6.28539 6.14303 6.33371 6.00793 6.53881C5.88155 6.73068 5.90435 6.97149 6.04781 7.43898C6.05802 7.47225 6.06903 7.50733 6.08048 7.54383C6.13745 7.72536 6.20544 7.942 6.2409 8.1458C6.28497 8.39912 6.29674 8.71764 6.13674 9.02466C5.97649 9.33217 5.76469 9.54085 5.51495 9.6769C5.27988 9.80497 5.03589 9.85382 4.85085 9.88664L4.78225 9.89873C4.42404 9.96169 4.24235 9.99362 4.06762 10.1808C3.93079 10.3274 3.8456 10.5821 3.79619 10.9527C3.77603 11.1039 3.7639 11.2539 3.75143 11.4081L3.74474 11.4902C3.73069 11.6606 3.7134 11.8546 3.67562 12.0206L3.65053 12.1309C4.74332 13.2801 6.28699 13.9964 7.99797 13.9964C9.11317 13.9964 10.1573 13.6921 11.0518 13.162C10.9724 13.0839 10.8822 12.9874 10.7936 12.8759C10.5566 12.5775 10.2499 12.0683 10.3563 11.4695C10.4073 11.1824 10.5614 10.9409 10.7122 10.7539C10.8658 10.5636 11.0515 10.3873 11.2149 10.2369C11.2535 10.2014 11.2906 10.1676 11.3262 10.135C11.4515 10.0206 11.5588 9.92268 11.6504 9.82661C11.707 9.7674 11.7473 9.71925 11.7746 9.68042C11.7977 9.64754 11.8049 9.63057 11.806 9.62798C11.8567 9.46014 11.7951 9.33707 11.7221 9.28066C11.6673 9.23827 11.5269 9.17529 11.2764 9.33397C11.179 9.39564 11.0923 9.45047 11.0225 9.49101C10.9702 9.52143 10.8641 9.58303 10.7482 9.60839C10.685 9.62219 10.5463 9.64235 10.3951 9.57127C10.2242 9.49098 10.1458 9.34767 10.1142 9.24919C10.0865 9.16267 10.0854 9.08554 10.0857 9.04941C10.086 9.00709 10.0897 8.96675 10.0928 8.93741C10.0954 8.9131 10.0985 8.88721 10.1019 8.85962C10.1275 8.64905 10.1652 8.33927 10.0449 7.87743C9.94813 7.50606 9.80724 7.22357 9.66337 6.93511C9.59706 6.80216 9.53011 6.66792 9.46657 6.52315C9.37901 6.32366 9.28273 6.06384 9.29966 5.78727C9.31923 5.46765 9.48127 5.20698 9.74249 5.01105C10.0595 4.77325 10.4583 4.22896 10.8033 3.67776C10.9683 3.41412 11.1096 3.16782 11.2097 2.98726C11.2176 2.97293 11.2253 2.95902 11.2327 2.94557C10.2994 2.34677 9.18923 1.99951 7.99797 1.99951Z" fill="currentColor"/></svg></span><span class="list-card__item-text">shiffman.net</span></a>
+              </div>
+            </div>`
+          }
+        ]
+      }
+    ]
+  },
+
+  realestate: {
+    id: "realestate",
+    label: "Real Estate",
+    icon: "\u{1F3E2}",
+    description: "Property / real estate brands",
+    hasStrongNavIntent: true,
+    intentions: [
+      {
+        rank: 1, label: "Browse available listings", type: "navigational", isPrimary: true,
+        trigger: "Apartment hunting or property shopping \u2014 wants to see what's available right now",
+        nextAction: "Click through to listings page to browse floor plans, photos, and pricing",
+        serpValue: "Subdivided card shows unit types + starting prices \u2014 immediate availability snapshot before clicking",
+        cardSuggestion: "Subdivided card (3x2): unit types with starting prices + availability count"
+      },
+      {
+        rank: 2, label: "Visit agency / property website", type: "navigational", isPrimary: true,
+        trigger: "Knows the property/agency name, wants to reach their site directly",
+        nextAction: "Click through to the official site, then navigate to specific sections (apply, floor plans)",
+        serpValue: "Hero card provides one-click official site link + shortcuts to Apply, Floor Plans, Schedule Tour",
+        cardSuggestion: "Hero-composite: property photo + site link + also-links (Floor Plans, Apply, Tours)"
+      },
+      {
+        rank: 3, label: "Find agent contact info", type: "navigational", isPrimary: false,
+        trigger: "Ready to speak with someone \u2014 wants to call the leasing office or email an agent",
+        nextAction: "Call the phone number, send an email, or visit the office",
+        serpValue: "List card surfaces phone, email, and office hours \u2014 no need to find contact page on the site",
+        cardSuggestion: "List card (3x2): phone number, tour scheduling, office hours"
+      },
+      {
+        rank: 4, label: "Check property prices / market info", type: "informational", isPrimary: false,
+        trigger: "Evaluating affordability or comparing options \u2014 needs price ranges and market context",
+        nextAction: "Compare prices with other properties, decide if it fits budget",
+        serpValue: "Subdivided card shows per-unit-type pricing \u2014 enables quick comparison without deep-diving each site",
+        cardSuggestion: "Covered by Subdivided card (prices per unit type)"
+      },
+      {
+        rank: 5, label: "Read reviews / reputation", type: "informational", isPrimary: false,
+        trigger: "Wants social proof before scheduling a tour \u2014 checks ratings, resident feedback",
+        nextAction: "Read reviews on third-party sites (Google, Yelp, StreetEasy), then make a judgment",
+        serpValue: "Overview card can include source links to review platforms; not directly served by magazine cards",
+        cardSuggestion: "Partially covered by Overview source line (StreetEasy, Google Reviews)"
+      },
+      {
+        rank: 6, label: "Get neighborhood info", type: "informational", isPrimary: false,
+        trigger: "Unfamiliar with the area \u2014 wants to understand the neighborhood before committing",
+        nextAction: "Scan transit access, nearby landmarks, walkability score",
+        serpValue: "Overview card facts include transit proximity and neighborhood context \u2014 basic location intel",
+        cardSuggestion: "Covered by Overview card facts (address, transit, neighborhood)"
+      },
+      {
+        rank: 7, label: "Schedule tours / inquiries", type: "transactional", isPrimary: false,
+        trigger: "Interested enough to visit in person \u2014 wants to book a tour",
+        nextAction: "Click 'Schedule Tour' link or call the leasing office",
+        serpValue: "Also-links in hero include 'Schedule Tour'; List card has office hours and phone",
+        cardSuggestion: "Covered by Hero also-links (Schedule Tour) + List card (contact)"
+      },
+      {
+        rank: 8, label: "Check rental availability", type: "navigational", isPrimary: false,
+        trigger: "Specifically looking for rental units \u2014 wants to filter by availability and move-in date",
+        nextAction: "Navigate to availability page to see specific units and move-in dates",
+        serpValue: "Subdivided card shows available unit count \u2014 quick answer to 'is anything open?'",
+        cardSuggestion: "Covered by Subdivided card (Available: 12 units)"
+      }
+    ],
+    queries: [
+      {
+        label: "Avalon Fort Greene",
+        template: "hero-map",
+        templateDesc: "Hero Map \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72 + 3\u00D72 / 8\u00D72 + 3\u00D72 = 66u",
+        serpValue: "Faster than navigating avaloncommunities.com \u2014 immediate access to pricing, contact, and neighborhood context with map.",
+        slots: [
+          {
+            id: "a", type: "nav-anchor", servesIntentions: [2, 1],
+            html: `<div class="nav-anchor">
+              <div class="nav-anchor__images">
+                <div class="nav-anchor__img-main">
+                  <img src="images/realestate/avalon-fort-greene.jpg" alt="Avalon Fort Greene exterior">
+                  <span class="nav-anchor__img-btn"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 3C3.22386 3 3 3.22386 3 3.5V7H2V3.5C2 2.67157 2.67157 2 3.5 2H7V3H3.5ZM13 3.5V7H14V3.5C14 2.67157 13.3284 2 12.5 2H9V3H12.5C12.7761 3 13 3.22386 13 3.5ZM13 12.5V9H14V12.5C14 13.3284 13.3284 14 12.5 14H9V13H12.5C12.7761 13 13 12.7761 13 12.5ZM3 12.5V9H2V12.5C2 13.3284 2.67157 14 3.5 14H7V13H3.5C3.22386 13 3 12.7761 3 12.5Z" fill="currentColor"/></svg> All images</span>
+                </div>
+                <div class="nav-anchor__img-side">
+                  <img src="images/realestate/manfred-sofa-andreu-world-1.webp" alt="Avalon Fort Greene interior">
+                </div>
+              </div>
+              <div class="nav-anchor__info">
+                <div class="nav-anchor__attribution">
+                  <div class="nav-anchor__favicon">\u{1F3E2}</div>
+                  <div class="nav-anchor__attr-text">
+                    <span class="nav-anchor__site-name">Avalon Fort Greene</span>
+                    <span class="nav-anchor__site-url">avaloncommunities.com</span>
+                  </div>
+                </div>
+                <a class="nav-anchor__title" href="https://www.avaloncommunities.com/new-york/fort-greene-apartments/avalon-fort-greene" target="_blank">Avalon Fort Greene</a>
+                <p class="nav-anchor__desc">Luxury rental community by AvalonBay in Fort Greene, Brooklyn. Modern studio, 1-bed, and 2-bed apartments with floor-to-ceiling windows, in-unit washer/dryer, and premium finishes. Residents enjoy a rooftop terrace, state-of-the-art fitness center, resident lounge, and courtyard. Steps from Fort Greene Park, BAM, and Atlantic Terminal transit hub.</p>
+                <div class="nav-anchor__links">
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Floor Plans</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Schedule Tour</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Apply Online</a>
+                </div>
+              </div>
+            </div>`
+          },
+          {
+            id: "b", type: "overview", servesIntentions: [5, 6],
+            html: `<div class="overview-card">
+              <span class="overview-card__label">LUXURY APARTMENTS</span>
+              <h2 class="overview-card__title">About Avalon Fort Greene</h2>
+              <p class="overview-card__intro">Luxury apartment community by AvalonBay Communities in Fort Greene, Brooklyn. Studio, 1-bed, and 2-bed units with modern finishes, floor-to-ceiling windows, in-unit washer/dryer. Near Fort Greene Park, BAM, and Atlantic Terminal transit hub. Part of AvalonBay's premier portfolio.</p>
+              <div class="overview-card__facts">
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Address</span><span class="overview-card__fact-value">343 Gold St, Brooklyn, NY</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Transit</span><span class="overview-card__fact-value">Atlantic Av-Barclays (2 min)</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Built</span><span class="overview-card__fact-value">2015</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Units</span><span class="overview-card__fact-value">385 apartments</span></div>
+                <div class="overview-card__fact"><span class="overview-card__fact-label">Amenities</span><span class="overview-card__fact-value">Rooftop, Gym, Lounge</span></div>
+              </div>
+              <div class="overview-card__source"><span>AvalonBay</span><span class="overview-card__source-dot"></span><span>StreetEasy</span><span class="overview-card__source-dot"></span><span>Google Reviews 4.1\u2605</span></div>
+            </div>`
+          },
+          {
+            id: "c", type: "subdivided", servesIntentions: [1, 4],
+            html: `<div class="subdivided-card">
+              <div class="subdivided-card__header">Price List</div>
+              <div class="subdivided-card__grid subdivided-card__grid--2x2">
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Studio</span><span class="subdivided-card__cell-value">$2,850</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">1-Bed</span><span class="subdivided-card__cell-value">$3,450</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">2-Bed</span><span class="subdivided-card__cell-value">$4,950</span></div>
+                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Available</span><span class="subdivided-card__cell-value">12 units</span></div>
+              </div>
+            </div>`
+          },
+          {
+            id: "d", type: "list", servesIntentions: [3, 7],
+            html: `<div class="list-card">
+              <div class="list-card__header">Contact Info</div>
+              <div class="list-card__items">
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg></span><span class="list-card__item-text">(718) 489-2200</span><span class="list-card__item-meta">Leasing</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.24848 8.99696C5.66186 8.99696 5.99696 8.66186 5.99696 8.24848C5.99696 7.83511 5.66186 7.5 5.24848 7.5C4.83511 7.5 4.5 7.83511 4.5 8.24848C4.5 8.66186 4.83511 8.99696 5.24848 8.99696ZM14 4.5C14 3.11929 12.8807 2 11.5 2H4.5C3.11929 2 2 3.11929 2 4.5V11.5C2 12.8807 3.11929 14 4.5 14H11.5C12.8807 14 14 12.8807 14 11.5V4.5ZM3 6H13V11.5C13 12.3284 12.3284 13 11.5 13H4.5C3.67157 13 3 12.3284 3 11.5V6ZM4.5 3H11.5C12.3284 3 13 3.67157 13 4.5V5H3V4.5C3 3.67157 3.67157 3 4.5 3Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Mon\u2013Sat 9am\u20136pm</span><span class="list-card__item-meta">Office</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.03807V11C2 12.1046 2.89543 13 4 13H12C13.1046 13 14 12.1046 14 11V5C14 3.89543 13.1046 3 12 3H4C2.89543 3 2 3.89543 2 5V6.03807ZM4 4H12C12.5523 4 13 4.44772 13 5V5.73987L8.0001 8.43212L3 5.73976V5C3 4.44772 3.44772 4 4 4ZM3 6.87552L7.76305 9.44024C7.91104 9.51992 8.08916 9.51992 8.23715 9.44024L13 6.87562V11C13 11.5523 12.5523 12 12 12H4C3.44772 12 3 11.5523 3 11V6.87552Z" fill="currentColor"/></svg></span><span class="list-card__item-text">leasing@avalonfortgreene.com</span></a>
+              </div>
+            </div>`
+          },
+          {
+            id: "e", type: "answer-bar", servesIntentions: [2, 8],
+            html: `<div class="answer-bar">
+              <div class="answer-bar__image">
+                <img src="images/realestate/IMG_0420-Edit-scaled.jpg" alt="Avalon Fort Greene lobby">
+              </div>
+              <div class="answer-bar__info">
+                <div class="answer-bar__title-row">
+                  <span class="answer-bar__title">Avalon Fort Greene</span>
+                  <svg class="answer-bar__verified" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L9.91 3.09L12.66 2.58L12.87 5.35L15.31 6.84L13.85 9.31L14.91 11.91L12.24 12.73L11.09 15.27L8.5 14.15L8 14.39L7.5 14.15L4.91 15.27L3.76 12.73L1.09 11.91L2.15 9.31L0.69 6.84L3.13 5.35L3.34 2.58L6.09 3.09L8 1Z" fill="currentColor"/><path d="M6.5 8.5L7.5 9.5L10 7" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <a class="answer-bar__url" href="https://www.avaloncommunities.com" target="_blank">https://www.avaloncommunities.com</a>
+                <div class="answer-bar__rating">
+                  <span class="answer-bar__rating-icon">\u229B</span>
+                  <span>4.1 / 5</span>
+                  <a class="answer-bar__rating-link">(38 reviews)</a>
+                  <span>\u00B7</span>
+                  <span>Luxury apartments in Brooklyn, NY</span>
+                </div>
+                <div class="answer-bar__meta">
+                  <div class="answer-bar__meta-item">
+                    <svg class="answer-bar__meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5ZM8 9C6.9 9 6 8.1 6 7C6 5.9 6.9 5 8 5C9.1 5 10 5.9 10 7C10 8.1 9.1 9 8 9Z" fill="currentColor"/></svg>
+                    <span>343 Gold St, Brooklyn, NY 11201</span>
+                  </div>
+                  <div class="answer-bar__meta-item">
+                    <svg class="answer-bar__meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2C4.69 2 2 4.69 2 8C2 11.31 4.69 14 8 14C11.31 14 14 11.31 14 8C14 4.69 11.31 2 8 2ZM8 3C10.76 3 13 5.24 13 8C13 10.76 10.76 13 8 13C5.24 13 3 10.76 3 8C3 5.24 5.24 3 8 3ZM7.5 4.5V8.21L10.15 9.74L10.65 8.88L8.5 7.62V4.5H7.5Z" fill="currentColor"/></svg>
+                    <span class="answer-bar__meta-label">Open</span>
+                    <span>\u00B7 Office 9 AM\u20136 PM</span>
+                    <span>\u00B7 More hours \u25BE</span>
+                  </div>
+                  <div class="answer-bar__meta-item">
+                    <svg class="answer-bar__meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg>
+                    <span>(718) 489-2200</span>
+                  </div>
+                </div>
+              </div>
+              <div class="answer-bar__actions">
+                <a class="answer-bar__action-btn answer-bar__action-btn--secondary" href="https://www.avaloncommunities.com" target="_blank">Website</a>
+                <a class="answer-bar__action-btn answer-bar__action-btn--secondary">Directions</a>
+                <a class="answer-bar__action-btn answer-bar__action-btn--secondary">Contact us</a>
+              </div>
+            </div>`
+          },
+          {
+            id: "f", type: "map", servesIntentions: [6],
+            html: `<div class="map-card">
+              <img src="images/realestate/imagemap.png" alt="Map of Avalon Fort Greene" style="filter:blur(4px);position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);object-fit:cover;">
+              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);"></div>
+              <div style="position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;">
+                <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:rgba(255,255,255,0.85);"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5ZM8 9C6.9 9 6 8.1 6 7C6 5.9 6.9 5 8 5C9.1 5 10 5.9 10 7C10 8.1 9.1 9 8 9Z" fill="currentColor"/></svg>
+                <span style="font-size:12px;color:rgba(255,255,255,0.9);font-weight:600;">Fort Greene, Brooklyn</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.6);">343 Gold St</span>
+              </div>
+            </div>`
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  activeSegment: "government",
+  hoveredIntention: null,
+  selectedIntention: 1,
+  showBadges: false
+};
+
+// ============================================================
+// RENDER: Segment Tabs (horizontal, top of page)
+// ============================================================
+function renderSegmentTabs() {
+  const container = document.getElementById("segmentTabs");
+  let html = '';
+  for (const [id, seg] of Object.entries(SEGMENTS)) {
+    const active = state.activeSegment === id ? " active" : "";
+    html += `<button class="segment-tab${active}" data-segment="${id}"
+               onclick="selectSegment('${id}')">${seg.icon} ${seg.label}</button>`;
+  }
+  container.innerHTML = html;
+}
+
+// ============================================================
+// RENDER: Intention Sidebar (left, expandable details)
+// ============================================================
+function renderIntentionSidebar() {
+  const sidebar = document.getElementById("intentionSidebar");
+  const seg = SEGMENTS[state.activeSegment];
+  let html = `
+    <div class="intention-sidebar__header">
+      <span class="intention-sidebar__label">Intentions</span>
+      <div class="badge-toggle" onclick="toggleBadges()" role="switch" aria-checked="${state.showBadges}" tabindex="0" aria-label="Toggle intent badges" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleBadges()}">
+        <div class="badge-toggle__switch${state.showBadges ? ' on' : ''}" id="badgeSwitch"></div>
+        <span class="badge-toggle__label">Badges</span>
+      </div>
+    </div>
+    <div class="intention-list" id="intentionList">`;
+  seg.intentions.forEach(intent => {
+    const activeClass = (state.selectedIntention === intent.rank) ? ' active' : '';
+    const expandedClass = (state.selectedIntention === intent.rank) ? ' expanded' : '';
+    html += `
+      <div class="intention-list__item${activeClass}" data-rank="${intent.rank}"
+           onclick="selectIntention(${intent.rank})"
+           onmouseenter="highlightIntention(${intent.rank})"
+           onmouseleave="clearIntentionHighlight()">
+        <span class="intention-list__rank">${intent.rank}</span>
+        <span class="intention-list__label">${intent.label}</span>
+        <span class="intention-type-badge intention-type-badge--${intent.type}">${intent.type.slice(0,3)}</span>
+        ${intent.isPrimary ? '<span class="intention-primary-badge" title="Primary intention for this segment">P</span>' : ''}
+      </div>
+      <div class="intention-list__item-detail${expandedClass}" data-detail-rank="${intent.rank}">
+        <div class="intention-list__item-detail__inner">
+          ${renderIntentionInlineDetail(intent)}
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  sidebar.innerHTML = html;
+}
+
+function renderIntentionInlineDetail(intent) {
+  return `
+    <ul class="intention-list__item-detail__bullets">
+      <li><strong>Trigger:</strong> ${intent.trigger}</li>
+      <li><strong>Next Action:</strong> ${intent.nextAction}</li>
+      <li><strong>Magazine Value:</strong> ${intent.serpValue}</li>
+      <li><strong>Card Suggestion:</strong> ${intent.cardSuggestion}</li>
+    </ul>`;
+}
+
+// ============================================================
+// RENDER: Content Area
+// ============================================================
+function renderContent() {
+  const seg = SEGMENTS[state.activeSegment];
+  const content = document.getElementById("content");
+
+  // Magazine (visual payoff) — no segment header needed, tabs are at top
+  const query = seg.queries[0];
+  let html = `
+    <div class="magazine-section">
+      <div class="magazine-header">
+        <span class="magazine-header__query">${query.label}</span>
+        <span class="magazine-header__template">${query.templateDesc}</span>
+      </div>
+      <div class="serp-value"><strong>Why this layout works:</strong> ${query.serpValue}</div>
+      <div class="magazine-wrapper">
+        <div class="magazine-scaler" id="magazineScaler">
+          <div class="magazine-grid--${query.template}">`;
+
+  if (query.template === "hero-left") {
+    const slotA = query.slots.find(s => s.id === "a");
+    const slotB = query.slots.find(s => s.id === "b");
+    const slotC = query.slots.find(s => s.id === "c");
+    const slotD = query.slots.find(s => s.id === "d");
+    html += renderSlot(slotA, "slot-a", seg.intentions);
+    html += renderSlot(slotB, "slot-b", seg.intentions, true);
+    html += '<div class="slot-cd">';
+    html += renderSlot(slotC, "slot-c", seg.intentions, true);
+    html += renderSlot(slotD, "slot-d", seg.intentions, true);
+    html += '</div>';
+  } else if (query.template === "photo-left") {
+    const slotA = query.slots.find(s => s.id === "a");
+    const slotB = query.slots.find(s => s.id === "b");
+    const slotC = query.slots.find(s => s.id === "c");
+    const slotD = query.slots.find(s => s.id === "d");
+    html += renderSlot(slotA, "slot-a", seg.intentions);
+    html += renderSlot(slotB, "slot-b", seg.intentions, true);
+    html += '<div class="slot-cd">';
+    html += renderSlot(slotC, "slot-c", seg.intentions, true);
+    html += renderSlot(slotD, "slot-d", seg.intentions, true);
+    html += '</div>';
+  } else if (query.template === "hero-stack") {
+    // 5×4 + 4× 3×2 — all direct children of the grid
+    const slotA = query.slots.find(s => s.id === "a");
+    const slotB = query.slots.find(s => s.id === "b");
+    const slotC = query.slots.find(s => s.id === "c");
+    const slotD = query.slots.find(s => s.id === "d");
+    const slotE = query.slots.find(s => s.id === "e");
+    html += renderSlot(slotA, "slot-a", seg.intentions);
+    html += renderSlot(slotB, "slot-b", seg.intentions, true);
+    html += renderSlot(slotC, "slot-c", seg.intentions, true);
+    html += renderSlot(slotD, "slot-d", seg.intentions, true);
+    html += renderSlot(slotE, "slot-e", seg.intentions, true);
+  } else if (query.template === "dashboard-mix") {
+    // 4×4 + 2×4 + 3×2 + 2×2 + 5×2
+    const slotA = query.slots.find(s => s.id === "a");
+    const slotB = query.slots.find(s => s.id === "b");
+    const slotC = query.slots.find(s => s.id === "c");
+    const slotD = query.slots.find(s => s.id === "d");
+    const slotE = query.slots.find(s => s.id === "e");
+    html += renderSlot(slotA, "slot-a", seg.intentions);
+    html += renderSlot(slotB, "slot-b", seg.intentions, true);
+    html += renderSlot(slotC, "slot-c", seg.intentions, true);
+    html += renderSlot(slotD, "slot-d", seg.intentions, true);
+    html += renderSlot(slotE, "slot-e", seg.intentions, true);
+  } else if (query.template === "hero-wide") {
+    // 6×4 + 2×2 + 3×2 + 5×2
+    const slotA = query.slots.find(s => s.id === "a");
+    const slotB = query.slots.find(s => s.id === "b");
+    const slotC = query.slots.find(s => s.id === "c");
+    const slotD = query.slots.find(s => s.id === "d");
+    html += renderSlot(slotA, "slot-a", seg.intentions);
+    html += renderSlot(slotB, "slot-b", seg.intentions, true);
+    html += renderSlot(slotC, "slot-c", seg.intentions, true);
+    html += renderSlot(slotD, "slot-d", seg.intentions, true);
+  } else if (query.template === "hero-map") {
+    // 5×4 + 3×4 + 3×2 + 3×2 / 8×2 + 3×2
+    const slotA = query.slots.find(s => s.id === "a");
+    const slotB = query.slots.find(s => s.id === "b");
+    const slotC = query.slots.find(s => s.id === "c");
+    const slotD = query.slots.find(s => s.id === "d");
+    const slotE = query.slots.find(s => s.id === "e");
+    const slotF = query.slots.find(s => s.id === "f");
+    html += renderSlot(slotA, "slot-a", seg.intentions);
+    html += renderSlot(slotB, "slot-b", seg.intentions, true);
+    html += renderSlot(slotC, "slot-c", seg.intentions, true);
+    html += renderSlot(slotD, "slot-d", seg.intentions, true);
+    html += renderSlot(slotE, "slot-e", seg.intentions);
+    html += renderSlot(slotF, "slot-f", seg.intentions);
+  }
+
+  html += '</div><div class="badge-overlay" id="badgeOverlay"></div>';
+
+  // Pole Slide (Tabs + Carousel) — inside scaler, below magazine grid
+  if (query.carousel) {
+    const carousel = query.carousel;
+    const activeTabIdx = carousel.activeTab || 0;
+    html += `<div class="pole-slide" id="poleSlide">
+      <div class="pole-slide__tabs" id="poleSlideTabs">`;
+    carousel.tabs.forEach((tab, i) => {
+      html += `<button class="pole-slide__tab${i === activeTabIdx ? ' pole-slide__tab--active' : ''}" data-tab="${tab}" onclick="switchCarouselTab('${tab}')">${tab}</button>`;
+    });
+    html += `</div>
+      <div class="pole-slide__container">
+        <div class="pole-slide__track" id="poleSlideTrack">`;
+    const activeItems = carousel.items[carousel.tabs[activeTabIdx]] || [];
+    activeItems.forEach(item => {
+      html += `<div class="pole-slide__card">
+        <div class="pole-slide__card-body">
+          <div class="pole-slide__card-title">${item.title}</div>
+          <div class="pole-slide__card-source">
+            <div class="pole-slide__card-favicon"><img src="${item.favicon}" alt=""></div>
+            <span class="pole-slide__card-url">${item.url}</span>
+          </div>
+        </div>
+        ${item.image ? `<div class="pole-slide__card-img"><img src="${item.image}" alt="${item.title}"></div>` : ''}
+      </div>`;
+    });
+    html += `</div>
+        <div class="pole-slide__fade"></div>
+        <div class="pole-slide__scroller">
+          <button class="pole-slide__scroller-btn" onclick="scrollCarousel()" aria-label="Scroll right">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Close magazine-scaler + magazine-wrapper + magazine-section
+  html += '</div></div></div>';
+
+  content.innerHTML = html;
+  scaleMagazine();
+  renderBadgeOverlay(seg);
+}
+
+function renderSlot(slot, className, intentions, padded) {
+  if (!slot) return '';
+  const noPadTypes = ["hero-composite","image-card","image-site-card","professor-photo","nav-anchor","answer-bar","map"];
+  const isPadded = noPadTypes.includes(slot.type) ? false : (padded || ["overview","subdivided","list","result","service","nav-anchor","news"].includes(slot.type));
+  const paddedClass = isPadded ? "card--padded" : "";
+
+  return `
+    <div class="${className} card ${paddedClass} card--full slot-wrapper" data-serves="${slot.servesIntentions.join(",")}" data-slot-id="${slot.id}">
+      ${slot.html}
+    </div>`;
+}
+
+// ============================================================
+// RENDER: Badge Overlay (positioned outside cards to avoid overflow clipping)
+// ============================================================
+function renderBadgeOverlay(seg) {
+  const overlay = document.getElementById('badgeOverlay');
+  if (!overlay) return;
+  const scaler = document.getElementById('magazineScaler');
+  if (!scaler) return;
+
+  // Match overlay scale to magazine scale
+  const scale = scaler.style.transform ? parseFloat(scaler.style.transform.match(/scale\(([^)]+)\)/)?.[1] || 1) : 1;
+  overlay.style.transform = `scale(${scale})`;
+
+  const query = seg.queries[0];
+  const hiddenClass = state.showBadges ? '' : 'card-intent-badge--hidden';
+  let badgeHtml = '';
+
+  query.slots.forEach(slot => {
+    // Find the slot element position relative to the grid
+    const slotEl = scaler.querySelector(`[data-slot-id="${slot.id}"]`);
+    if (!slotEl) return;
+    const slotRect = slotEl.getBoundingClientRect();
+    const scalerRect = scaler.getBoundingClientRect();
+    // Calculate position in unscaled coordinates
+    const top = (slotRect.top - scalerRect.top) / scale + 8;
+    const right = (scalerRect.right - slotRect.right) / scale + 8;
+
+    const badges = slot.servesIntentions.map(rank => {
+      const intent = seg.intentions.find(i => i.rank === rank);
+      const isPrimary = intent && intent.isPrimary;
+      const tooltipText = intent ? intent.label : '';
+      return `<span class="card-intent-badge__item${isPrimary ? ' card-intent-badge__item--primary' : ''}">
+        #${rank}
+        <span class="badge-tooltip">${tooltipText}</span>
+      </span>`;
+    }).join('');
+
+    badgeHtml += `<div class="card-intent-badge ${hiddenClass}" style="top:${top}px;right:${right}px;">${badges}</div>`;
+  });
+
+  overlay.innerHTML = badgeHtml;
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function selectIntention(rank) {
+  // Toggle: if same rank clicked again, collapse it
+  if (state.selectedIntention === rank) {
+    state.selectedIntention = null;
+    document.querySelectorAll('.intention-list__item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.intention-list__item-detail').forEach(el => el.classList.remove('expanded'));
+    clearIntentionHighlight();
+    return;
+  }
+  state.selectedIntention = rank;
+  // Update list active state
+  document.querySelectorAll('.intention-list__item').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.rank) === rank);
+  });
+  // Collapse all, expand selected
+  document.querySelectorAll('.intention-list__item-detail').forEach(el => {
+    el.classList.toggle('expanded', Number(el.dataset.detailRank) === rank);
+  });
+  // Highlight corresponding cards
+  highlightIntention(rank);
+}
+
+function selectSegment(segmentId) {
+  state.activeSegment = segmentId;
+  state.hoveredIntention = null;
+  state.selectedIntention = 1;
+  renderSegmentTabs();
+  renderIntentionSidebar();
+  renderContent();
+  document.getElementById("content").scrollTop = 0;
+}
+
+function toggleBadges() {
+  state.showBadges = !state.showBadges;
+  document.getElementById("badgeSwitch").className = "badge-toggle__switch" + (state.showBadges ? " on" : "");
+  document.querySelector('.badge-toggle').setAttribute('aria-checked', state.showBadges);
+  document.querySelectorAll('#badgeOverlay .card-intent-badge').forEach(el => {
+    el.classList.toggle('card-intent-badge--hidden', !state.showBadges);
+  });
+}
+
+function switchCarouselTab(tabName) {
+  const seg = SEGMENTS[state.activeSegment];
+  const query = seg.queries[0];
+  if (!query.carousel) return;
+  const carousel = query.carousel;
+  // Update active tab
+  document.querySelectorAll('.pole-slide__tab').forEach(btn => {
+    btn.classList.toggle('pole-slide__tab--active', btn.dataset.tab === tabName);
+  });
+  // Re-render track items
+  const items = carousel.items[tabName] || [];
+  const track = document.getElementById('poleSlideTrack');
+  if (!track) return;
+  track.innerHTML = items.map(item => `<div class="pole-slide__card">
+    <div class="pole-slide__card-body">
+      <div class="pole-slide__card-title">${item.title}</div>
+      <div class="pole-slide__card-source">
+        <div class="pole-slide__card-favicon"><img src="${item.favicon}" alt=""></div>
+        <span class="pole-slide__card-url">${item.url}</span>
+      </div>
+    </div>
+    ${item.image ? `<div class="pole-slide__card-img"><img src="${item.image}" alt="${item.title}"></div>` : ''}
+  </div>`).join('');
+  track.scrollLeft = 0;
+}
+
+function scrollCarousel() {
+  const track = document.getElementById('poleSlideTrack');
+  if (!track) return;
+  track.scrollBy({ left: 328, behavior: 'smooth' });
+}
+
+function highlightIntention(rank) {
+  state.hoveredIntention = rank;
+  document.querySelectorAll('.intention-list__item').forEach(el => {
+    el.classList.toggle('highlighted', Number(el.dataset.rank) === rank);
+  });
+  document.querySelectorAll('.slot-wrapper').forEach(el => {
+    const serves = el.dataset.serves.split(',').map(Number);
+    el.classList.toggle('highlighted', serves.includes(rank));
+  });
+}
+
+function clearIntentionHighlight() {
+  state.hoveredIntention = null;
+  document.querySelectorAll('.intention-list__item').forEach(el => {
+    el.classList.remove('highlighted');
+  });
+  document.querySelectorAll('.slot-wrapper').forEach(el => {
+    el.classList.remove('highlighted');
+  });
+}
+
+// Card hover -> highlight matching intentions in list (no outline on card itself)
+document.addEventListener('mouseenter', (e) => {
+  const slot = e.target.closest('.slot-wrapper');
+  if (!slot) return;
+  const serves = slot.dataset.serves.split(',').map(Number);
+  serves.forEach(rank => {
+    const item = document.querySelector(`.intention-list__item[data-rank="${rank}"]`);
+    if (item) item.classList.add('highlighted');
+  });
+}, true);
+
+document.addEventListener('mouseleave', (e) => {
+  const slot = e.target.closest('.slot-wrapper');
+  if (!slot) return;
+  if (state.hoveredIntention) return;
+  document.querySelectorAll('.intention-list__item').forEach(el => {
+    el.classList.remove('highlighted');
+  });
+}, true);
+
+// ============================================================
+// INIT
+// ============================================================
+renderSegmentTabs();
+renderIntentionSidebar();
+renderContent();
+
+// Scale magazine to fit container width
+function scaleMagazine() {
+  const scaler = document.getElementById('magazineScaler');
+  if (!scaler) return;
+  const wrapper = scaler.parentElement;
+  const available = wrapper.clientWidth;
+  const scale = Math.min(1, available / 1208);
+  scaler.style.transform = `scale(${scale})`;
+  scaler.style.transformOrigin = 'top left';
+  // Measure natural content height (magazine grid + optional pole-slide)
+  scaler.style.height = 'auto';
+  const naturalHeight = scaler.scrollHeight;
+  scaler.style.height = (naturalHeight * scale) + 'px';
+  // Sync badge overlay scale
+  const overlay = document.getElementById('badgeOverlay');
+  if (overlay) {
+    overlay.style.transform = `scale(${scale})`;
+  }
+}
+window.addEventListener('resize', () => {
+  scaleMagazine();
+  const seg = SEGMENTS[state.activeSegment];
+  renderBadgeOverlay(seg);
+});
+
+// Image error fallback — show a neutral placeholder
+document.addEventListener('error', (e) => {
+  if (e.target.tagName === 'IMG') {
+    e.target.style.display = 'none';
+    const parent = e.target.parentElement;
+    if (parent && !parent.querySelector('.img-fallback')) {
+      const fallback = document.createElement('div');
+      fallback.className = 'img-fallback';
+      fallback.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bing-smtc-background-ctrl-neutral-rest,#efeae7);color:rgba(0,0,0,0.3);font-size:13px;';
+      fallback.textContent = 'Image unavailable';
+      parent.appendChild(fallback);
+    }
+  }
+}, true);
+
+// Initial pulse to show the connection between intention #1 and its cards
+setTimeout(() => {
+  highlightIntention(1);
+  document.querySelectorAll('.slot-wrapper.highlighted').forEach(el => el.classList.add('pulse'));
+  setTimeout(() => {
+    clearIntentionHighlight();
+    document.querySelectorAll('.slot-wrapper.pulse').forEach(el => el.classList.remove('pulse'));
+  }, 1000);
+}, 400);
+</script>
+
+</body>
+</html>
