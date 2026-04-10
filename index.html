@@ -344,6 +344,7 @@
     .magazine-scaler {
       display: inline-block;
       position: relative;
+      flex-shrink: 0;
     }
 
     /* --- Template 3: Hero Left (5×4 + 3×4 + 3×2 + 3×2 = 44u) --- */
@@ -438,7 +439,7 @@
       grid-template-columns: 536px 312px 312px;
       grid-template-rows: 200px 200px 200px;
       gap: var(--smtc-gap-between-content-x-large, 24px);
-      width: 1208px; height: 648px;
+      width: 1208px; height: auto;
       transform-origin: top left;
     }
     .magazine-grid--hero-map .slot-a { grid-column: 1; grid-row: 1 / 3; height: 424px; }
@@ -446,7 +447,10 @@
     .magazine-grid--hero-map .slot-c { grid-column: 3; grid-row: 1; }
     .magazine-grid--hero-map .slot-d { grid-column: 3; grid-row: 2; }
     .magazine-grid--hero-map .slot-e { grid-column: 1 / 3; grid-row: 3; }
+    .magazine-grid--hero-map .slot-e:last-child { grid-column: 1 / 4; }
     .magazine-grid--hero-map .slot-f { grid-column: 3; grid-row: 3; }
+    /* floorplan carousel slot: auto-height row */
+    .magazine-grid--hero-map:has(.floorplan-carousel) { grid-template-rows: 200px 200px auto; }
 
     /* ===== Answer Bar Card (bottom-row wide card) ===== */
     .answer-bar {
@@ -614,12 +618,258 @@
     /* Tighter padding for small cards in hero-wide template */
     .magazine-grid--hero-wide .slot-b .card--padded { padding: 12px 16px; }
     .card--full { width: 100%; height: 100%; }
+    /* Subdivided card IS the card — transparent shell so cell gaps show page bg */
+    .card:has(.subdivided-card) { background: transparent; }
     /* Answer-bar and map slots manage their own background/radius */
     .magazine-grid--hero-map .slot-e.card,
     .magazine-grid--hero-map .slot-f.card { background: transparent; padding: 0; }
 
     /* ===== Hero Composite Card ===== */
     .hero-composite { display: flex; flex-direction: column; height: 100%; }
+
+    /* ===== Nav Deeplinks Card (5×4, algo-style with sitelinks) ===== */
+    .nav-deeplinks {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
+      height: 100%; padding: var(--mai-smtc-padding-card-default, 20px); box-sizing: border-box;
+    }
+    .nav-deeplinks__attribution {
+      display: flex; gap: var(--smtc-gap-between-content-small, 12px); align-items: center;
+    }
+    .nav-deeplinks__favicon-frame {
+      width: 42px; height: 42px; border-radius: 150px; flex-shrink: 0;
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #f5f5f5);
+      border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1));
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .nav-deeplinks__favicon-frame img {
+      width: 27px; height: 27px; border-radius: var(--smtc-corner-ctrl-sm-rest, 4px); object-fit: cover;
+    }
+    .nav-deeplinks__attr-text {
+      display: flex; flex-direction: column; flex: 1 0 0; min-width: 1px;
+    }
+    .nav-deeplinks__site-name {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .nav-deeplinks__site-url {
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .nav-deeplinks__title {
+      font-size: var(--text-global-title2-fontsize, 24px); line-height: var(--text-global-title2-lineheight, 32px);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      text-decoration: none; cursor: pointer;
+    }
+    .nav-deeplinks__title:hover { text-decoration: underline; }
+    .nav-deeplinks__snippet {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .nav-deeplinks__links {
+      display: flex; flex-direction: column; flex: 1 0 0; min-height: 1px;
+    }
+    .nav-deeplinks__link {
+      display: flex; gap: var(--smtc-gap-between-content-xx-small, 4px); align-items: center;
+      flex: 1 0 0; min-height: 1px;
+      padding: 0 var(--smtc-padding-ctrl-lg-horizontal-default, 16px);
+      border-radius: var(--mai-smtc-corner-list-card-default, 8px);
+      cursor: pointer; text-decoration: none;
+    }
+    .nav-deeplinks__link:hover {
+      background: var(--bing-smtc-background-ctrl-subtle-hover, rgba(0,0,0,0.04));
+    }
+    .nav-deeplinks__link-text {
+      display: flex; flex-direction: column; flex: 1 0 0; min-width: 1px; white-space: nowrap; overflow: hidden;
+    }
+    .nav-deeplinks__link-title {
+      font-size: 16px; line-height: 26px;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .nav-deeplinks__link-snippet {
+      font-size: var(--text-global-body3-fontsize, 13px); line-height: var(--text-global-body3-lineheight, 20px);
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .nav-deeplinks__link-chevron {
+      width: 28px; height: 28px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
+    }
+
+    /* ===== Portfolio Card (3×4, full-bleed image carousel with overlay) ===== */
+    .portfolio-card {
+      position: relative; width: 100%; height: 100%; overflow: hidden;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+    }
+    .portfolio-card__image {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      transition: opacity 0.4s ease;
+    }
+    .portfolio-card__image--hidden { opacity: 0; }
+    .portfolio-card__image--active { opacity: 1; }
+    .portfolio-card__badge {
+      position: absolute; z-index: 2;
+      background: var(--mai-smtc-background-ctrl-on-image-rest, black);
+      color: var(--mai-smtc-foreground-ctrl-on-image-rest, white);
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      padding: var(--smtc-ctrl-badge-sm-text-padding-top, 2px) var(--smtc-ctrl-badge-padding, 8px) var(--smtc-ctrl-badge-sm-text-padding-bottom, 2px);
+      border-radius: var(--smtc-ctrl-badge-corner, 8px);
+      white-space: nowrap;
+    }
+    .portfolio-card__badge--top { top: 16px; left: 16px; }
+    .portfolio-card__badge--category { top: 12px; left: 12px; }
+    .portfolio-card__overlay {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 1;
+      padding: var(--mai-smtc-padding-card-default, 20px);
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px);
+      align-items: center;
+      background: radial-gradient(ellipse at bottom left, rgba(0,0,0,0.8) 10.8%, transparent 100%);
+    }
+    .portfolio-card__text-body {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-xxx-small, 2px);
+      width: 100%;
+    }
+    .portfolio-card__title {
+      font-size: 18px; line-height: var(--text-global-body1-lineheight, 28px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      color: white; overflow: hidden; text-overflow: ellipsis;
+    }
+    .portfolio-card__fact {
+      display: flex; gap: 4px; align-items: flex-start;
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      color: rgba(255,255,255,0.8); overflow: clip;
+    }
+    .portfolio-card__fact-label { white-space: nowrap; flex-shrink: 0; }
+    .portfolio-card__fact-value { flex: 1 0 0; min-width: 1px; }
+    .portfolio-card__pagination {
+      display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); align-items: center; height: 12px;
+    }
+    .portfolio-card__page-btn {
+      width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+      background: var(--mai-smtc-background-ctrl-on-image-rest, rgba(0,0,0,0.5));
+      border: none; border-radius: var(--smtc-corner-circular, 9999px); cursor: pointer;
+      color: white;
+    }
+    .portfolio-card__page-btn:hover { background: rgba(0,0,0,0.7); }
+    .portfolio-card__page-num {
+      background: var(--mai-smtc-background-ctrl-on-image-rest, black);
+      border-radius: var(--smtc-corner-ctrl-sm-rest, 4px);
+      padding: 0 var(--smtc-padding-ctrl-sm-horizontal-default, 8px);
+      height: 24px; display: flex; align-items: center; gap: var(--smtc-gap-between-content-xxx-small, 2px);
+      font-size: var(--text-global-caption2-fontsize, 11px); line-height: var(--text-global-caption2-lineheight, 13px);
+      color: white; white-space: nowrap;
+    }
+
+    /* ===== Local Overview Card (11×2 / 8×2, entity card with actions) ===== */
+    .local-overview {
+      display: flex; gap: var(--smtc-gap-between-content-x-large, 24px); align-items: flex-start;
+      padding: var(--mai-smtc-padding-card-default, 20px); height: 100%; box-sizing: border-box;
+      border: 1px solid var(--bing-smtc-stroke-ctrl-default, rgba(0,0,0,0.1));
+      border-radius: var(--mai-smtc-corner-card-default, 24px); overflow: hidden;
+    }
+    .local-overview__image {
+      width: 160px; height: 100%; border-radius: var(--mai-smtc-corner-card-default, 24px);
+      overflow: hidden; flex-shrink: 0; position: relative;
+    }
+    .local-overview__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .local-overview__image-btn {
+      position: absolute; bottom: 12px; right: 12px;
+      background: var(--mai-smtc-background-ctrl-on-image-rest, black);
+      border: 1px solid rgba(0,0,0,0.1); border-radius: var(--smtc-corner-circular, 9999px);
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      color: white; cursor: pointer;
+    }
+    .local-overview__info {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
+      flex: 1 0 0; min-width: 1px; height: 100%;
+    }
+    .local-overview__header {
+      display: flex; gap: var(--smtc-gap-between-content-small, 12px); align-items: flex-start;
+    }
+    .local-overview__header-main { display: flex; flex-direction: column; flex: 1 0 0; min-width: 1px; }
+    .local-overview__title-row {
+      display: flex; flex-wrap: wrap; gap: var(--smtc-gap-between-content-xx-small, 4px); align-items: center;
+    }
+    .local-overview__title {
+      font-size: var(--text-global-subtitle1-fontsize, 20px); line-height: var(--text-global-subtitle1-lineheight, 26px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      text-decoration: none; cursor: pointer;
+    }
+    .local-overview__title:hover { text-decoration: underline; }
+    .local-overview__verified {
+      width: 20px; height: 20px; color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+    }
+    .local-overview__url {
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      text-decoration: none;
+    }
+    .local-overview__menu {
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
+    }
+    .local-overview__metadata {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-xx-small, 4px); flex: 1;
+    }
+    .local-overview__rating {
+      display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); align-items: center;
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+    }
+    .local-overview__rating-icon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 999px; overflow: hidden; }
+    .local-overview__rating-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .local-overview__rating-score {
+      display: flex; gap: 3px; font-weight: var(--text-style-default-header-weight, 700);
+      color: var(--smtc-foreground-content-neutral-secondary, rgba(0,0,0,0.8));
+    }
+    .local-overview__rating-link {
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4); cursor: pointer;
+    }
+    .local-overview__rating-link:hover { text-decoration: underline; }
+    .local-overview__category {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      color: var(--smtc-foreground-content-neutral-secondary, rgba(0,0,0,0.8));
+    }
+    .local-overview__meta-row {
+      display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); align-items: flex-start;
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+    }
+    .local-overview__meta-icon {
+      width: 16px; height: 16px; flex-shrink: 0; padding-top: 3px;
+      color: var(--smtc-foreground-content-neutral-secondary, rgba(0,0,0,0.8));
+    }
+    .local-overview__meta-link {
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4); cursor: pointer;
+    }
+    .local-overview__meta-link:hover { text-decoration: underline; }
+    .local-overview__meta-status-open { font-weight: 700; color: var(--smtc-status-success-tint-foreground, #0d7a22); }
+    .local-overview__meta-status-closed { font-weight: 700; color: var(--smtc-status-danger-tint-foreground, #c80000); }
+    .local-overview__actions {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-small, 12px);
+      justify-content: center; flex-shrink: 0;
+    }
+    .local-overview__action-btn {
+      display: flex; gap: var(--smtc-gap-inside-ctrl-to-secondary-icon, 4px); align-items: center; justify-content: center;
+      height: 36px; width: 120px;
+      padding: var(--smtc-padding-ctrl-text-top, 8px) var(--smtc-padding-ctrl-horizontal-default, 12px) var(--smtc-padding-ctrl-text-bottom, 8px);
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      border-radius: var(--smtc-corner-ctrl-rest, 8px); border: none;
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      color: var(--bing-smtc-foreground-ctrl-neutral-primary-alt-rest, #3c51b4);
+      cursor: pointer; text-decoration: none; box-sizing: border-box;
+    }
+    .local-overview__action-btn:hover { background: var(--bing-smtc-background-ctrl-neutral-hover, #e8e3df); }
+    .local-overview__action-icon {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--bing-smtc-foreground-ctrl-neutral-primary-alt-rest, #3c51b4);
+    }
 
     /* ===== Nav Anchor Card (Cocaurus review style) ===== */
     .nav-anchor { display: flex; flex-direction: column; justify-content: space-between; height: 100%; background: white; border-radius: var(--mai-smtc-corner-card-default, 24px); border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1)); padding: 20px; }
@@ -721,6 +971,91 @@
     /* Nav anchor card controls its own background — make card shell transparent */
     .card:has(.nav-anchor) { background: transparent; }
 
+    /* ===== Nav Anchor — Immersive Dark Variant ===== */
+    .nav-anchor--immersive {
+      position: relative; padding: 0; border: none; background: black;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      overflow: hidden;
+    }
+    .nav-anchor--immersive .nav-anchor__bg {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .nav-anchor--immersive .nav-anchor__bg img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .nav-anchor--immersive .nav-anchor__bg-blur {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, transparent 65%);
+      mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, transparent 65%);
+    }
+    .nav-anchor--immersive .nav-anchor__bg-gradient {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 100%;
+      background: linear-gradient(to bottom, transparent 30%, black 63%);
+    }
+    .nav-anchor--immersive .nav-anchor__info {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 20px; padding-top: 0;
+      margin-top: auto;
+    }
+    .nav-anchor--immersive .nav-anchor__brand-row {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-anchor--immersive .nav-anchor__brand-icon {
+      width: 54px; height: 54px; border-radius: var(--mai-smtc-corner-ctrl-xlg-rest, 16px);
+      background: white; overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-anchor--immersive .nav-anchor__brand-icon img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .nav-anchor--immersive .nav-anchor__brand-text {
+      display: flex; flex-direction: column; min-width: 0;
+    }
+    .nav-anchor--immersive .nav-anchor__brand-name {
+      font-size: var(--text-global-title1-fontsize, 36px);
+      line-height: var(--text-global-title1-lineheight, 48px);
+      font-weight: 700; color: white;
+    }
+    .nav-anchor--immersive .nav-anchor__brand-url {
+      font-size: 13px; line-height: var(--text-global-caption1-lineheight, 20px);
+      color: rgba(255,255,255,0.6);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .nav-anchor--immersive .nav-anchor__desc {
+      color: white; -webkit-line-clamp: 3;
+    }
+    .nav-anchor--immersive .nav-anchor__ai-label {
+      font-size: 11px; line-height: 13px; color: rgba(255,255,255,0.6);
+    }
+    .nav-anchor--immersive .nav-anchor__pills {
+      display: flex; gap: 8px; flex-wrap: wrap; overflow: hidden;
+    }
+    .nav-anchor--immersive .nav-anchor__pill {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 12px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 13px; line-height: 20px; font-weight: 700;
+      color: white; cursor: pointer; text-decoration: none; white-space: nowrap;
+    }
+    .nav-anchor--immersive .nav-anchor__pill:hover {
+      background: rgba(255,255,255,0.12);
+    }
+    .nav-anchor--immersive .nav-anchor__pill .bing-icon { fill: white; }
+    .nav-anchor--immersive .nav-anchor__cta {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 8px 12px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      background: var(--smtc-background-ctrl-active-brand-rest, #4f6bed);
+      font-size: 13px; line-height: 20px; font-weight: 700;
+      color: white; cursor: pointer; text-decoration: none;
+      border: none; white-space: nowrap; align-self: flex-start;
+    }
+    .nav-anchor--immersive .nav-anchor__cta:hover {
+      background: var(--smtc-background-ctrl-active-brand-hover, #3d5bd9);
+    }
+
     .hero-composite__image { flex: 1; min-height: 0; overflow: hidden; position: relative; }
     .hero-composite__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .hero-composite__body {
@@ -786,37 +1121,45 @@
     }
 
     /* ===== News Article Card (bento 3×2 style: header + body + continue reading + source) ===== */
-    .news-card { display: flex; flex-direction: column; gap: 8px; height: 100%; }
-    .news-card__header {
-      font-size: 14px; line-height: 22px; font-weight: 700;
-      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    .news-card {
+      display: flex; flex-direction: row; gap: 0; height: 100%;
+      overflow: hidden; border-radius: var(--mai-smtc-corner-card-default, 24px);
     }
-    .news-card__body {
-      font-size: 14px; line-height: 22px; font-weight: 400;
-      color: var(--smtc-foreground-content-neutral-secondary, rgba(0,0,0,0.8));
-      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    .news-card__content {
+      flex: 1; display: flex; flex-direction: column; gap: 8px;
+      padding: var(--mai-smtc-padding-card-default, 20px);
+      min-width: 0;
     }
-    .news-card__continue {
-      display: flex; align-items: center; gap: 4px;
-      font-size: 13px; line-height: 20px; font-weight: 400;
-      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
-      cursor: pointer; text-decoration: none;
-    }
-    .news-card__continue:hover { text-decoration: underline; }
-    .news-card__continue-arrow { font-size: 12px; }
     .news-card__source {
-      display: flex; align-items: center; gap: 4px; margin-top: auto;
+      display: flex; align-items: center; gap: 4px;
       font-size: 11px; line-height: 13px;
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .news-card__source-favicon {
       width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0;
       background: var(--bing-smtc-background-ctrl-neutral-rest, rgba(0,0,0,0.1));
       border: 1px solid rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .news-card__source-favicon img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
     }
     .news-card__source-dot {
       width: 3px; height: 3px; border-radius: 50%;
       background: currentColor; opacity: 0.6;
+    }
+    .news-card__title {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-card__image {
+      width: 50%; flex-shrink: 0; overflow: hidden;
+    }
+    .news-card__image img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
     }
 
     /* ===== Image Card ===== */
@@ -995,6 +1338,232 @@
       width: 4px; height: 4px; border-radius: 50%;
       background: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
     }
+    /* Quick Actions section inside overview card */
+    .overview-card__actions-label {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      padding-top: 4px;
+    }
+    .overview-card__actions {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .overview-card__action-link {
+      font-size: 14px; line-height: 22px;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      text-decoration: none; cursor: pointer;
+    }
+    .overview-card__action-link:hover {
+      text-decoration: underline;
+    }
+    .overview-card__show-more {
+      font-size: 13px; line-height: 20px; font-weight: 700;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      display: flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+
+    /* ===== Details Card (Overview variant) ===== */
+    .details-card {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-small, 12px);
+      height: 100%;
+      padding: var(--mai-smtc-padding-card-default, 20px);
+      box-sizing: border-box;
+    }
+    .details-card__header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .details-card__header-title {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .details-card__header-more {
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+    }
+    .details-card__body {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px);
+      flex: 1 0 0; min-height: 1px;
+    }
+    .details-card__facts {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
+    }
+    .details-card__fact {
+      display: flex; gap: var(--smtc-gap-between-content-xx-small, 4px); align-items: flex-start;
+    }
+    .details-card__fact-icon {
+      width: 20px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      padding: var(--smtc-gap-between-content-xxx-small, 2px);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+    }
+    .details-card__fact-text {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      font-weight: var(--text-style-default-regular-weight, 400);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
+      cursor: pointer; flex: 1;
+    }
+    .details-card__fact-text:hover { text-decoration: underline; }
+    .details-card__amenities-title {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .details-card__amenities {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
+    }
+    .details-card__amenities-grid {
+      display: flex; gap: var(--smtc-gap-between-content-small, 12px);
+    }
+    .details-card__amenities-col {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
+      flex: 1 0 0; min-width: 1px;
+    }
+    .details-card__amenity {
+      display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); align-items: flex-start;
+    }
+    .details-card__amenity-icon {
+      width: 16px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+    }
+    .details-card__amenity-text {
+      font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
+      font-weight: var(--text-style-default-regular-weight, 400);
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+    }
+    .details-card__more {
+      display: flex; align-items: center; gap: var(--smtc-gap-inside-ctrl-to-secondary-icon, 4px); cursor: pointer;
+    }
+    .details-card__more-text {
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #202020);
+    }
+    .details-card__more-arrow {
+      width: 12px; height: 12px; display: flex; align-items: center; justify-content: center;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #202020);
+    }
+    .details-card__buttons {
+      display: flex; gap: var(--smtc-gap-between-content-small, 12px);
+      margin-top: auto;
+    }
+    .details-card__btn {
+      flex: 1 0 0; min-width: 1px; display: flex; align-items: center; justify-content: center;
+      padding: var(--smtc-padding-ctrl-text-top, 8px) var(--smtc-padding-ctrl-horizontal-default, 12px) var(--smtc-padding-ctrl-text-bottom, 8px);
+      background: var(--bing-smtc-background-ctrl-brand-rest, #322d29);
+      color: var(--smtc-foreground-ctrl-on-brand-rest, white);
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      font-weight: var(--text-style-default-header-weight, 700);
+      border-radius: var(--smtc-corner-ctrl-rest, 12px);
+      border: none; cursor: pointer; text-decoration: none;
+    }
+    .details-card__btn:hover {
+      background: var(--bing-smtc-background-ctrl-brand-hover, #4a4340);
+    }
+
+    /* ===== Map-Details Card (map + amenities variant) ===== */
+    .map-details-card {
+      display: flex; flex-direction: column; height: 100%; overflow: hidden;
+    }
+    .map-details-card__map {
+      width: 100%; height: 47%; flex-shrink: 0; overflow: hidden; position: relative;
+      border-radius: var(--mai-smtc-corner-card-default, 24px) var(--mai-smtc-corner-card-default, 24px) 0 0;
+    }
+    .map-details-card__map img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .map-details-card__body {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px);
+      flex: 1; padding: var(--mai-smtc-padding-card-default, 20px);
+    }
+
+    /* ===== Location/Contact Card ===== */
+    .location-card {
+      display: flex; flex-direction: column; height: 100%; overflow: hidden;
+    }
+    .location-card__map {
+      width: 100%; height: 45%; flex-shrink: 0; overflow: hidden; position: relative;
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+    }
+    .location-card__map img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .location-card__map-badge {
+      position: absolute; top: 12px; left: 12px;
+      font-size: 13px; line-height: 20px;
+      padding: 2px 8px; border-radius: 8px;
+      background: var(--smtc-status-informative-tint-background, #f5f5f5);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .location-card__body {
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+      padding: 16px 20px 20px;
+    }
+    .location-card__header {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .location-card__title {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .location-card__details {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .location-card__detail {
+      display: flex; align-items: flex-start; gap: 4px;
+      font-size: 14px; line-height: 22px;
+    }
+    .location-card__detail-icon {
+      width: 20px; height: 22px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.5));
+    }
+    .location-card__detail-icon svg { width: 16px; height: 16px; }
+    .location-card__detail-text {
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #4007a2);
+    }
+    .location-card__cta {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 8px 12px;
+      border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      background: var(--bing-smtc-background-ctrl-brand-rest, #4f6bed);
+      color: var(--smtc-foreground-ctrl-on-brand-rest, #fffbf8);
+      font-size: 13px; line-height: 20px; font-weight: 700;
+      border: none; cursor: pointer; text-decoration: none;
+      width: fit-content;
+    }
+    .location-card__cta svg { width: 16px; height: 16px; }
+    .location-card__amenities {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
+    }
+    .location-card__amenity {
+      display: flex;
+      align-items: center;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
+      font-size: 14px;
+      line-height: 22px;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
+    }
+    .location-card__amenity-icon {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.5));
+    }
+    .location-card__more {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 700;
+      color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #202020);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .location-card__buttons {
+      display: flex;
+      gap: var(--smtc-gap-between-content-small, 12px);
+      margin-top: auto;
+    }
 
     /* ===== List Card ===== */
     .list-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); height: 100%; }
@@ -1036,29 +1605,55 @@
     }
 
     /* ===== Subdivided Card ===== */
-    .subdivided-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-xx-small, 4px); height: 100%; }
+    .subdivided-card {
+      display: flex; flex-direction: column;
+      gap: var(--smtc-gap-between-content-xx-small, 4px);
+      align-items: flex-start; overflow: hidden;
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      width: 100%; height: 100%;
+    }
     .subdivided-card__header {
       font-size: 14px; line-height: 22px; font-weight: 700;
       color: var(--smtc-foreground-content-neutral-primary, #272320);
-      margin-bottom: 4px;
+      padding: 12px 16px 0; flex-shrink: 0;
     }
-    .subdivided-card__grid { display: grid; gap: var(--smtc-gap-between-content-xx-small, 4px); flex: 1; }
-    .subdivided-card__grid--2x2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .subdivided-card__row {
+      display: flex; flex: 1 0 0;
+      gap: var(--smtc-gap-between-content-xx-small, 4px);
+      align-items: center; width: 100%;
+      min-height: 1px; min-width: 1px;
+    }
     .subdivided-card__cell {
-      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
-      border-radius: var(--mai-smtc-corner-list-card-nested-default, 8px);
-      padding: 12px 16px; display: flex; flex-direction: column; gap: 2px;
-      justify-content: center;
+      display: flex; flex: 1 0 0; flex-direction: column;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
+      align-items: flex-start; height: 100%;
+      position: relative; min-height: 1px; min-width: 1px;
+      padding: var(--smtc-padding-ctrl-lg-text-top, 12px) var(--smtc-padding-ctrl-lg-horizontal-default, 16px) var(--smtc-padding-ctrl-lg-text-bottom, 12px);
     }
-    /* Tighter cells in small 2×2 slots (200px height cards) */
-    .magazine-grid--hero-wide .slot-b .subdivided-card__cell { padding: 8px 12px; }
+    .subdivided-card__cell-bg {
+      position: absolute; inset: 0;
+      background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
+      overflow: hidden;
+    }
+    .subdivided-card__cell:hover .subdivided-card__cell-bg {
+      background: var(--bing-smtc-background-card-on-primary-alt-hover, #efeae7);
+    }
+    .subdivided-card__cell-content {
+      display: flex; flex-direction: column; justify-content: space-between;
+      flex: 1 0 0; width: 100%; position: relative; z-index: 1;
+    }
+    /* Tighter cells in small 3×2 slots (200px height cards) */
+    .magazine-grid--hero-wide .slot-c .subdivided-card__cell,
+    .magazine-grid--hero-wide .slot-d .subdivided-card__cell {
+      padding: var(--smtc-padding-ctrl-sm-text-top, 8px) var(--smtc-padding-ctrl-sm-horizontal-default, 12px) var(--smtc-padding-ctrl-sm-text-bottom, 8px);
+    }
     .subdivided-card__cell-label {
-      font-size: 11px; line-height: 14px;
-      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      font-size: 14px; line-height: var(--text-global-body3-lineheight, 22px); font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .subdivided-card__cell-value {
-      font-size: 14px; line-height: 20px; font-weight: 600;
-      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      font-size: 13px; line-height: var(--text-global-caption1-lineheight, 20px); font-weight: 400;
+      color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
@@ -1139,91 +1734,50 @@
       scrollbar-width: none;
       padding-bottom: 4px;
       width: 1208px;
-      height: 114px;
     }
     .pole-slide__track::-webkit-scrollbar { display: none; }
 
     .pole-slide__card {
       display: flex;
-      gap: var(--smtc-gap-between-content-medium, 16px);
-      align-items: flex-start;
-      padding: 20px;
-      border: 1px solid var(--bing-smtc-stroke-ctrl-default, rgba(0,0,0,0.1));
-      border-radius: var(--mai-smtc-corner-card-default, 24px);
-      width: 312px;
-      height: 114px;
-      flex-shrink: 0;
-      overflow: hidden;
-      cursor: pointer;
-      transition: box-shadow 0.15s ease;
-      background: transparent;
-    }
-    .pole-slide__card:hover {
-      box-shadow: var(--smtc-shadow-card-hover, 0 2px 8px rgba(0,0,0,0.1));
-    }
-    .pole-slide__card-body {
-      display: flex;
       flex-direction: column;
-      gap: 6px;
-      flex: 1;
-      min-width: 0;
-      height: 100%;
+      gap: 8px;
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .pole-slide__card-img-wrap {
+      flex: 1; min-height: 0; width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 12px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .pole-slide__card-img-wrap img {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .pole-slide__card-meta {
+      display: flex; flex-direction: column;
+      gap: 2px; padding: 0 4px;
     }
     .pole-slide__card-title {
       font-size: 14px;
-      line-height: 22px;
+      line-height: var(--text-global-body3-lineheight, 22px);
       font-weight: 700;
       color: var(--smtc-foreground-content-neutral-primary, black);
       overflow: hidden;
       text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      flex: 1;
-    }
-    .pole-slide__card-source {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .pole-slide__card-favicon {
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    .pole-slide__card-favicon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .pole-slide__card-url {
-      font-size: 13px;
-      line-height: 20px;
-      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      flex: 1;
-      min-width: 0;
     }
-    .pole-slide__card-img {
-      width: auto;
-      height: 100%;
-      aspect-ratio: 1;
-      flex-shrink: 0;
-      border-radius: var(--bing-smtc-corner-flyout-popover-rest, 16px);
-      overflow: hidden;
-      border: 1px solid var(--bing-smtc-background-ctrl-image-placeholder-default, rgba(0,0,0,0.1));
-    }
-    .pole-slide__card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      display: block;
-      transform: scale(1.15);
+    .pole-slide__card-subtitle {
+      font-size: 13px;
+      line-height: var(--text-global-caption1-lineheight, 20px);
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
 
     /* Scroller button */
@@ -1262,13 +1816,441 @@
     }
     .pole-slide__fade {
       position: absolute;
-      right: 18px;
+      right: 0;
       top: 0;
       bottom: 4px;
-      width: 48px;
-      background: linear-gradient(to right, transparent, white);
+      width: 64px;
+      background: linear-gradient(to right, transparent, var(--smtc-background-layer-primary-solid, white));
       pointer-events: none;
       z-index: 1;
+    }
+
+    /* ===== Photo Carousel (11×2, pole-slide attachment card style) ===== */
+    .photo-carousel-wrapper {
+      position: relative;
+      height: 200px;
+    }
+    .photo-carousel {
+      display: flex;
+      gap: var(--bing-smtc-padding-ctrl-xlg-text-top, 16px);
+      align-items: center;
+      height: 200px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .photo-carousel::-webkit-scrollbar { display: none; }
+    .photo-carousel__card {
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
+      cursor: pointer;
+    }
+    .photo-carousel__card-img {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-carousel__card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-carousel__card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.05);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    .photo-carousel__card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 4px;
+    }
+    .photo-carousel__card-title {
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, black);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .photo-carousel__card-subtitle {
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .photo-carousel__fade {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 48px;
+      background: linear-gradient(to right, transparent, var(--smtc-background-card-on-primary-default-rest, white));
+      pointer-events: none;
+      z-index: 1;
+    }
+    .photo-carousel__scroller {
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    .photo-carousel__scroller-btn {
+      width: 36px;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--smtc-ctrl-fab-background-rest, white);
+      border: 1px solid var(--smtc-stroke-ctrl-on-neutral-rest, rgba(0,0,0,0.1));
+      border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 0 0 rgba(0,0,0,0.05);
+      cursor: pointer;
+      padding: 8px;
+    }
+    .photo-carousel__scroller-btn:hover {
+      background: var(--smtc-background-ctrl-subtle-hover, #efeae7);
+    }
+    .photo-carousel__scroller-btn svg {
+      width: 20px;
+      height: 20px;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+
+    /* ===== Video Card (3×2 single video) ===== */
+    .video-card {
+      position: relative; width: 100%; height: 100%; overflow: hidden;
+      border-radius: var(--smtc-corner-ctrl-rest, 16px);
+    }
+    .video-card__thumb {
+      position: absolute; inset: 0;
+    }
+    .video-card__thumb img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .video-card__play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 32px; height: 32px; border-radius: 9999px;
+      background: var(--mai-smtc-background-ctrl-on-image-rest, rgba(0,0,0,0.6));
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .video-card__play svg { color: white; }
+    .video-card__badge {
+      position: absolute; top: 8px; left: 8px;
+      background: var(--mai-smtc-background-ctrl-on-image-rest, rgba(0,0,0,0.6));
+      color: white; font-size: 11px; line-height: 13px; font-weight: 700;
+      padding: 2px 4px; border-radius: 4px;
+    }
+    .video-card__overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px 12px 12px;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.85) 43%);
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .video-card__title {
+      font-size: 16px; line-height: 26px; font-weight: 700;
+      color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .video-card__meta {
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+    }
+    .video-card__meta-item {
+      display: flex; align-items: center; gap: 4px; font-size: 11px; line-height: 13px;
+      color: rgba(255,255,255,0.6); white-space: nowrap;
+    }
+    .video-card__meta-item--source { color: white; }
+    .video-card__meta-icon {
+      width: 16px; height: 16px; flex-shrink: 0;
+    }
+    .video-card__meta-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .video-card__meta-dot::after { content: '\00B7'; margin: 0 1px; }
+
+    /* ===== Floor Plan Carousel (mini-source cards) ===== */
+    .floorplan-carousel {
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px);
+      width: 100%; box-sizing: border-box;
+      overflow: hidden;
+    }
+    .floorplan-carousel__title {
+      font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
+      font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .card:has(.floorplan-carousel) {
+      border-radius: 0; background: transparent;
+    }
+    .card:has(.local-overview) {
+      background: transparent; overflow: visible;
+    }
+    .card:has(.photo-carousel-wrapper) {
+      background: transparent;
+      padding: 0;
+      overflow: visible;
+    }
+    .card:has(.portfolio-card) {
+      background: transparent; padding: 0;
+    }
+    .card:has(.nav-deeplinks) {
+      background: var(--smtc-background-card-on-primary-default-rest, white);
+      border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1));
+    }
+    .floorplan-carousel__container {
+      position: relative; overflow: hidden;
+    }
+    .floorplan-carousel__track {
+      display: flex; gap: var(--smtc-gap-between-content-medium, 16px);
+      height: 114px; overflow-x: auto; overflow-y: hidden;
+      scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
+    }
+    .floorplan-carousel__track::-webkit-scrollbar { display: none; }
+    .floorplan-carousel__card {
+      display: flex; gap: var(--smtc-gap-between-content-medium, 16px);
+      width: 312px; height: 114px; flex-shrink: 0;
+      padding: var(--bing-smtc-padding-ctrl-xlg-horizontal-default, 20px);
+      border: 1px solid var(--bing-smtc-stroke-ctrl-default, rgba(0,0,0,0.1));
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      overflow: hidden; cursor: pointer; box-sizing: border-box;
+    }
+    .floorplan-carousel__card:hover {
+      border-color: var(--bing-smtc-stroke-ctrl-default-hover, rgba(0,0,0,0.2));
+      box-shadow: var(--smtc-shadow-card-hover, 0 2px 8px rgba(0,0,0,0.08));
+    }
+    .floorplan-carousel__card-info {
+      display: flex; flex-direction: column; flex: 1; min-width: 0; height: 100%;
+    }
+    .floorplan-carousel__card-lines {
+      display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; white-space: nowrap;
+    }
+    .floorplan-carousel__card-line {
+      font-size: 14px; line-height: 22px; font-weight: 700;
+      color: var(--smtc-foreground-content-neutral-primary, black);
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .floorplan-carousel__card-sub {
+      font-size: 13px; line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .floorplan-carousel__card-source {
+      display: flex; align-items: center; gap: 6px; margin-top: auto;
+    }
+    .floorplan-carousel__card-favicon {
+      width: 16px; height: 16px; border-radius: 3px; overflow: hidden; flex-shrink: 0;
+    }
+    .floorplan-carousel__card-favicon img { width: 100%; height: 100%; object-fit: cover; }
+    .floorplan-carousel__card-url {
+      font-size: 13px; line-height: 20px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
+    }
+    .floorplan-carousel__card-img {
+      width: 72px; height: 72px; flex-shrink: 0; border-radius: var(--bing-smtc-corner-flyout-popover-rest, 16px);
+      overflow: hidden; border: 1px solid var(--bing-smtc-background-ctrl-image-placeholder-default, rgba(0,0,0,0.1));
+      align-self: center;
+    }
+    .floorplan-carousel__card-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .floorplan-carousel__fade {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 48px;
+      background: linear-gradient(to right, transparent, var(--smtc-background-layer-primary-solid, white));
+      pointer-events: none; z-index: 1;
+    }
+    .floorplan-carousel__scroller-btn {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 36px; height: 66px;
+      background: var(--smtc-ctrl-fab-background-rest, white);
+      border: 1px solid var(--smtc-stroke-ctrl-on-neutral-rest, rgba(0,0,0,0.1));
+      border-radius: var(--smtc-corner-ctrl-rest, 8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 0 0 rgba(0,0,0,0.05);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .floorplan-carousel__scroller-btn:hover {
+      background: var(--bing-smtc-background-ctrl-neutral-hover, #e8e3df);
+    }
+
+    /* ===== Gallery Toggle Button ===== */
+    .gallery-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 10px;
+      border-radius: var(--smtc-corner-ctrl-sm-rest, 8px);
+      background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
+      transition: background 0.15s;
+    }
+    .gallery-toggle:hover {
+      background: var(--mai-smtc-background-card-on-primary-alt-selected, #e5e0dc);
+    }
+    .gallery-toggle.active {
+      background: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .gallery-toggle.active .gallery-toggle__label {
+      color: #fff;
+    }
+    .gallery-toggle__label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+
+    /* ===== Gallery: Scroll Container + Alternates Track ===== */
+    .magazine-scroll-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 40px;
+    }
+    .magazine-scroll-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    .magazine-scroll-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .magazine-scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.15);
+      border-radius: 3px;
+    }
+    .magazine-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(0,0,0,0.25);
+    }
+
+    .alternates-track {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+      animation: altTrackSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    @keyframes altTrackSlideIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .alt-column {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+    }
+    .alt-column__tall {
+      width: 312px;
+      height: 424px;
+      flex-shrink: 0;
+    }
+    .alt-column__stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 312px;
+      flex-shrink: 0;
+    }
+    .alt-column__small {
+      width: 312px;
+      height: 200px;
+    }
+
+    /* Alternate card styling */
+    .alt-card {
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      background: var(--smtc-background-card-primary-rest, white);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .alt-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .alt-card:active {
+      cursor: grabbing;
+    }
+    .alt-card--tall {
+      width: 312px;
+      height: 424px;
+    }
+    .alt-card--small {
+      width: 312px;
+      height: 200px;
+    }
+    .alt-card__label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ===== Drag & Drop States ===== */
+    .slot-wrapper[draggable="true"] {
+      cursor: grab;
+    }
+    .slot-wrapper[draggable="true"]:active {
+      cursor: grabbing;
+    }
+    .slot-wrapper.dragging,
+    .alt-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.96);
+    }
+    .slot-wrapper.drag-over {
+      box-shadow: 0 0 0 3px var(--smtc-foreground-content-neutral-primary, #272320), 0 0 16px rgba(39,35,32,0.15);
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+      z-index: 10;
+    }
+    .slot-wrapper.drag-invalid {
+      box-shadow: 0 0 0 3px rgba(200,50,50,0.5);
+      border-radius: var(--mai-smtc-corner-card-default, 24px);
+    }
+    @keyframes cardSwapIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .card-swapped {
+      animation: cardSwapIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* No alternates message */
+    .alternates-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
+      font-size: 13px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -1353,7 +2335,7 @@ const SEGMENTS = {
     ],
     queries: [
       {
-        label: "United Nations",
+        label: "Federal Aviation Administration",
         template: "hero-left",
         templateDesc: "Hero Left \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72 + 3\u00D72 = 44u",
         serpValue: "Answer on the page \u2014 the magazine IS the destination for informational government entity queries.",
@@ -1362,9 +2344,9 @@ const SEGMENTS = {
             id: "a", type: "nav-anchor", servesIntentions: [1, 5],
             html: `<div class="nav-anchor">
               <div class="nav-anchor__images">
-                <div class="nav-anchor__img-main"><img src="images/government/un-headquarters.jpg" alt="UN Headquarters, New York"></div>
+                <div class="nav-anchor__img-main"><img src="images/government/DOT-FAA_Headquarters_by_Matthew_Bisanz.jpeg" alt="FAA Headquarters, Washington DC"></div>
                 <div class="nav-anchor__img-side">
-                  <img src="images/government/un-general-assembly.jpg" alt="UN General Assembly">
+                  <img src="images/government/Flag_of_the_United_States_Federal_Aviation_Administration.svg.png" alt="FAA Flag">
                   <div class="nav-anchor__img-btn">
                     <svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 5C10 5.55228 9.55228 6 9 6C8.44772 6 8 5.55228 8 5C8 4.44772 8.44772 4 9 4C9.55228 4 10 4.44772 10 5ZM4.5 2C3.11929 2 2 3.11929 2 4.5V9.5C2 10.8807 3.11929 12 4.5 12H9.5C10.8807 12 12 10.8807 12 9.5V4.5C12 3.11929 10.8807 2 9.5 2H4.5ZM3 4.5C3 3.67157 3.67157 3 4.5 3H9.5C10.3284 3 11 3.67157 11 4.5V9.5C11 9.73157 10.9475 9.95088 10.8538 10.1467L8.20919 7.50207C7.54139 6.83427 6.45868 6.83427 5.79089 7.50207L3.1462 10.1467C3.05248 9.95092 3 9.73159 3 9.5V4.5ZM3.85333 10.8538L6.49799 8.20917C6.77526 7.9319 7.22481 7.9319 7.50208 8.20918L10.1467 10.8538C9.9509 10.9475 9.73158 11 9.5 11H4.5C4.26844 11 4.04914 10.9475 3.85333 10.8538ZM6.99994 14C6.18203 14 5.45586 13.6072 4.99976 13H9.49994C11.4329 13 12.9999 11.433 12.9999 9.5V3.99982C13.6072 4.45592 13.9999 5.18209 13.9999 6V9.5C13.9999 11.9853 11.9852 14 9.49994 14H6.99994Z" fill="currentColor"/></svg>
                     All images
@@ -1373,19 +2355,19 @@ const SEGMENTS = {
               </div>
               <div class="nav-anchor__info">
                 <div class="nav-anchor__attribution">
-                  <div class="nav-anchor__favicon">\u{1F310}</div>
+                  <div class="nav-anchor__favicon">\u2708\uFE0F</div>
                   <div class="nav-anchor__attr-text">
-                    <span class="nav-anchor__site-name">United Nations</span>
-                    <span class="nav-anchor__site-url">https://www.un.org</span>
+                    <span class="nav-anchor__site-name">Federal Aviation Administration</span>
+                    <span class="nav-anchor__site-url">https://www.faa.gov</span>
                   </div>
                 </div>
-                <a class="nav-anchor__title" href="https://www.un.org" target="_blank">United Nations</a>
-                <p class="nav-anchor__desc">The United Nations is an intergovernmental organization of 193 member states, maintaining international peace and security, developing friendly relations among nations, and promoting social progress and human rights since 1945.</p>
+                <a class="nav-anchor__title" href="https://www.faa.gov" target="_blank">Federal Aviation Administration (FAA)</a>
+                <p class="nav-anchor__desc">The FAA is the national aviation authority of the United States, responsible for the regulation and oversight of civil aviation, air traffic management, and the certification of aircraft, pilots, and airports.</p>
                 <div class="nav-anchor__links">
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> About</a>
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Member States</a>
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> News</a>
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> SDGs</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> About FAA</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Regulations</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Licenses</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Safety</a>
                 </div>
               </div>
             </div>`
@@ -1394,35 +2376,74 @@ const SEGMENTS = {
             id: "b", type: "overview", servesIntentions: [2, 7],
             html: `<div class="overview-card">
               <span class="overview-card__label">OVERVIEW</span>
-              <h2 class="overview-card__title">About the United Nations</h2>
-              <p class="overview-card__intro">The United Nations is an intergovernmental organization established on October 24, 1945, to maintain international peace and security, develop friendly relations among nations, and promote social progress and human rights. It serves as a forum for its 193 member states to address global challenges including climate change, humanitarian crises, and international law.</p>
-              <div class="overview-card__facts">
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Founded</span><span class="overview-card__fact-value">October 24, 1945</span></div>
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Members</span><span class="overview-card__fact-value">193 member states</span></div>
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Secretary-General</span><span class="overview-card__fact-value">Ant\u00F3nio Guterres</span></div>
+              <h2 class="overview-card__title">About the FAA</h2>
+              <p class="overview-card__intro">The Federal Aviation Administration (FAA) is the agency of the United States Department of Transportation responsible for regulating all aspects of civil aviation in the U.S., including air traffic management, certification of aircraft and pilots, and airport safety standards.</p>
+              <span class="overview-card__show-more">Show more \u2192</span>
+              <div class="overview-card__actions-label">Quick Actions</div>
+              <div class="overview-card__actions">
+                <a class="overview-card__action-link">Licenses &amp; Certificates</a>
+                <a class="overview-card__action-link">FAA Regulations</a>
+                <a class="overview-card__action-link">Aircraft Certification</a>
+                <a class="overview-card__action-link">Medical Certification</a>
               </div>
-              <div class="overview-card__source"><span>Wikipedia</span><span class="overview-card__source-dot"></span><span>un.org</span></div>
-            </div>`
+              <div class="overview-card__source"><span>faa.gov</span><span class="overview-card__source-dot"></span><span>3 Sources</span></div>
+            </div>`,
+            alternates: [
+              { type: "location-contact", label: "Location / Contact", servesIntentions: [4],
+                html: `<div class="location-card">
+                  <div class="location-card__map">
+                    <img src="images/government/FAAmap.png" alt="FAA HQ Map">
+                    <span class="location-card__map-badge">Federal Agency</span>
+                  </div>
+                  <div class="location-card__body">
+                    <div class="location-card__header">
+                      <span class="location-card__title">Details</span>
+                    </div>
+                    <div class="location-card__details">
+                      <div class="location-card__detail">
+                        <span class="location-card__detail-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2C6.69 2 4 4.69 4 8c0 4.5 6 10 6 10s6-5.5 6-10c0-3.31-2.69-6-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z" fill="currentColor"/></svg></span>
+                        <span class="location-card__detail-text">800 Independence Ave SW, Washington, DC 20591</span>
+                      </div>
+                      <div class="location-card__detail">
+                        <span class="location-card__detail-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c2 2.5 2 12.5 0 15m0-15c-2 2.5-2 12.5 0 15" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                        <span class="location-card__detail-text">faa.gov</span>
+                      </div>
+                      <div class="location-card__detail">
+                        <span class="location-card__detail-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M17.2 14.5c-1.1 0-2.2-.2-3.2-.5a1 1 0 00-1 .2l-1.8 1.8A13.4 13.4 0 015 9.8l1.8-1.8a1 1 0 00.2-1c-.3-1-.5-2.1-.5-3.2A1 1 0 005.5 2.8H3a1 1 0 00-1 1c0 8.3 6.7 15 15 15a1 1 0 001-1v-2.3a1 1 0 00-1-1z" fill="currentColor"/></svg></span>
+                        <span class="location-card__detail-text">1-866-835-5322</span>
+                      </div>
+                    </div>
+                    <a class="location-card__cta"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Directions</a>
+                  </div>
+                </div>` }
+            ]
           },
           {
             id: "c", type: "subdivided", servesIntentions: [4, 7],
             html: `<div class="subdivided-card">
-              <div class="subdivided-card__grid subdivided-card__grid--2x2">
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Headquarters</span><span class="subdivided-card__cell-value">New York City</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Members</span><span class="subdivided-card__cell-value">193 states</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Secretary-General</span><span class="subdivided-card__cell-value">Ant\u00F3nio Guterres</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Founded</span><span class="subdivided-card__cell-value">Oct 24, 1945</span></div>
+              <div class="subdivided-card__row">
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Headquarters</span><span class="subdivided-card__cell-value">Washington, DC</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Administrator</span><span class="subdivided-card__cell-value">Mike Whitaker</span></div></div>
+              </div>
+              <div class="subdivided-card__row">
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Founded</span><span class="subdivided-card__cell-value">Aug 23, 1958</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Employees</span><span class="subdivided-card__cell-value">~45,000</span></div></div>
               </div>
             </div>`
           },
           {
             id: "d", type: "news", servesIntentions: [3],
             html: `<div class="news-card">
-              <div class="news-card__header">Latest News</div>
-              <p class="news-card__body">UN General Assembly adopts landmark resolution on AI governance framework, calling for international cooperation on safety standards among all 193 member states. The resolution establishes principles for responsible use...</p>
-              <a class="news-card__continue">Continue reading <span class="news-card__continue-arrow">\u2192</span></a>
-              <div class="news-card__source"><div class="news-card__source-favicon"></div><span>UN News</span><span class="news-card__source-dot"></span><span>news.un.org</span></div>
-            </div>`
+              <div class="news-card__content">
+                <div class="news-card__source"><div class="news-card__source-favicon"></div><span>Newsroom</span><span class="news-card__source-dot"></span><span>3h</span></div>
+                <div class="news-card__title">FAA proposes to hire 2,300 air traffic controllers in budget request</div>
+              </div>
+              <div class="news-card__image"><img src="images/government/FAAnews.jpeg" alt="Air traffic control tower"></div>
+            </div>`,
+            alternates: [
+              { type: "list", label: "Services", servesIntentions: [6],
+                html: `<div class="list-card"><div class="list-card__header">Services &amp; Resources</div><div class="list-card__items"><a class="list-card__item"><span class="list-card__item-text">Drone Registration (Part 107)</span></a><a class="list-card__item"><span class="list-card__item-text">Pilot Certificate Lookup</span></a><a class="list-card__item"><span class="list-card__item-text">Airport Status &amp; Delays</span></a></div></div>` }
+            ]
           }
         ]
       }
@@ -1495,27 +2516,30 @@ const SEGMENTS = {
         slots: [
           {
             id: "a", type: "nav-anchor", servesIntentions: [1, 2],
-            html: `<div class="nav-anchor nav-anchor--with-logo">
-              <div class="nav-anchor__images">
-                <div class="nav-anchor__img-main"><img src="images/luxury/gucci-storefront.jpg" alt="Gucci Storefront"></div>
-                <div class="nav-anchor__img-side">
-                  <img src="images/luxury/gucci-valigeria-in-paris-7-1200x2133.jpg" alt="Gucci Valigeria Paris">
-                  <div class="nav-anchor__img-btn">
-                    <svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 5.5C3 4.11929 4.11929 3 5.5 3H10.5C11.8807 3 13 4.11929 13 5.5V10.5C13 11.8807 11.8807 13 10.5 13H5.5C4.11929 13 3 11.8807 3 10.5V5.5ZM5.5 4C4.67157 4 4 4.67157 4 5.5V7H7V4H5.5ZM8 4V7H12V5.5C12 4.67157 11.3284 4 10.5 4H8ZM12 8H8V12H10.5C11.3284 12 12 11.3284 12 10.5V8ZM7 12V8H4V10.5C4 11.3284 4.67157 12 5.5 12H7Z" fill="currentColor"/></svg> All images
-                  </div>
-                </div>
+            html: `<div class="nav-anchor nav-anchor--immersive">
+              <div class="nav-anchor__bg">
+                <img src="images/luxury/hero.png" alt="Gucci">
+                <div class="nav-anchor__bg-blur"></div>
+                <div class="nav-anchor__bg-gradient"></div>
               </div>
-              <div class="nav-anchor__logo"><img src="images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg" alt="Gucci Logo"></div>
               <div class="nav-anchor__info">
-                <div class="nav-anchor__attribution">
-                  <div class="nav-anchor__favicon"><img src="images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg" alt="Gucci"></div>
-                  <div class="nav-anchor__attr-text">
-                    <span class="nav-anchor__site-name">Gucci Official</span>
-                    <span class="nav-anchor__site-url">https://www.gucci.com</span>
+                <div class="nav-anchor__brand-row">
+                  <div class="nav-anchor__brand-icon"><img src="images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg" alt="Gucci"></div>
+                  <div class="nav-anchor__brand-text">
+                    <span class="nav-anchor__brand-name">Gucci</span>
+                    <span class="nav-anchor__brand-url">https://www.gucci.com</span>
                   </div>
                 </div>
-                <a class="nav-anchor__title" href="https://www.gucci.com" target="_blank">Gucci</a>
-                <p class="nav-anchor__desc nav-anchor__desc--4line">Italian luxury fashion house founded in 1921 by Guccio Gucci in Florence, Italy. Renowned worldwide for its leather goods, ready-to-wear collections, shoes, and the iconic interlocking GG monogram. Under the creative direction of Sabato De Sarno since 2023, the brand blends heritage craftsmanship with a refined modern sensibility, spanning fashion, accessories, fragrances, and home décor across over 500 stores globally.</p>
+                <div>
+                  <p class="nav-anchor__desc">Italian luxury fashion house founded in 1921 by Guccio Gucci in Florence. Renowned for leather goods, ready-to-wear, and the iconic GG monogram. Under creative director Sabato De Sarno, blending heritage craftsmanship with modern aesthetics across fashion, accessories, and home d\u00e9cor.</p>
+                  <span class="nav-anchor__ai-label">Summarized by AI</span>
+                </div>
+                <div class="nav-anchor__pills">
+                  <a class="nav-anchor__pill"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 1.75C6.5 1.33579 6.16421 1 5.75 1C5.33579 1 5 1.33579 5 1.75V3H3.5C2.67157 3 2 3.67157 2 4.5V6H14V4.5C14 3.67157 13.3284 3 12.5 3H11V1.75C11 1.33579 10.6642 1 10.25 1C9.83579 1 9.5 1.33579 9.5 1.75V3H6.5V1.75ZM14 7H2V12.5C2 13.3284 2.67157 14 3.5 14H12.5C13.3284 14 14 13.3284 14 12.5V7Z" fill="currentColor"/></svg> Handbags</a>
+                  <a class="nav-anchor__pill"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 1.75C6.5 1.33579 6.16421 1 5.75 1C5.33579 1 5 1.33579 5 1.75V3H3.5C2.67157 3 2 3.67157 2 4.5V6H14V4.5C14 3.67157 13.3284 3 12.5 3H11V1.75C11 1.33579 10.6642 1 10.25 1C9.83579 1 9.5 1.33579 9.5 1.75V3H6.5V1.75ZM14 7H2V12.5C2 13.3284 2.67157 14 3.5 14H12.5C13.3284 14 14 13.3284 14 12.5V7Z" fill="currentColor"/></svg> New Arrivals</a>
+                  <a class="nav-anchor__pill"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 1.75C6.5 1.33579 6.16421 1 5.75 1C5.33579 1 5 1.33579 5 1.75V3H3.5C2.67157 3 2 3.67157 2 4.5V6H14V4.5C14 3.67157 13.3284 3 12.5 3H11V1.75C11 1.33579 10.6642 1 10.25 1C9.83579 1 9.5 1.33579 9.5 1.75V3H6.5V1.75ZM14 7H2V12.5C2 13.3284 2.67157 14 3.5 14H12.5C13.3284 14 14 13.3284 14 12.5V7Z" fill="currentColor"/></svg> Store Locator</a>
+                </div>
+                <a class="nav-anchor__cta" href="https://www.gucci.com" target="_blank">Open gucci.com <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 4L10 8L6 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
               </div>
             </div>`
           },
@@ -1561,32 +2585,45 @@ const SEGMENTS = {
           activeTab: 0,
           items: {
             "Handbags": [
-              { title: "GG Marmont Small Shoulder Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-marmont-black.webp" },
-              { title: "Ophidia GG Medium Tote Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-ophidia-tote.png" },
-              { title: "Gucci Giglio Large Tote Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-giglio-tote.avif" },
-              { title: "GG Plus Tote Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-gg-tote.avif" },
-              { title: "Animalier Leather Shoulder Bag", url: "https://www.gucci.com/handbags", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/gucci-animalier-bag.jpg" }
+              { title: "GG Marmont Small Shoulder Bag", subtitle: "$2,980", image: "images/luxury/bags/截屏2026-04-09 14.14.54.png" },
+              { title: "Ophidia GG Medium Tote Bag", subtitle: "$2,490", image: "images/luxury/bags/截屏2026-04-09 14.15.16.png" },
+              { title: "Gucci Giglio Large Tote Bag", subtitle: "$3,100", image: "images/luxury/bags/截屏2026-04-09 14.15.21.png" },
+              { title: "GG Plus Tote Bag", subtitle: "$1,850", image: "images/luxury/bags/截屏2026-04-09 14.15.32.png" },
+              { title: "Animalier Leather Shoulder Bag", subtitle: "$2,750", image: "images/luxury/bags/截屏2026-04-09 14.15.39.png" },
+              { title: "Animalier Leather Crossbody", subtitle: "$2,350", image: "images/luxury/bags/gucci-animalier-bag.png" },
+              { title: "GG Supreme Canvas Tote", subtitle: "$1,980", image: "images/luxury/bags/large-designer-bags-299053-1649254102445-product-1024-80.png" },
+              { title: "Dionysus GG Supreme Bag", subtitle: "$2,690", image: "images/luxury/bags/截屏2026-04-03 13.11.31.png" }
             ],
             "Heels": [
-              { title: "GG Fringed Marmont Pumps", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/gucci-black-Gg-High-heel-Fringed-Marmont-Pumps-In-Black.webp" },
-              { title: "Leather Platform Pump", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/a7ede37ff273a5bc0c37e8758988869e.jpg" },
-              { title: "Patent Leather Slingback Heel", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/dd7cfa2527d18c4e2c377798daba3453.jpg" },
-              { title: "Horsebit Mid-Heel Pump", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/5bd53661d0813e1add14c32c8378cde8.jpg" },
-              { title: "GG Canvas Platform Sandal", url: "https://www.gucci.com/shoes/heels", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/heels/OIP.webp" }
+              { title: "GG Fringed Marmont Pumps", subtitle: "$890", image: "images/luxury/heels/截屏2026-04-09 14.18.37.png" },
+              { title: "Leather Platform Pump", subtitle: "$1,100", image: "images/luxury/heels/截屏2026-04-09 14.18.45.png" },
+              { title: "Patent Leather Slingback Heel", subtitle: "$950", image: "images/luxury/heels/截屏2026-04-09 14.18.48.png" },
+              { title: "Horsebit Mid-Heel Pump", subtitle: "$880", image: "images/luxury/heels/截屏2026-04-09 14.18.57.png" },
+              { title: "GG Canvas Platform Sandal", subtitle: "$790", image: "images/luxury/heels/a7ede37ff273a5bc0c37e8758988869e.png" },
+              { title: "Leather Ankle Boot", subtitle: "$1,250", image: "images/luxury/heels/dd7cfa2527d18c4e2c377798daba3453.png" },
+              { title: "Crystal Embellished Pump", subtitle: "$1,350", image: "images/luxury/heels/5bd53661d0813e1add14c32c8378cde8.png" }
             ],
             "Wallets": [
-              { title: "GG Marmont Card Case Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1239063_2_enlarged.webp" },
-              { title: "Ophidia GG Continental Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1464371_1_enlarged.webp" },
-              { title: "GG Supreme Zip Around Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1661120_2_enlarged.webp" },
-              { title: "Interlocking G Bi-fold Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/GUC1684725_1_enlarged.webp" },
-              { title: "Horsebit 1955 Mini Wallet", url: "https://www.gucci.com/wallets", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/钱包/OIP.webp" }
+              { title: "GG Marmont Card Case Wallet", subtitle: "$390", image: "images/luxury/\u94b1\u5305/截屏2026-04-09 14.22.52.png" },
+              { title: "Ophidia GG Continental Wallet", subtitle: "$690", image: "images/luxury/\u94b1\u5305/截屏2026-04-09 14.23.01.png" },
+              { title: "GG Supreme Zip Around Wallet", subtitle: "$580", image: "images/luxury/\u94b1\u5305/截屏2026-04-09 14.23.11.png" },
+              { title: "Interlocking G Bi-fold Wallet", subtitle: "$450", image: "images/luxury/\u94b1\u5305/截屏2026-04-09 14.23.14.png" },
+              { title: "Horsebit 1955 Mini Wallet", subtitle: "$520", image: "images/luxury/\u94b1\u5305/截屏2026-04-09 14.23.16.png" },
+              { title: "GG Marmont Zip Around", subtitle: "$650", image: "images/luxury/\u94b1\u5305/GUC1239063_2_enlarged.webp" },
+              { title: "Ophidia GG Card Case", subtitle: "$350", image: "images/luxury/\u94b1\u5305/GUC1464371_1_enlarged.webp" },
+              { title: "GG Supreme Bi-fold", subtitle: "$480", image: "images/luxury/\u94b1\u5305/GUC1661120_2_enlarged.webp" },
+              { title: "Interlocking G Continental", subtitle: "$590", image: "images/luxury/\u94b1\u5305/GUC1684725_1_enlarged.webp" },
+              { title: "GG Canvas Mini Wallet", subtitle: "$320", image: "images/luxury/\u94b1\u5305/OIP.webp" }
             ],
             "Sneakers": [
-              { title: "Ace Watersnake Embroidered Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/Gucci-Ace-Watersnake-Trimmed-Embroidered-Leather-Sneakers-Men-White.jpg" },
-              { title: "GG Canvas High-Top Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/gucci-blue-california-hightop-laceup-sneakers-product-1-8432734-629730683.webp" },
-              { title: "Screener Leather Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/272468.022_2.jpg" },
-              { title: "Run Trainer Low-Top Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/309598.022_3.jpg" },
-              { title: "Rhyton Logo Leather Sneaker", url: "https://www.gucci.com/shoes/sneakers", favicon: "images/luxury/gucci-logo-brand-symbol-with-name-brown-design-clothes-fashion-illustration-free-vector.jpg", image: "images/luxury/鞋子/R.jpeg" }
+              { title: "Ace Watersnake Embroidered", subtitle: "$890", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.11.png" },
+              { title: "GG Canvas High-Top", subtitle: "$850", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.14.png" },
+              { title: "Screener Leather Sneaker", subtitle: "$980", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.19.png" },
+              { title: "Run Trainer Low-Top", subtitle: "$750", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.23.png" },
+              { title: "Rhyton Logo Leather", subtitle: "$950", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.28.png" },
+              { title: "Tennis 1977 High-Top", subtitle: "$730", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.32.png" },
+              { title: "Gazelle Platform Sneaker", subtitle: "$820", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.36.png" },
+              { title: "GG Miro Soft Sneaker", subtitle: "$790", image: "images/luxury/\u978b\u5b50/截屏2026-04-09 14.20.40.png" }
             ]
           }
         }
@@ -1687,11 +2724,13 @@ const SEGMENTS = {
           {
             id: "c", type: "subdivided", servesIntentions: [3, 6],
             html: `<div class="subdivided-card">
-              <div class="subdivided-card__grid subdivided-card__grid--2x2">
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Department</span><span class="subdivided-card__cell-value">ITP, Tisch</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Focus</span><span class="subdivided-card__cell-value">Creative Coding</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Books</span><span class="subdivided-card__cell-value">Nature of Code</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Open Source</span><span class="subdivided-card__cell-value">p5.js core</span></div>
+              <div class="subdivided-card__row">
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Department</span><span class="subdivided-card__cell-value">ITP, Tisch</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Focus</span><span class="subdivided-card__cell-value">Creative Coding</span></div></div>
+              </div>
+              <div class="subdivided-card__row">
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Books</span><span class="subdivided-card__cell-value">Nature of Code</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Open Source</span><span class="subdivided-card__cell-value">p5.js core</span></div></div>
               </div>
             </div>`
           },
@@ -1783,60 +2822,485 @@ const SEGMENTS = {
         serpValue: "Faster than navigating avaloncommunities.com \u2014 immediate access to pricing, contact, and neighborhood context with map.",
         slots: [
           {
-            id: "a", type: "nav-anchor", servesIntentions: [2, 1],
-            html: `<div class="nav-anchor">
-              <div class="nav-anchor__images">
-                <div class="nav-anchor__img-main">
-                  <img src="images/realestate/avalon-fort-greene.jpg" alt="Avalon Fort Greene exterior">
-                  <span class="nav-anchor__img-btn"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 3C3.22386 3 3 3.22386 3 3.5V7H2V3.5C2 2.67157 2.67157 2 3.5 2H7V3H3.5ZM13 3.5V7H14V3.5C14 2.67157 13.3284 2 12.5 2H9V3H12.5C12.7761 3 13 3.22386 13 3.5ZM13 12.5V9H14V12.5C14 13.3284 13.3284 14 12.5 14H9V13H12.5C12.7761 13 13 12.7761 13 12.5ZM3 12.5V9H2V12.5C2 13.3284 2.67157 14 3.5 14H7V13H3.5C3.22386 13 3 12.7761 3 12.5Z" fill="currentColor"/></svg> All images</span>
+            id: "a", type: "nav-deeplinks", servesIntentions: [2, 1],
+            html: `<div class="nav-deeplinks">
+              <div class="nav-deeplinks__attribution">
+                <div class="nav-deeplinks__favicon-frame">
+                  <img src="images/realestate/logo.png" alt="Avalon favicon">
                 </div>
-                <div class="nav-anchor__img-side">
-                  <img src="images/realestate/manfred-sofa-andreu-world-1.webp" alt="Avalon Fort Greene interior">
+                <div class="nav-deeplinks__attr-text">
+                  <span class="nav-deeplinks__site-name">Avalon Fort Greene</span>
+                  <span class="nav-deeplinks__site-url">www.avaloncommunities.com</span>
                 </div>
               </div>
-              <div class="nav-anchor__info">
-                <div class="nav-anchor__attribution">
-                  <div class="nav-anchor__favicon">\u{1F3E2}</div>
-                  <div class="nav-anchor__attr-text">
-                    <span class="nav-anchor__site-name">Avalon Fort Greene</span>
-                    <span class="nav-anchor__site-url">avaloncommunities.com</span>
+              <div style="display:flex;flex-direction:column;gap:var(--smtc-gap-between-content-xx-small, 4px);">
+                <a class="nav-deeplinks__title" href="https://www.avaloncommunities.com/new-york/fort-greene-apartments/avalon-fort-greene" target="_blank">Avalon Fort Greene Apartments</a>
+                <p class="nav-deeplinks__snippet">Luxury rental community by AvalonBay in Fort Greene, Brooklyn. Modern studio, 1-bed, and 2-bed apartments with floor-to-ceiling windows, in-unit washer/dryer, and premium finishes...</p>
+              </div>
+              <div class="nav-deeplinks__links">
+                <a class="nav-deeplinks__link" href="#">
+                  <div class="nav-deeplinks__link-text">
+                    <span class="nav-deeplinks__link-title">Floor Plans & Pricing</span>
+                    <span class="nav-deeplinks__link-snippet">Studio from $2,850 · 1-Bed from $3,450 · 2-Bed from $4,950. View all available layouts and current specials.</span>
                   </div>
-                </div>
-                <a class="nav-anchor__title" href="https://www.avaloncommunities.com/new-york/fort-greene-apartments/avalon-fort-greene" target="_blank">Avalon Fort Greene</a>
-                <p class="nav-anchor__desc">Luxury rental community by AvalonBay in Fort Greene, Brooklyn. Modern studio, 1-bed, and 2-bed apartments with floor-to-ceiling windows, in-unit washer/dryer, and premium finishes. Residents enjoy a rooftop terrace, state-of-the-art fitness center, resident lounge, and courtyard. Steps from Fort Greene Park, BAM, and Atlantic Terminal transit hub.</p>
-                <div class="nav-anchor__links">
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Floor Plans</a>
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Schedule Tour</a>
-                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Apply Online</a>
-                </div>
+                  <span class="nav-deeplinks__link-chevron"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+                <a class="nav-deeplinks__link" href="#">
+                  <div class="nav-deeplinks__link-text">
+                    <span class="nav-deeplinks__link-title">Schedule a Tour</span>
+                    <span class="nav-deeplinks__link-snippet">Book an in-person or virtual tour of available apartments. Leasing office open Mon–Sat 9 AM – 6 PM.</span>
+                  </div>
+                  <span class="nav-deeplinks__link-chevron"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+                <a class="nav-deeplinks__link" href="#">
+                  <div class="nav-deeplinks__link-text">
+                    <span class="nav-deeplinks__link-title">Amenities & Features</span>
+                    <span class="nav-deeplinks__link-snippet">Rooftop terrace, fitness center, resident lounge, courtyard, package room, bike storage, and pet-friendly policy.</span>
+                  </div>
+                  <span class="nav-deeplinks__link-chevron"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+                <a class="nav-deeplinks__link" href="#">
+                  <div class="nav-deeplinks__link-text">
+                    <span class="nav-deeplinks__link-title">Apply Online</span>
+                    <span class="nav-deeplinks__link-snippet">Start your application today. Move-in dates available from next month. No broker fee.</span>
+                  </div>
+                  <span class="nav-deeplinks__link-chevron"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
               </div>
             </div>`
           },
           {
-            id: "b", type: "overview", servesIntentions: [5, 6],
-            html: `<div class="overview-card">
-              <span class="overview-card__label">LUXURY APARTMENTS</span>
-              <h2 class="overview-card__title">About Avalon Fort Greene</h2>
-              <p class="overview-card__intro">Luxury apartment community by AvalonBay Communities in Fort Greene, Brooklyn. Studio, 1-bed, and 2-bed units with modern finishes, floor-to-ceiling windows, in-unit washer/dryer. Near Fort Greene Park, BAM, and Atlantic Terminal transit hub. Part of AvalonBay's premier portfolio.</p>
-              <div class="overview-card__facts">
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Address</span><span class="overview-card__fact-value">343 Gold St, Brooklyn, NY</span></div>
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Transit</span><span class="overview-card__fact-value">Atlantic Av-Barclays (2 min)</span></div>
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Built</span><span class="overview-card__fact-value">2015</span></div>
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Units</span><span class="overview-card__fact-value">385 apartments</span></div>
-                <div class="overview-card__fact"><span class="overview-card__fact-label">Amenities</span><span class="overview-card__fact-value">Rooftop, Gym, Lounge</span></div>
+            id: "b", type: "portfolio", servesIntentions: [5, 6],
+            html: `<div class="portfolio-card" data-slide="0">
+              <img class="portfolio-card__image portfolio-card__image--active" data-index="0" src="images/realestate/截屏2026-04-09 17.31.16.png" alt="Avalon Fort Greene community">
+              <img class="portfolio-card__image portfolio-card__image--hidden" data-index="1" src="images/realestate/截屏2026-04-09 17.31.18.png" alt="Avalon Fort Greene rooftop">
+              <img class="portfolio-card__image portfolio-card__image--hidden" data-index="2" src="images/realestate/截屏2026-04-09 17.31.27.png" alt="Avalon Fort Greene amenities">
+              <span class="portfolio-card__badge portfolio-card__badge--category">Community Life</span>
+              <div class="portfolio-card__overlay">
+                <div class="portfolio-card__text-body">
+                  <span class="portfolio-card__title">Avalon Fort Greene</span>
+                  <div class="portfolio-card__fact"><span class="portfolio-card__fact-label">Type:</span><span class="portfolio-card__fact-value">Luxury Rental</span></div>
+                  <div class="portfolio-card__fact"><span class="portfolio-card__fact-label">Units:</span><span class="portfolio-card__fact-value">385 apartments</span></div>
+                  <div class="portfolio-card__fact"><span class="portfolio-card__fact-label">Built:</span><span class="portfolio-card__fact-value">2015</span></div>
+                </div>
+                <div class="portfolio-card__pagination">
+                  <button class="portfolio-card__page-btn" onclick="portfolioSlide(this,-1)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7.5 2.5L4 6L7.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                  <span class="portfolio-card__page-num"><span class="portfolio-card__page-current">1</span><span>of</span><span class="portfolio-card__page-total">3</span></span>
+                  <button class="portfolio-card__page-btn" onclick="portfolioSlide(this,1)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                </div>
               </div>
-              <div class="overview-card__source"><span>AvalonBay</span><span class="overview-card__source-dot"></span><span>StreetEasy</span><span class="overview-card__source-dot"></span><span>Google Reviews 4.1\u2605</span></div>
-            </div>`
+            </div>`,
+            alternates: [
+              { type: "location-contact", label: "Map + Info", servesIntentions: [6, 2],
+                html: `<div class="location-card">
+                  <div class="location-card__map">
+                    <img src="images/realestate/map.png" alt="Avalon Fort Greene Map">
+                  </div>
+                  <div class="location-card__body">
+                    <div class="location-card__amenities">
+                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M2.5 11.5h11M4 11.5V8.75a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75V11.5M9 11.5V8.75a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75V11.5M5.5 8V5.5a2.5 2.5 0 015 0V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Parking</div>
+                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2v2M8 12v2M2 8h2M12 8h2M4.93 4.93l1.41 1.41M9.66 9.66l1.41 1.41M4.93 11.07l1.41-1.41M9.66 6.34l1.41-1.41M8 5.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>AC</div>
+                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M8 14c-1.7 0-3.2-.7-4.2-1.8M8 14c1.7 0 3.2-.7 4.2-1.8M8 14v-3M5 4a3 3 0 016 0M5 4H4l-1 7h2M11 4h1l1 7h-2M5 4v7m6-7v7M5 11h6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Wheelchair accessible</div>
+                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M3.5 10h3M9.5 10h3M3.5 10V8.5a1 1 0 011-1h1a1 1 0 011 1V10M9.5 10V8.5a1 1 0 011-1h1a1 1 0 011 1V10M6.5 10V7a2 2 0 012-2h0a2 2 0 012 2v3M2 10h12" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Fitness center</div>
+                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M12 10c0 2.2-1.8 4-4 4s-4-1.8-4-4c0-3 4-8 4-8s4 5 4 8z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Spa</div>
+                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M5.5 13V8M10.5 13V8M3 8h10M4.5 5h7l-1-3h-5l-1 3z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Family Friendly</div>
+                    </div>
+                    <a class="location-card__more">More details <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                    <div class="location-card__buttons">
+                      <a class="location-card__cta" href="https://www.avaloncommunities.com" target="_blank" style="flex:1;justify-content:center;">Website</a>
+                      <a class="location-card__cta" style="flex:1;justify-content:center;">Reserve</a>
+                    </div>
+                  </div>
+                </div>`
+              }
+            ]
           },
           {
             id: "c", type: "subdivided", servesIntentions: [1, 4],
             html: `<div class="subdivided-card">
-              <div class="subdivided-card__header">Price List</div>
-              <div class="subdivided-card__grid subdivided-card__grid--2x2">
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Studio</span><span class="subdivided-card__cell-value">$2,850</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">1-Bed</span><span class="subdivided-card__cell-value">$3,450</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">2-Bed</span><span class="subdivided-card__cell-value">$4,950</span></div>
-                <div class="subdivided-card__cell"><span class="subdivided-card__cell-label">Available</span><span class="subdivided-card__cell-value">12 units</span></div>
+              <div class="subdivided-card__row">
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Studio</span><span class="subdivided-card__cell-value">$2,850</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">1-Bed</span><span class="subdivided-card__cell-value">$3,450</span></div></div>
+              </div>
+              <div class="subdivided-card__row">
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">2-Bed</span><span class="subdivided-card__cell-value">$4,950</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Available</span><span class="subdivided-card__cell-value">12 units</span></div></div>
+              </div>
+            </div>`
+          },
+          {
+            id: "d", type: "video-card", servesIntentions: [3, 7],
+            html: `<div class="video-card">
+              <div class="video-card__media">
+                <img src="images/realestate/video cover.png" alt="Avalon Fort Greene tour video">
+                <span class="video-card__play"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5L12 8L5.5 12.5V3.5Z" fill="currentColor"/></svg></span>
+                <span class="video-card__badge">3:45</span>
+              </div>
+              <div class="video-card__overlay">
+                <span class="video-card__title">Tour Avalon Fort Greene Apartments</span>
+                <div class="video-card__meta">
+                  <span class="video-card__meta-item video-card__meta-item--source"><span class="video-card__meta-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" fill="#FF0000"/><path d="M6.5 5L11 8L6.5 11V5Z" fill="white"/></svg></span>YouTube</span>
+                  <span class="video-card__meta-dot"></span>
+                  <span class="video-card__meta-item">AvalonBay</span>
+                  <span class="video-card__meta-dot"></span>
+                  <span class="video-card__meta-item">12K views</span>
+                  <span class="video-card__meta-dot"></span>
+                  <span class="video-card__meta-item">6 mo ago</span>
+                </div>
+              </div>
+            </div>`
+          },
+          {
+            id: "e", type: "local-overview", servesIntentions: [2, 8],
+            html: `<div class="local-overview">
+              <div class="local-overview__image">
+                <img src="images/realestate/avalon-fort-greene.jpg" alt="Avalon Fort Greene building">
+                <div class="local-overview__image-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3h4v4H3V3Zm6 0h4v4H9V3ZM3 9h4v4H3V9Zm6 0h4v4H9V9Z" fill="currentColor" opacity=".8"/></svg></div>
+              </div>
+              <div class="local-overview__info">
+                <div class="local-overview__header">
+                  <div class="local-overview__header-main">
+                    <div class="local-overview__title-row">
+                      <a class="local-overview__title" href="https://www.avaloncommunities.com" target="_blank">Avalon Fort Greene</a>
+                      <svg class="local-overview__verified" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 1L12.39 3.61L15.82 2.98L16.09 6.44L19.14 8.3L17.32 11.14L18.64 14.39L15.3 15.39L13.87 18.52L10.63 17.15L10 17.45L9.37 17.15L6.13 18.52L4.7 15.39L1.36 14.39L2.68 11.14L0.86 8.3L3.91 6.44L4.18 2.98L7.61 3.61L10 1Z" fill="currentColor"/><path d="M7.5 10.5L9 12L12.5 8.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <a class="local-overview__url" href="https://www.avaloncommunities.com" target="_blank">https://www.avaloncommunities.com</a>
+                  </div>
+                  <div class="local-overview__menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="4" r="1.5" fill="currentColor"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/><circle cx="10" cy="16" r="1.5" fill="currentColor"/></svg></div>
+                </div>
+                <div class="local-overview__metadata">
+                  <div class="local-overview__rating">
+                    <span class="local-overview__rating-icon" style="background:#00aa6c;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;">G</span>
+                    <span class="local-overview__rating-score"><span>4.1</span><span>/</span><span>5</span></span>
+                    <span class="local-overview__rating-link">(38 reviews)</span>
+                    <span style="color:rgba(0,0,0,0.4);">\u00B7</span>
+                    <span class="local-overview__category">Luxury apartments in Brooklyn, NY</span>
+                  </div>
+                  <div class="local-overview__meta-row">
+                    <span class="local-overview__meta-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5ZM8 9C6.9 9 6 8.1 6 7C6 5.9 6.9 5 8 5C9.1 5 10 5.9 10 7C10 8.1 9.1 9 8 9Z" fill="currentColor"/></svg></span>
+                    <span class="local-overview__meta-link">343 Gold St, Brooklyn, NY 11201</span>
+                  </div>
+                  <div class="local-overview__meta-row">
+                    <span class="local-overview__meta-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C4.69 2 2 4.69 2 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6Zm0 11c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5Zm2.65-3.65L8.5 7.5V4h-1v3.79l2.35 2.06.65-.5Z" fill="currentColor"/></svg></span>
+                    <span class="local-overview__meta-status-open">Open</span>
+                    <span>\u00B7</span>
+                    <span>Office 9 AM\u20136 PM</span>
+                    <span>\u00B7</span>
+                    <span class="local-overview__meta-link">More hours \u25BE</span>
+                  </div>
+                  <div class="local-overview__meta-row">
+                    <span class="local-overview__meta-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.36 10.47l-2.54-1.09a.75.75 0 00-.77.12l-1.27 1.04A9.45 9.45 0 015.46 7.22l1.04-1.27a.75.75 0 00.12-.77L5.53 2.64a.76.76 0 00-.74-.49l-2.09.22A.75.75 0 002 3.12 12.87 12.87 0 0012.88 14a.75.75 0 00.75-.7l.22-2.09a.76.76 0 00-.49-.74Z" fill="currentColor"/></svg></span>
+                    <span class="local-overview__meta-link">(718) 489-2200</span>
+                  </div>
+                </div>
+              </div>
+              <div class="local-overview__actions">
+                <a class="local-overview__action-btn" href="https://www.avaloncommunities.com" target="_blank">
+                  <svg class="local-overview__action-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zM2 8a6 6 0 0112 0A6 6 0 012 8z" fill="currentColor"/><path d="M7.5 4v4.5H11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  <span>Website</span>
+                </a>
+                <a class="local-overview__action-btn">
+                  <svg class="local-overview__action-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5Z" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+                  <span>Directions</span>
+                </a>
+                <a class="local-overview__action-btn">
+                  <svg class="local-overview__action-icon" viewBox="0 0 16 16" fill="none"><path d="M2 5c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V5z" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M3 5.7l5 2.8 5-2.8" stroke="currentColor" stroke-width="1.2"/></svg>
+                  <span>Contact us</span>
+                </a>
+              </div>
+            </div>`,
+            alternates: [
+              { type: "photo-carousel", label: "Photo Gallery", servesIntentions: [5, 3],
+                html: `<div class="photo-carousel-wrapper">
+                  <div class="photo-carousel" id="photoCarouselTrack">
+                    <div class="photo-carousel__card">
+                      <div class="photo-carousel__card-img"><img src="images/realestate/截屏2026-04-09 17.31.10.png" alt="Kitchen"></div>
+                      <div class="photo-carousel__card-meta"><div class="photo-carousel__card-title">Kitchen</div><div class="photo-carousel__card-subtitle">Granite countertops</div></div>
+                    </div>
+                    <div class="photo-carousel__card">
+                      <div class="photo-carousel__card-img"><img src="images/realestate/截屏2026-04-09 17.31.16.png" alt="Living Room"></div>
+                      <div class="photo-carousel__card-meta"><div class="photo-carousel__card-title">Living Room</div><div class="photo-carousel__card-subtitle">Open floor plan</div></div>
+                    </div>
+                    <div class="photo-carousel__card">
+                      <div class="photo-carousel__card-img"><img src="images/realestate/截屏2026-04-09 17.31.18.png" alt="City View"></div>
+                      <div class="photo-carousel__card-meta"><div class="photo-carousel__card-title">City View</div><div class="photo-carousel__card-subtitle">Floor-to-ceiling windows</div></div>
+                    </div>
+                    <div class="photo-carousel__card">
+                      <div class="photo-carousel__card-img"><img src="images/realestate/截屏2026-04-09 17.31.27.png" alt="Bedroom"></div>
+                      <div class="photo-carousel__card-meta"><div class="photo-carousel__card-title">Bedroom</div><div class="photo-carousel__card-subtitle">Panoramic skyline</div></div>
+                    </div>
+                    <div class="photo-carousel__card">
+                      <div class="photo-carousel__card-img"><img src="images/realestate/截屏2026-04-09 17.31.35.png" alt="Open Layout"></div>
+                      <div class="photo-carousel__card-meta"><div class="photo-carousel__card-title">Open Layout</div><div class="photo-carousel__card-subtitle">Kitchen &amp; living</div></div>
+                    </div>
+                    <div class="photo-carousel__card">
+                      <div class="photo-carousel__card-img"><img src="images/realestate/avalon-fort-greene.jpg" alt="Building Exterior"></div>
+                      <div class="photo-carousel__card-meta"><div class="photo-carousel__card-title">Building Exterior</div><div class="photo-carousel__card-subtitle">Fort Greene, Brooklyn</div></div>
+                    </div>
+                  </div>
+                  <div class="photo-carousel__fade"></div>
+                  <div class="photo-carousel__scroller">
+                    <button class="photo-carousel__scroller-btn" onclick="scrollPhotoCarousel()" aria-label="Scroll right">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.5 4L13.5 10L7.5 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                </div>`
+              }
+            ]
+          },
+          {
+            id: "f", type: "map", servesIntentions: [6],
+            html: `<div class="map-card">
+              <img src="images/realestate/map.png" alt="Map of Avalon Fort Greene" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+            </div>`
+          }
+        ]
+      }
+    ]
+  },
+
+  apartment: {
+    id: "apartment",
+    label: "Apartment",
+    icon: "\u{1F3E0}",
+    description: "Luxury apartment / residential condo",
+    hasStrongNavIntent: true,
+    intentions: [
+      {
+        rank: 1, label: "Browse available residences", type: "navigational", isPrimary: true,
+        trigger: "Luxury condo shopping \u2014 wants to see what's available at this building right now",
+        nextAction: "Click through to listings page to browse floor plans, photos, and pricing",
+        serpValue: "Subdivided card shows unit types + starting prices \u2014 immediate availability snapshot before clicking",
+        cardSuggestion: "Subdivided card (3x2): unit types with starting prices + availability count"
+      },
+      {
+        rank: 2, label: "Visit property website", type: "navigational", isPrimary: true,
+        trigger: "Knows the building name, wants to reach the official site directly",
+        nextAction: "Click through to the official site, then navigate to specific sections (Gallery, Floor Plans, Amenities)",
+        serpValue: "Hero card provides one-click official site link + shortcuts to Gallery, Floor Plans, Amenities",
+        cardSuggestion: "Hero-composite: building photo + site link + also-links (Gallery, Floor Plans, Amenities)"
+      },
+      {
+        rank: 3, label: "Find sales office contact", type: "navigational", isPrimary: false,
+        trigger: "Ready to speak with someone \u2014 wants to call the sales gallery or email a broker",
+        nextAction: "Call the phone number, send an email, or visit the sales gallery",
+        serpValue: "List card surfaces phone, email, and sales gallery hours \u2014 no need to find contact page on the site",
+        cardSuggestion: "List card (3x2): phone number, sales gallery hours, email"
+      },
+      {
+        rank: 4, label: "Check pricing / market info", type: "informational", isPrimary: false,
+        trigger: "Evaluating affordability or comparing luxury options \u2014 needs price ranges and unit types",
+        nextAction: "Compare prices with other buildings, decide if it fits budget",
+        serpValue: "Subdivided card shows per-unit-type pricing \u2014 enables quick comparison without deep-diving each site",
+        cardSuggestion: "Covered by Subdivided card (prices per unit type)"
+      },
+      {
+        rank: 5, label: "Read reviews / reputation", type: "informational", isPrimary: false,
+        trigger: "Wants social proof before scheduling a visit \u2014 checks ratings, resident feedback",
+        nextAction: "Read reviews on third-party sites (Google, StreetEasy, CityRealty), then make a judgment",
+        serpValue: "Overview card can include source links to review platforms; not directly served by magazine cards",
+        cardSuggestion: "Partially covered by Overview source line (StreetEasy, CityRealty)"
+      },
+      {
+        rank: 6, label: "Get neighborhood info", type: "informational", isPrimary: false,
+        trigger: "Unfamiliar with the area \u2014 wants to understand the neighborhood before committing",
+        nextAction: "Scan transit access, nearby landmarks, walkability score",
+        serpValue: "Overview card facts include transit proximity and neighborhood context \u2014 basic location intel",
+        cardSuggestion: "Covered by Overview card facts (address, transit, neighborhood)"
+      },
+      {
+        rank: 7, label: "Schedule private tour", type: "transactional", isPrimary: false,
+        trigger: "Interested enough to visit in person \u2014 wants to book a private showing",
+        nextAction: "Click 'Schedule Tour' link or call the sales gallery",
+        serpValue: "Also-links in hero include 'Schedule Tour'; List card has sales gallery hours and phone",
+        cardSuggestion: "Covered by Hero also-links (Schedule Tour) + List card (contact)"
+      },
+      {
+        rank: 8, label: "Check unit availability", type: "navigational", isPrimary: false,
+        trigger: "Specifically looking for a unit type \u2014 wants to filter by bedrooms and availability",
+        nextAction: "Navigate to availability page to see specific units and move-in dates",
+        serpValue: "Subdivided card shows available unit count \u2014 quick answer to 'is anything open?'",
+        cardSuggestion: "Covered by Subdivided card (Available: 15 units)"
+      }
+    ],
+    queries: [
+      {
+        label: "One Manhattan Square",
+        template: "hero-map",
+        templateDesc: "Hero Map \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72 + 3\u00D72 / 8\u00D72 + 3\u00D72 = 66u",
+        serpValue: "Faster than navigating onemanhattansquare.com \u2014 immediate access to pricing, contact, and neighborhood context with map.",
+        slots: [
+          {
+            id: "a", type: "nav-anchor", servesIntentions: [2, 1],
+            html: `<div class="nav-anchor">
+              <div class="nav-anchor__images">
+                <div class="nav-anchor__img-main">
+                  <img src="images/apartment/截屏2026-04-09 16.02.26.png" alt="One Manhattan Square exterior aerial view">
+                  <span class="nav-anchor__img-btn"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 3C3.22386 3 3 3.22386 3 3.5V7H2V3.5C2 2.67157 2.67157 2 3.5 2H7V3H3.5ZM13 3.5V7H14V3.5C14 2.67157 13.3284 2 12.5 2H9V3H12.5C12.7761 3 13 3.22386 13 3.5ZM13 12.5V9H14V12.5C14 13.3284 13.3284 14 12.5 14H9V13H12.5C12.7761 13 13 12.7761 13 12.5ZM3 12.5V9H2V12.5C2 13.3284 2.67157 14 3.5 14H7V13H3.5C3.22386 13 3 12.7761 3 12.5Z" fill="currentColor"/></svg> All images</span>
+                </div>
+                <div class="nav-anchor__img-side">
+                  <img src="images/apartment/截屏2026-04-09 16.02.53.png" alt="One Manhattan Square lobby interior">
+                </div>
+              </div>
+              <div class="nav-anchor__info">
+                <div class="nav-anchor__attribution">
+                  <div class="nav-anchor__favicon">\u{1F3E0}</div>
+                  <div class="nav-anchor__attr-text">
+                    <span class="nav-anchor__site-name">One Manhattan Square</span>
+                    <span class="nav-anchor__site-url">onemanhattansquare.com</span>
+                  </div>
+                </div>
+                <a class="nav-anchor__title" href="https://www.onemanhattansquare.com" target="_blank">One Manhattan Square</a>
+                <p class="nav-anchor__desc">Iconic 80-story luxury condominium by Extell Development on the Lower East Side waterfront. 815 residences ranging from studios to five-bedrooms with floor-to-ceiling windows and breathtaking views of the Manhattan skyline, Brooklyn Bridge, and East River. Over 100,000 sq ft of amenities including an outdoor pool, basketball court, bowling alley, private IMAX theater, and landscaped gardens.</p>
+                <div class="nav-anchor__links">
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Gallery</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Floor Plans</a>
+                  <a class="nav-anchor__link"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.6665 8.2C2.6665 6.43269 4.09919 5 5.8665 5H5.99984C6.36803 5 6.6665 5.29848 6.6665 5.66667C6.6665 6.03486 6.36803 6.33333 5.99984 6.33333H5.8665C4.83557 6.33333 3.99984 7.16907 3.99984 8.2V8.46667C3.99984 9.4976 4.83557 10.3333 5.8665 10.3333H5.99984C6.36803 10.3333 6.6665 10.6318 6.6665 11C6.6665 11.3682 6.36803 11.6667 5.99984 11.6667H5.8665C4.09919 11.6667 2.6665 10.234 2.6665 8.46667V8.2ZM13.3332 8.2C13.3332 6.43269 11.9005 5 10.1332 5H9.99984C9.63165 5 9.33317 5.29848 9.33317 5.66667C9.33317 6.03486 9.63165 6.33333 9.99984 6.33333H10.1332C11.1641 6.33333 11.9998 7.16907 11.9998 8.2V8.46667C11.9998 9.4976 11.1641 10.3333 10.1332 10.3333H9.99984C9.63165 10.3333 9.33317 10.6318 9.33317 11C9.33317 11.3682 9.63165 11.6667 9.99984 11.6667H10.1332C11.9005 11.6667 13.3332 10.234 13.3332 8.46667V8.2ZM5.99984 7.66667C5.63165 7.66667 5.33317 7.96514 5.33317 8.33333C5.33317 8.70152 5.63165 9 5.99984 9H9.99984C10.368 9 10.6665 8.70152 10.6665 8.33333C10.6665 7.96514 10.368 7.66667 9.99984 7.66667H5.99984Z" fill="currentColor"/></svg> Amenities</a>
+                </div>
+              </div>
+            </div>`
+          },
+          {
+            id: "b", type: "details-card", servesIntentions: [5, 6],
+            html: `<div class="details-card">
+              <div class="details-card__header">
+                <span class="details-card__header-title">Details</span>
+                <span class="details-card__header-more"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="3" r="1.5" fill="currentColor"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="13" r="1.5" fill="currentColor"/></svg></span>
+              </div>
+              <div class="details-card__body">
+                <div class="details-card__facts">
+                  <div class="details-card__fact">
+                    <span class="details-card__fact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5ZM8 9C6.9 9 6 8.1 6 7C6 5.9 6.9 5 8 5C9.1 5 10 5.9 10 7C10 8.1 9.1 9 8 9Z" fill="currentColor"/></svg></span>
+                    <span class="details-card__fact-text">252 South St, New York, NY 10002</span>
+                  </div>
+                  <div class="details-card__fact">
+                    <span class="details-card__fact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1C4.13 1 1 4.13 1 8C1 11.87 4.13 15 8 15C11.87 15 15 11.87 15 8C15 4.13 11.87 1 8 1ZM8 14C4.69 14 2 11.31 2 8C2 4.69 4.69 2 8 2C11.31 2 14 4.69 14 8C14 11.31 11.31 14 8 14ZM7.5 4V8.5H11V7.5H8.5V4H7.5Z" fill="currentColor"/></svg></span>
+                    <span class="details-card__fact-text">onemanhattansquare.com</span>
+                  </div>
+                  <div class="details-card__fact">
+                    <span class="details-card__fact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.62 2C3.28 2 3 2.28 3 2.62V4.5C3 7.54 5.46 10 8.5 10H10.5V13.38C10.5 13.72 10.78 14 11.12 14H12.38C12.72 14 13 13.72 13 13.38V10.5C13 6.36 9.64 3 5.5 3H3.62V2Z" fill="currentColor"/></svg></span>
+                    <span class="details-card__fact-text">(212) 252-1560</span>
+                  </div>
+                </div>
+                <div class="details-card__amenities">
+                  <span class="details-card__amenities-title">Amenities</span>
+                  <div class="details-card__amenities-grid">
+                    <div class="details-card__amenities-col">
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 9C3.22 9 3 9.22 3 9.5S3.22 10 3.5 10h9c.28 0 .5-.22.5-.5S12.78 9 12.5 9h-9ZM1 12.5c0-.28.22-.5.5-.5h13c.28 0 .5.22.5.5s-.22.5-.5.5h-13c-.28 0-.5-.22-.5-.5ZM5.5 6C5.22 6 5 6.22 5 6.5S5.22 7 5.5 7h5c.28 0 .5-.22.5-.5S10.78 6 10.5 6h-5ZM7 3.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5S8.78 4 8.5 4h-1c-.28 0-.5-.22-.5-.5Z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Pool</span>
+                      </div>
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6V3.5C13 2.67 12.33 2 11.5 2h-7C3.67 2 3 2.67 3 3.5V6c-1.1 0-2 .9-2 2v5.5c0 .28.22.5.5.5s.5-.22.5-.5V13h12v.5c0 .28.22.5.5.5s.5-.22.5-.5V8c0-1.1-.9-2-2-2ZM4 3.5c0-.28.22-.5.5-.5h7c.28 0 .5.22.5.5V6H4V3.5ZM14 12H2V8c0-.55.45-1 1-1h10c.55 0 1 .45 1 1v4Z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Concierge</span>
+                      </div>
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2C4.69 2 2 4.69 2 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6Zm0 11c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5Zm2.65-3.65L8.5 7.5V4h-1v3.79l2.35 2.06.65-.5Z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">IMAX Theater</span>
+                      </div>
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C12 6.43 10.21 8 8 8S4 6.43 4 4.5 5.79 1 8 1s4 1.57 4 3.5ZM2 13c0-2.21 2.69-4 6-4s6 1.79 6 4v1H2v-1Z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Doorman</span>
+                      </div>
+                    </div>
+                    <div class="details-card__amenities-col">
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 2.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM4 6a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm8 1.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm0-3a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" fill="currentColor"/><path d="M1.5 13.5c0-2.49 2.24-4.5 5-4.5s5 2.01 5 4.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-1.93-1.79-3.5-4-3.5S3 11.57 3 13.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5Z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Valet Parking</span>
+                      </div>
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3.5 12.5c.28 0 .5-.22.5-.5 0-1.93 1.79-3.5 4-3.5s4 1.57 4 3.5c0 .28.22.5.5.5s.5-.22.5-.5c0-2.49-2.24-4.5-5-4.5S3 9.51 3 12c0 .28.22.5.5.5Z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Fitness Center</span>
+                      </div>
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 3H3c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1ZM3 12V4h10v8H3Z" fill="currentColor"/><path d="M5 5.5h6v1H5zM5 7.5h4v1H5z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Rooftop Terrace</span>
+                      </div>
+                      <div class="details-card__amenity">
+                        <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1C4.13 1 1 4.13 1 8c0 3.87 3.13 7 7 7s7-3.13 7-7c0-3.87-3.13-7-7-7Zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6Z" fill="currentColor"/><path d="M4 7.5h8v1H4z" fill="currentColor"/></svg></span>
+                        <span class="details-card__amenity-text">Garden</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="details-card__more">
+                    <span class="details-card__more-text">More details</span>
+                    <span class="details-card__more-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  </div>
+                </div>
+              </div>
+              <div class="details-card__buttons">
+                <a class="details-card__btn" href="https://www.onemanhattansquare.com" target="_blank">Website</a>
+                <a class="details-card__btn">Reserve</a>
+              </div>
+            </div>`,
+            alternates: [
+              {
+                type: "map-details", servesIntentions: [6, 5],
+                html: `<div class="map-details-card">
+                  <div class="map-details-card__map">
+                    <img src="images/realestate/imagemap.png" alt="Map of One Manhattan Square area">
+                  </div>
+                  <div class="map-details-card__body">
+                    <div class="details-card__amenities-grid">
+                      <div class="details-card__amenities-col">
+                        <div class="details-card__amenity">
+                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 9C3.22 9 3 9.22 3 9.5S3.22 10 3.5 10h9c.28 0 .5-.22.5-.5S12.78 9 12.5 9h-9ZM1 12.5c0-.28.22-.5.5-.5h13c.28 0 .5.22.5.5s-.22.5-.5.5h-13c-.28 0-.5-.22-.5-.5ZM5.5 6C5.22 6 5 6.22 5 6.5S5.22 7 5.5 7h5c.28 0 .5-.22.5-.5S10.78 6 10.5 6h-5ZM7 3.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5S8.78 4 8.5 4h-1c-.28 0-.5-.22-.5-.5Z" fill="currentColor"/></svg></span>
+                          <span class="details-card__amenity-text">Pool</span>
+                        </div>
+                        <div class="details-card__amenity">
+                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6V3.5C13 2.67 12.33 2 11.5 2h-7C3.67 2 3 2.67 3 3.5V6c-1.1 0-2 .9-2 2v5.5c0 .28.22.5.5.5s.5-.22.5-.5V13h12v.5c0 .28.22.5.5.5s.5-.22.5-.5V8c0-1.1-.9-2-2-2ZM4 3.5c0-.28.22-.5.5-.5h7c.28 0 .5.22.5.5V6H4V3.5ZM14 12H2V8c0-.55.45-1 1-1h10c.55 0 1 .45 1 1v4Z" fill="currentColor"/></svg></span>
+                          <span class="details-card__amenity-text">Concierge</span>
+                        </div>
+                        <div class="details-card__amenity">
+                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C12 6.43 10.21 8 8 8S4 6.43 4 4.5 5.79 1 8 1s4 1.57 4 3.5ZM2 13c0-2.21 2.69-4 6-4s6 1.79 6 4v1H2v-1Z" fill="currentColor"/></svg></span>
+                          <span class="details-card__amenity-text">Doorman</span>
+                        </div>
+                      </div>
+                      <div class="details-card__amenities-col">
+                        <div class="details-card__amenity">
+                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 2.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM4 6a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm8 1.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm0-3a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" fill="currentColor"/><path d="M1.5 13.5c0-2.49 2.24-4.5 5-4.5s5 2.01 5 4.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-1.93-1.79-3.5-4-3.5S3 11.57 3 13.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5Z" fill="currentColor"/></svg></span>
+                          <span class="details-card__amenity-text">Valet Parking</span>
+                        </div>
+                        <div class="details-card__amenity">
+                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3.5 12.5c.28 0 .5-.22.5-.5 0-1.93 1.79-3.5 4-3.5s4 1.57 4 3.5c0 .28.22.5.5.5s.5-.22.5-.5c0-2.49-2.24-4.5-5-4.5S3 9.51 3 12c0 .28.22.5.5.5Z" fill="currentColor"/></svg></span>
+                          <span class="details-card__amenity-text">Fitness Center</span>
+                        </div>
+                        <div class="details-card__amenity">
+                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 3H3c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1ZM3 12V4h10v8H3Z" fill="currentColor"/><path d="M5 5.5h6v1H5zM5 7.5h4v1H5z" fill="currentColor"/></svg></span>
+                          <span class="details-card__amenity-text">Rooftop Terrace</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="details-card__more">
+                      <span class="details-card__more-text">More details</span>
+                      <span class="details-card__more-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </div>
+                    <div class="details-card__buttons">
+                      <a class="details-card__btn" href="https://www.onemanhattansquare.com" target="_blank">Website</a>
+                      <a class="details-card__btn">Reserve</a>
+                    </div>
+                  </div>
+                </div>`
+              }
+            ]
+          },
+          {
+            id: "c", type: "video-card", servesIntentions: [5],
+            html: `<div class="video-card">
+              <div class="video-card__thumb"><img src="images/apartment/video.png" alt="One Manhattan Square video tour"></div>
+              <span class="video-card__badge">12:34</span>
+              <div class="video-card__play"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3L12.5 8L5.5 13V3Z" fill="white"/></svg></div>
+              <div class="video-card__overlay">
+                <span class="video-card__title">One Manhattan Square | Full Residence Tour</span>
+                <div class="video-card__meta">
+                  <span class="video-card__meta-item video-card__meta-item--source"><span class="video-card__meta-icon"><img src="https://www.youtube.com/s/desktop/12d6b690/img/favicon_32x32.png" alt="YouTube"></span>YouTube</span>
+                  <span class="video-card__meta-dot"></span>
+                  <span class="video-card__meta-item">Extell Development</span>
+                  <span class="video-card__meta-dot"></span>
+                  <span class="video-card__meta-item">2.1M views</span>
+                  <span class="video-card__meta-dot"></span>
+                  <span class="video-card__meta-item">2 yr ago</span>
+                </div>
               </div>
             </div>`
           },
@@ -1845,67 +3309,157 @@ const SEGMENTS = {
             html: `<div class="list-card">
               <div class="list-card__header">Contact Info</div>
               <div class="list-card__items">
-                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg></span><span class="list-card__item-text">(718) 489-2200</span><span class="list-card__item-meta">Leasing</span></a>
-                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.24848 8.99696C5.66186 8.99696 5.99696 8.66186 5.99696 8.24848C5.99696 7.83511 5.66186 7.5 5.24848 7.5C4.83511 7.5 4.5 7.83511 4.5 8.24848C4.5 8.66186 4.83511 8.99696 5.24848 8.99696ZM14 4.5C14 3.11929 12.8807 2 11.5 2H4.5C3.11929 2 2 3.11929 2 4.5V11.5C2 12.8807 3.11929 14 4.5 14H11.5C12.8807 14 14 12.8807 14 11.5V4.5ZM3 6H13V11.5C13 12.3284 12.3284 13 11.5 13H4.5C3.67157 13 3 12.3284 3 11.5V6ZM4.5 3H11.5C12.3284 3 13 3.67157 13 4.5V5H3V4.5C3 3.67157 3.67157 3 4.5 3Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Mon\u2013Sat 9am\u20136pm</span><span class="list-card__item-meta">Office</span></a>
-                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.03807V11C2 12.1046 2.89543 13 4 13H12C13.1046 13 14 12.1046 14 11V5C14 3.89543 13.1046 3 12 3H4C2.89543 3 2 3.89543 2 5V6.03807ZM4 4H12C12.5523 4 13 4.44772 13 5V5.73987L8.0001 8.43212L3 5.73976V5C3 4.44772 3.44772 4 4 4ZM3 6.87552L7.76305 9.44024C7.91104 9.51992 8.08916 9.51992 8.23715 9.44024L13 6.87562V11C13 11.5523 12.5523 12 12 12H4C3.44772 12 3 11.5523 3 11V6.87552Z" fill="currentColor"/></svg></span><span class="list-card__item-text">leasing@avalonfortgreene.com</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg></span><span class="list-card__item-text">(212) 252-1560</span><span class="list-card__item-meta">Sales Gallery</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.24848 8.99696C5.66186 8.99696 5.99696 8.66186 5.99696 8.24848C5.99696 7.83511 5.66186 7.5 5.24848 7.5C4.83511 7.5 4.5 7.83511 4.5 8.24848C4.5 8.66186 4.83511 8.99696 5.24848 8.99696ZM14 4.5C14 3.11929 12.8807 2 11.5 2H4.5C3.11929 2 2 3.11929 2 4.5V11.5C2 12.8807 3.11929 14 4.5 14H11.5C12.8807 14 14 12.8807 14 11.5V4.5ZM3 6H13V11.5C13 12.3284 12.3284 13 11.5 13H4.5C3.67157 13 3 12.3284 3 11.5V6ZM4.5 3H11.5C12.3284 3 13 3.67157 13 4.5V5H3V4.5C3 3.67157 3.67157 3 4.5 3Z" fill="currentColor"/></svg></span><span class="list-card__item-text">Mon\u2013Sat 10am\u20136pm, Sun 12\u20135pm</span><span class="list-card__item-meta">Gallery Hours</span></a>
+                <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.03807V11C2 12.1046 2.89543 13 4 13H12C13.1046 13 14 12.1046 14 11V5C14 3.89543 13.1046 3 12 3H4C2.89543 3 2 3.89543 2 5V6.03807ZM4 4H12C12.5523 4 13 4.44772 13 5V5.73987L8.0001 8.43212L3 5.73976V5C3 4.44772 3.44772 4 4 4ZM3 6.87552L7.76305 9.44024C7.91104 9.51992 8.08916 9.51992 8.23715 9.44024L13 6.87562V11C13 11.5523 12.5523 12 12 12H4C3.44772 12 3 11.5523 3 11V6.87552Z" fill="currentColor"/></svg></span><span class="list-card__item-text">info@onemanhattansquare.com</span></a>
               </div>
             </div>`
           },
           {
-            id: "e", type: "answer-bar", servesIntentions: [2, 8],
-            html: `<div class="answer-bar">
-              <div class="answer-bar__image">
-                <img src="images/realestate/IMG_0420-Edit-scaled.jpg" alt="Avalon Fort Greene lobby">
-              </div>
-              <div class="answer-bar__info">
-                <div class="answer-bar__title-row">
-                  <span class="answer-bar__title">Avalon Fort Greene</span>
-                  <svg class="answer-bar__verified" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L9.91 3.09L12.66 2.58L12.87 5.35L15.31 6.84L13.85 9.31L14.91 11.91L12.24 12.73L11.09 15.27L8.5 14.15L8 14.39L7.5 14.15L4.91 15.27L3.76 12.73L1.09 11.91L2.15 9.31L0.69 6.84L3.13 5.35L3.34 2.58L6.09 3.09L8 1Z" fill="currentColor"/><path d="M6.5 8.5L7.5 9.5L10 7" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </div>
-                <a class="answer-bar__url" href="https://www.avaloncommunities.com" target="_blank">https://www.avaloncommunities.com</a>
-                <div class="answer-bar__rating">
-                  <span class="answer-bar__rating-icon">\u229B</span>
-                  <span>4.1 / 5</span>
-                  <a class="answer-bar__rating-link">(38 reviews)</a>
-                  <span>\u00B7</span>
-                  <span>Luxury apartments in Brooklyn, NY</span>
-                </div>
-                <div class="answer-bar__meta">
-                  <div class="answer-bar__meta-item">
-                    <svg class="answer-bar__meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5ZM8 9C6.9 9 6 8.1 6 7C6 5.9 6.9 5 8 5C9.1 5 10 5.9 10 7C10 8.1 9.1 9 8 9Z" fill="currentColor"/></svg>
-                    <span>343 Gold St, Brooklyn, NY 11201</span>
+            id: "e", type: "floorplan-carousel", servesIntentions: [1, 4],
+            html: `<div class="floorplan-carousel">
+              <span class="floorplan-carousel__title">Floor Plans</span>
+              <div class="floorplan-carousel__container">
+                <div class="floorplan-carousel__track">
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">1 Bed · 1 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $1,500,000</span>
+                        <span class="floorplan-carousel__card-sub">660 – 863 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.06.18.png" alt="1-Bed floor plan"></div>
                   </div>
-                  <div class="answer-bar__meta-item">
-                    <svg class="answer-bar__meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2C4.69 2 2 4.69 2 8C2 11.31 4.69 14 8 14C11.31 14 14 11.31 14 8C14 4.69 11.31 2 8 2ZM8 3C10.76 3 13 5.24 13 8C13 10.76 10.76 13 8 13C5.24 13 3 10.76 3 8C3 5.24 5.24 3 8 3ZM7.5 4.5V8.21L10.15 9.74L10.65 8.88L8.5 7.62V4.5H7.5Z" fill="currentColor"/></svg>
-                    <span class="answer-bar__meta-label">Open</span>
-                    <span>\u00B7 Office 9 AM\u20136 PM</span>
-                    <span>\u00B7 More hours \u25BE</span>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">2 Bed · 2 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $2,300,000</span>
+                        <span class="floorplan-carousel__card-sub">1,100 – 1,250 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.06.33.png" alt="2-Bed floor plan A"></div>
                   </div>
-                  <div class="answer-bar__meta-item">
-                    <svg class="answer-bar__meta-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg>
-                    <span>(718) 489-2200</span>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">2 Bed · 2 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $2,800,000</span>
+                        <span class="floorplan-carousel__card-sub">1,250 – 1,400 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.06.48.png" alt="2-Bed floor plan B"></div>
+                  </div>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">2 Bed · 2.5 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $3,200,000</span>
+                        <span class="floorplan-carousel__card-sub">1,400 – 1,600 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.07.08.png" alt="2-Bed floor plan C"></div>
+                  </div>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">3 Bed · 3 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $4,200,000</span>
+                        <span class="floorplan-carousel__card-sub">1,750 – 2,100 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.07.20.png" alt="3-Bed floor plan A"></div>
+                  </div>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">3 Bed · 3.5 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $5,500,000</span>
+                        <span class="floorplan-carousel__card-sub">2,100 – 2,600 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.07.30.png" alt="3-Bed floor plan B"></div>
+                  </div>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">4 Bed · 4.5 Bath</span>
+                        <span class="floorplan-carousel__card-line">From $7,500,000</span>
+                        <span class="floorplan-carousel__card-sub">2,800 – 3,500 sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.07.40.png" alt="4-Bed floor plan"></div>
+                  </div>
+                  <div class="floorplan-carousel__card">
+                    <div class="floorplan-carousel__card-info">
+                      <div class="floorplan-carousel__card-lines">
+                        <span class="floorplan-carousel__card-line">Penthouse · 5 Bed</span>
+                        <span class="floorplan-carousel__card-line">From $15,000,000</span>
+                        <span class="floorplan-carousel__card-sub">4,500+ sq ft</span>
+                      </div>
+                    </div>
+                    <div class="floorplan-carousel__card-img"><img src="images/apartment/截屏2026-04-09 16.07.53.png" alt="Penthouse floor plan"></div>
                   </div>
                 </div>
-              </div>
-              <div class="answer-bar__actions">
-                <a class="answer-bar__action-btn answer-bar__action-btn--secondary" href="https://www.avaloncommunities.com" target="_blank">Website</a>
-                <a class="answer-bar__action-btn answer-bar__action-btn--secondary">Directions</a>
-                <a class="answer-bar__action-btn answer-bar__action-btn--secondary">Contact us</a>
-              </div>
-            </div>`
-          },
-          {
-            id: "f", type: "map", servesIntentions: [6],
-            html: `<div class="map-card">
-              <img src="images/realestate/imagemap.png" alt="Map of Avalon Fort Greene" style="filter:blur(4px);position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);object-fit:cover;">
-              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);"></div>
-              <div style="position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;">
-                <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:rgba(255,255,255,0.85);"><path d="M8 1.5C5.1 1.5 2.5 3.8 2.5 7.3C2.5 9.8 4.8 12.5 8 14.5C11.2 12.5 13.5 9.8 13.5 7.3C13.5 3.8 10.9 1.5 8 1.5ZM8 9C6.9 9 6 8.1 6 7C6 5.9 6.9 5 8 5C9.1 5 10 5.9 10 7C10 8.1 9.1 9 8 9Z" fill="currentColor"/></svg>
-                <span style="font-size:12px;color:rgba(255,255,255,0.9);font-weight:600;">Fort Greene, Brooklyn</span>
-                <span style="font-size:11px;color:rgba(255,255,255,0.6);">343 Gold St</span>
+                <div class="floorplan-carousel__fade"></div>
+                <button class="floorplan-carousel__scroller-btn" onclick="this.parentElement.querySelector('.floorplan-carousel__track').scrollBy({left:328,behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
               </div>
             </div>`
           }
+        ]
+      }
+    ]
+  },
+
+  agency: {
+    id: "agency",
+    label: "RE Agency",
+    icon: "\u{1F3E2}",
+    description: "Real estate agency / brokerage",
+    hasStrongNavIntent: true,
+    intentions: [
+      { rank: 1, label: "Browse agency portfolio", type: "navigational", isPrimary: true,
+        trigger: "Evaluating an agency — wants to see their listings and past work",
+        nextAction: "Browse portfolio, check property types and areas served",
+        serpValue: "Portfolio card shows key projects at a glance",
+        cardSuggestion: "Portfolio card (11x2)" },
+      { rank: 2, label: "Visit agency website", type: "navigational", isPrimary: true,
+        trigger: "Knows the agency, wants official site",
+        nextAction: "Navigate to agency site",
+        serpValue: "Nav anchor with deep links to key sections",
+        cardSuggestion: "Nav deeplinks (5x4)" },
+      { rank: 3, label: "Get contact info", type: "navigational", isPrimary: false,
+        trigger: "Ready to reach out to the agency",
+        nextAction: "Call, email, or visit office",
+        serpValue: "Contact card with map, address, phone",
+        cardSuggestion: "Contact card (3x4)" },
+      { rank: 4, label: "Check certifications / credentials", type: "informational", isPrimary: false,
+        trigger: "Verifying agency qualifications",
+        nextAction: "Review certifications and highlights",
+        serpValue: "Fact card shows key differentiators",
+        cardSuggestion: "Fact list card (3x2)" },
+      { rank: 5, label: "Watch agency video", type: "informational", isPrimary: false,
+        trigger: "Wants to get a feel for the agency",
+        nextAction: "Watch intro or testimonial video",
+        serpValue: "Video card for agency overview",
+        cardSuggestion: "Video card (3x2)" }
+    ],
+    queries: [
+      {
+        label: "RE Agency (TBD)",
+        template: "hero-left",
+        templateDesc: "Hero Left \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72 + 3\u00D72 = 44u",
+        serpValue: "Placeholder \u2014 content will be provided by Boss.",
+        slots: [
+          { id: "a", type: "nav-anchor", servesIntentions: [2, 1],
+            html: `<div class="nav-anchor"><div class="nav-anchor__info" style="padding:24px;display:flex;align-items:center;justify-content:center;height:100%;"><span style="font-size:14px;color:rgba(0,0,0,0.35);font-weight:600;">5\u00D74 Nav Deeplinks \u2014 Placeholder</span></div></div>` },
+          { id: "b", type: "overview", servesIntentions: [3, 4],
+            html: `<div class="overview-card"><span class="overview-card__label">AGENCY</span><h2 class="overview-card__title">Agency Contact & Facts</h2><p class="overview-card__intro">Placeholder \u2014 3\u00D74 Contact card with map + address + phone. Boss will provide details.</p><div class="overview-card__facts"><div class="overview-card__fact"><span class="overview-card__fact-label">Phone</span><span class="overview-card__fact-value">TBD</span></div><div class="overview-card__fact"><span class="overview-card__fact-label">Address</span><span class="overview-card__fact-value">TBD</span></div></div></div>` },
+          { id: "c", type: "list", servesIntentions: [5],
+            html: `<div class="list-card"><div class="list-card__header">Video</div><div class="list-card__items"><a class="list-card__item"><span class="list-card__item-text">3\u00D72 Video \u2014 Placeholder</span></a></div></div>` },
+          { id: "d", type: "list", servesIntentions: [4],
+            html: `<div class="list-card"><div class="list-card__header">Highlights & Certifications</div><div class="list-card__items"><a class="list-card__item"><span class="list-card__item-text">3\u00D72 Fact List \u2014 Placeholder</span></a></div></div>` }
         ]
       }
     ]
@@ -1919,7 +3473,9 @@ const state = {
   activeSegment: "government",
   hoveredIntention: null,
   selectedIntention: 1,
-  showBadges: false
+  showBadges: false,
+  galleryMode: false,
+  slotCards: {}  // { "government:a": 0, "government:b": 1, ... }
 };
 
 // ============================================================
@@ -1945,9 +3501,14 @@ function renderIntentionSidebar() {
   let html = `
     <div class="intention-sidebar__header">
       <span class="intention-sidebar__label">Intentions</span>
-      <div class="badge-toggle" onclick="toggleBadges()" role="switch" aria-checked="${state.showBadges}" tabindex="0" aria-label="Toggle intent badges" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleBadges()}">
-        <div class="badge-toggle__switch${state.showBadges ? ' on' : ''}" id="badgeSwitch"></div>
-        <span class="badge-toggle__label">Badges</span>
+      <div style="display:flex;gap:4px;align-items:center;">
+        <div class="gallery-toggle${state.galleryMode ? ' active' : ''}" onclick="toggleGalleryMode()" title="Show all cards in a flat gallery view">
+          <span class="gallery-toggle__label">Gallery</span>
+        </div>
+        <div class="badge-toggle" onclick="toggleBadges()" role="switch" aria-checked="${state.showBadges}" tabindex="0" aria-label="Toggle intent badges" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleBadges()}">
+          <div class="badge-toggle__switch${state.showBadges ? ' on' : ''}" id="badgeSwitch"></div>
+          <span class="badge-toggle__label">Badges</span>
+        </div>
       </div>
     </div>
     <div class="intention-list" id="intentionList">`;
@@ -1991,8 +3552,15 @@ function renderContent() {
   const seg = SEGMENTS[state.activeSegment];
   const content = document.getElementById("content");
 
+  // Clean up old drag-and-drop listeners
+  if (window._dndCleanup) {
+    window._dndCleanup();
+    window._dndCleanup = null;
+  }
+
   // Magazine (visual payoff) — no segment header needed, tabs are at top
   const query = seg.queries[0];
+  const isGallery = state.galleryMode;
   let html = `
     <div class="magazine-section">
       <div class="magazine-header">
@@ -2000,7 +3568,7 @@ function renderContent() {
         <span class="magazine-header__template">${query.templateDesc}</span>
       </div>
       <div class="serp-value"><strong>Why this layout works:</strong> ${query.serpValue}</div>
-      <div class="magazine-wrapper">
+      <div class="magazine-wrapper${isGallery ? ' magazine-scroll-container' : ''}">
         <div class="magazine-scaler" id="magazineScaler">
           <div class="magazine-grid--${query.template}">`;
 
@@ -2073,9 +3641,14 @@ function renderContent() {
     html += renderSlot(slotC, "slot-c", seg.intentions, true);
     html += renderSlot(slotD, "slot-d", seg.intentions, true);
     html += renderSlot(slotE, "slot-e", seg.intentions);
-    html += renderSlot(slotF, "slot-f", seg.intentions);
+    // If slot E's active card is photo-carousel (full 11×2), skip slot F
+    const activeE = getActiveCard(slotE);
+    if (!activeE || activeE.type !== "photo-carousel") {
+      html += renderSlot(slotF, "slot-f", seg.intentions);
+    }
   }
 
+  // Close magazine grid
   html += '</div><div class="badge-overlay" id="badgeOverlay"></div>';
 
   // Pole Slide (Tabs + Carousel) — inside scaler, below magazine grid
@@ -2093,14 +3666,11 @@ function renderContent() {
     const activeItems = carousel.items[carousel.tabs[activeTabIdx]] || [];
     activeItems.forEach(item => {
       html += `<div class="pole-slide__card">
-        <div class="pole-slide__card-body">
+        <div class="pole-slide__card-img-wrap">${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}</div>
+        <div class="pole-slide__card-meta">
           <div class="pole-slide__card-title">${item.title}</div>
-          <div class="pole-slide__card-source">
-            <div class="pole-slide__card-favicon"><img src="${item.favicon}" alt=""></div>
-            <span class="pole-slide__card-url">${item.url}</span>
-          </div>
+          ${item.subtitle ? `<div class="pole-slide__card-subtitle">${item.subtitle}</div>` : ''}
         </div>
-        ${item.image ? `<div class="pole-slide__card-img"><img src="${item.image}" alt="${item.title}"></div>` : ''}
       </div>`;
     });
     html += `</div>
@@ -2114,23 +3684,288 @@ function renderContent() {
     </div>`;
   }
 
-  // Close magazine-scaler + magazine-wrapper + magazine-section
-  html += '</div></div></div>';
+  // Close magazine-scaler
+  html += '</div>';
+
+  // Gallery mode: render alternates track alongside magazine
+  if (isGallery) {
+    html += renderAlternatesTrack(query);
+  }
+
+  // Close magazine-wrapper + magazine-section
+  html += '</div></div>';
 
   content.innerHTML = html;
   scaleMagazine();
   renderBadgeOverlay(seg);
+  if (isGallery) {
+    initDragAndDrop();
+  }
+}
+
+// Helper: get the active card data from a slot (supports alternates)
+function getActiveCard(slot) {
+  if (!slot) return null;
+  if (!slot.alternates || slot.alternates.length === 0) {
+    return { type: slot.type, servesIntentions: slot.servesIntentions, html: slot.html, label: slot.type };
+  }
+  const key = state.activeSegment + ":" + slot.id;
+  const idx = state.slotCards[key] || 0;
+  const allCards = [
+    { type: slot.type, servesIntentions: slot.servesIntentions, html: slot.html, label: slot.label || slot.type },
+    ...slot.alternates
+  ];
+  return allCards[Math.min(idx, allCards.length - 1)];
+}
+
+// Helper: total card count for a slot
+function getSlotCardCount(slot) {
+  if (!slot || !slot.alternates) return 1;
+  return 1 + slot.alternates.length;
+}
+
+// Helper: current card index for a slot
+function getSlotCardIndex(slot) {
+  const key = state.activeSegment + ":" + slot.id;
+  return state.slotCards[key] || 0;
+}
+
+// ============================================================
+// RENDER: Alternates Track (right side of magazine in gallery mode)
+// ============================================================
+function renderAlternatesTrack(query) {
+  // Collect all alternate cards, grouped by slot
+  const slots = query.slots;
+  const tallSlots = [];  // 3×4 or similar tall slots
+  const smallSlots = []; // 3×2 or similar small slots
+
+  slots.forEach(slot => {
+    if (!slot.alternates || slot.alternates.length === 0) return;
+    const size = inferSize(slot, query);
+    if (size.endsWith('x4')) {
+      tallSlots.push(slot);
+    } else if (size.endsWith('x2')) {
+      smallSlots.push(slot);
+    }
+  });
+
+  if (tallSlots.length === 0 && smallSlots.length === 0) {
+    return '<div class="alternates-empty">No alternate cards available</div>';
+  }
+
+  // Build alt-columns: each column = one 3×4 + up to two stacked 3×2
+  // First, flatten all alternate cards with their slot info
+  const tallAlts = [];
+  tallSlots.forEach(slot => {
+    const size = inferSize(slot, query);
+    slot.alternates.forEach((alt, idx) => {
+      tallAlts.push({ slot, alt, altIdx: idx + 1, size });
+    });
+  });
+  const smallAlts = [];
+  smallSlots.forEach(slot => {
+    const size = inferSize(slot, query);
+    slot.alternates.forEach((alt, idx) => {
+      smallAlts.push({ slot, alt, altIdx: idx + 1, size });
+    });
+  });
+
+  // Build columns: pair one tall + up to two smalls per column
+  let html = '<div class="alternates-track">';
+  let si = 0; // small alt index
+  const maxCols = Math.max(tallAlts.length, Math.ceil(smallAlts.length / 2));
+
+  for (let col = 0; col < maxCols; col++) {
+    html += '<div class="alt-column">';
+
+    // Tall card
+    if (col < tallAlts.length) {
+      const t = tallAlts[col];
+      html += `<div class="alt-column__tall">
+        ${renderAltCard(t.slot, t.alt, t.altIdx, 'tall')}
+      </div>`;
+    }
+
+    // Stack of up to 2 small cards
+    if (si < smallAlts.length) {
+      html += '<div class="alt-column__stack">';
+      for (let j = 0; j < 2 && si < smallAlts.length; j++, si++) {
+        const s = smallAlts[si];
+        html += `<div class="alt-column__small">
+          ${renderAltCard(s.slot, s.alt, s.altIdx, 'small')}
+        </div>`;
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function renderAltCard(slot, alt, altIdx, sizeClass) {
+  const size = inferSize(slot, SEGMENTS[state.activeSegment].queries[0]);
+  const isPadded = !["hero-composite","image-card","image-site-card","professor-photo","nav-anchor","answer-bar","map","location-contact","news","subdivided","details-card","map-details","floorplan-carousel","video-card"].includes(alt.type)
+    && ["overview","subdivided","list","result","service","nav-anchor"].includes(alt.type);
+  const paddedClass = isPadded ? "card--padded" : "";
+  return `
+    <div class="card ${paddedClass} card--full slot-wrapper"
+         draggable="true"
+         data-slot-id="${slot.id}"
+         data-alt-idx="${altIdx}"
+         data-slot-size="${size}"
+         data-serves="${alt.servesIntentions.join(",")}">
+      ${alt.html}
+    </div>`;
+}
+
+// ============================================================
+// DRAG & DROP: Swap alternate cards into magazine slots
+// ============================================================
+function initDragAndDrop() {
+  const seg = SEGMENTS[state.activeSegment];
+  const query = seg.queries[0];
+
+  // Make magazine slot cards draggable too (for swapping back)
+  document.querySelectorAll('.slot-wrapper').forEach(el => {
+    el.setAttribute('draggable', 'true');
+  });
+
+  let dragData = null; // { sourceType: 'alt'|'slot', slotId, altIdx, size }
+
+  document.addEventListener('dragstart', handleDragStart);
+  document.addEventListener('dragover', handleDragOver);
+  document.addEventListener('drop', handleDrop);
+  document.addEventListener('dragend', handleDragEnd);
+  document.addEventListener('dragleave', handleDragLeave);
+
+  // Store cleanup function for re-init
+  window._dndCleanup = () => {
+    document.removeEventListener('dragstart', handleDragStart);
+    document.removeEventListener('dragover', handleDragOver);
+    document.removeEventListener('drop', handleDrop);
+    document.removeEventListener('dragend', handleDragEnd);
+    document.removeEventListener('dragleave', handleDragLeave);
+  };
+
+  function handleDragStart(e) {
+    const slotCard = e.target.closest('.slot-wrapper');
+    if (!slotCard || !state.galleryMode) return;
+    const isAlt = slotCard.dataset.altIdx !== undefined;
+    dragData = {
+      sourceType: isAlt ? 'alt' : 'slot',
+      slotId: slotCard.dataset.slotId,
+      altIdx: isAlt ? parseInt(slotCard.dataset.altIdx) : 0,
+      size: slotCard.dataset.slotSize
+    };
+    slotCard.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+  }
+
+  function handleDragOver(e) {
+    if (!dragData) return;
+    const target = e.target.closest('.slot-wrapper');
+    if (!target) return;
+    const targetSize = target.dataset.slotSize;
+    if (targetSize === dragData.size) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      target.classList.add('drag-over');
+      target.classList.remove('drag-invalid');
+    } else {
+      target.classList.add('drag-invalid');
+      target.classList.remove('drag-over');
+    }
+  }
+
+  function handleDragLeave(e) {
+    const target = e.target.closest('.slot-wrapper');
+    if (target) {
+      target.classList.remove('drag-over', 'drag-invalid');
+    }
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    if (!dragData) return;
+    const target = e.target.closest('.slot-wrapper');
+    if (!target) return;
+    target.classList.remove('drag-over', 'drag-invalid');
+
+    const targetSize = target.dataset.slotSize;
+    if (targetSize !== dragData.size) return;
+
+    const targetSlotId = target.dataset.slotId;
+    const targetIsAlt = target.dataset.altIdx !== undefined;
+    const targetAltIdx = targetIsAlt ? parseInt(target.dataset.altIdx) : 0;
+
+    // Perform the swap
+    swapCards(dragData.slotId, dragData.altIdx, targetSlotId, targetAltIdx, query);
+
+    // Re-render
+    if (window._dndCleanup) window._dndCleanup();
+    renderContent();
+  }
+
+  function handleDragEnd(e) {
+    dragData = null;
+    document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    document.querySelectorAll('.drag-over, .drag-invalid').forEach(el => {
+      el.classList.remove('drag-over', 'drag-invalid');
+    });
+  }
+}
+
+function swapCards(srcSlotId, srcAltIdx, tgtSlotId, tgtAltIdx, query) {
+  const srcSlot = query.slots.find(s => s.id === srcSlotId);
+  const tgtSlot = query.slots.find(s => s.id === tgtSlotId);
+  if (!srcSlot || !tgtSlot) return;
+
+  // Get source card data
+  const srcCard = srcAltIdx === 0
+    ? { type: srcSlot.type, servesIntentions: srcSlot.servesIntentions, html: srcSlot.html, label: srcSlot.label || srcSlot.type }
+    : srcSlot.alternates[srcAltIdx - 1];
+
+  // Get target card data
+  const tgtCard = tgtAltIdx === 0
+    ? { type: tgtSlot.type, servesIntentions: tgtSlot.servesIntentions, html: tgtSlot.html, label: tgtSlot.label || tgtSlot.type }
+    : tgtSlot.alternates[tgtAltIdx - 1];
+
+  // Swap: write target's data into source's position
+  if (srcAltIdx === 0) {
+    srcSlot.type = tgtCard.type;
+    srcSlot.servesIntentions = tgtCard.servesIntentions;
+    srcSlot.html = tgtCard.html;
+    srcSlot.label = tgtCard.label;
+  } else {
+    srcSlot.alternates[srcAltIdx - 1] = { ...tgtCard };
+  }
+
+  // Write source's data into target's position
+  if (tgtAltIdx === 0) {
+    tgtSlot.type = srcCard.type;
+    tgtSlot.servesIntentions = srcCard.servesIntentions;
+    tgtSlot.html = srcCard.html;
+    tgtSlot.label = srcCard.label;
+  } else {
+    tgtSlot.alternates[tgtAltIdx - 1] = { ...srcCard };
+  }
 }
 
 function renderSlot(slot, className, intentions, padded) {
   if (!slot) return '';
-  const noPadTypes = ["hero-composite","image-card","image-site-card","professor-photo","nav-anchor","answer-bar","map"];
-  const isPadded = noPadTypes.includes(slot.type) ? false : (padded || ["overview","subdivided","list","result","service","nav-anchor","news"].includes(slot.type));
+  const card = getActiveCard(slot);
+  if (!card) return '';
+  const noPadTypes = ["hero-composite","image-card","image-site-card","professor-photo","nav-anchor","nav-deeplinks","answer-bar","map","location-contact","news","subdivided","details-card","map-details","floorplan-carousel","video-card","portfolio","local-overview","photo-carousel"];
+  const isPadded = noPadTypes.includes(card.type) ? false : (padded || ["overview","subdivided","list","result","service","nav-anchor"].includes(card.type));
   const paddedClass = isPadded ? "card--padded" : "";
 
   return `
-    <div class="${className} card ${paddedClass} card--full slot-wrapper" data-serves="${slot.servesIntentions.join(",")}" data-slot-id="${slot.id}">
-      ${slot.html}
+    <div class="${className} card ${paddedClass} card--full slot-wrapper" data-serves="${card.servesIntentions.join(",")}" data-slot-id="${slot.id}" data-slot-size="${inferSize(slot, SEGMENTS[state.activeSegment].queries[0])}">
+      ${card.html}
     </div>`;
 }
 
@@ -2152,6 +3987,8 @@ function renderBadgeOverlay(seg) {
   let badgeHtml = '';
 
   query.slots.forEach(slot => {
+    const card = getActiveCard(slot);
+    if (!card) return;
     // Find the slot element position relative to the grid
     const slotEl = scaler.querySelector(`[data-slot-id="${slot.id}"]`);
     if (!slotEl) return;
@@ -2161,7 +3998,7 @@ function renderBadgeOverlay(seg) {
     const top = (slotRect.top - scalerRect.top) / scale + 8;
     const right = (scalerRect.right - slotRect.right) / scale + 8;
 
-    const badges = slot.servesIntentions.map(rank => {
+    const badges = card.servesIntentions.map(rank => {
       const intent = seg.intentions.find(i => i.rank === rank);
       const isPrimary = intent && intent.isPrimary;
       const tooltipText = intent ? intent.label : '';
@@ -2206,6 +4043,7 @@ function selectSegment(segmentId) {
   state.activeSegment = segmentId;
   state.hoveredIntention = null;
   state.selectedIntention = 1;
+  state.galleryMode = false;
   renderSegmentTabs();
   renderIntentionSidebar();
   renderContent();
@@ -2235,14 +4073,11 @@ function switchCarouselTab(tabName) {
   const track = document.getElementById('poleSlideTrack');
   if (!track) return;
   track.innerHTML = items.map(item => `<div class="pole-slide__card">
-    <div class="pole-slide__card-body">
+    <div class="pole-slide__card-img-wrap">${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}</div>
+    <div class="pole-slide__card-meta">
       <div class="pole-slide__card-title">${item.title}</div>
-      <div class="pole-slide__card-source">
-        <div class="pole-slide__card-favicon"><img src="${item.favicon}" alt=""></div>
-        <span class="pole-slide__card-url">${item.url}</span>
-      </div>
+      ${item.subtitle ? `<div class="pole-slide__card-subtitle">${item.subtitle}</div>` : ''}
     </div>
-    ${item.image ? `<div class="pole-slide__card-img"><img src="${item.image}" alt="${item.title}"></div>` : ''}
   </div>`).join('');
   track.scrollLeft = 0;
 }
@@ -2250,7 +4085,59 @@ function switchCarouselTab(tabName) {
 function scrollCarousel() {
   const track = document.getElementById('poleSlideTrack');
   if (!track) return;
-  track.scrollBy({ left: 328, behavior: 'smooth' });
+  track.scrollBy({ left: 216, behavior: 'smooth' });
+}
+
+function scrollPhotoCarousel() {
+  const track = document.getElementById('photoCarouselTrack');
+  if (!track) return;
+  track.scrollBy({ left: 216, behavior: 'smooth' });
+}
+
+function toggleGalleryMode() {
+  state.galleryMode = !state.galleryMode;
+  renderIntentionSidebar();
+  renderContent();
+}
+
+// Infer card size from slot position and template
+function inferSize(slot, query) {
+  const t = query.template;
+  const id = slot.id;
+  if (t === "hero-left") {
+    if (id === "a") return "5x4";
+    if (id === "b") return "3x4";
+    return "3x2";
+  }
+  if (t === "photo-left") {
+    if (id === "a") return "3x4";
+    if (id === "b") return "5x4";
+    return "3x2";
+  }
+  if (t === "hero-stack") {
+    if (id === "a") return "5x4";
+    return "3x2";
+  }
+  if (t === "dashboard-mix") {
+    if (id === "a") return "4x4";
+    if (id === "b") return "2x4";
+    if (id === "c") return "3x2";
+    if (id === "d") return "2x2";
+    return "5x2";
+  }
+  if (t === "hero-map") {
+    if (id === "a") return "5x4";
+    if (id === "b") return "3x4";
+    if (id === "e") return "8x2";
+    return "3x2";
+  }
+  if (t === "hero-wide") {
+    if (id === "a") return "6x4";
+    if (id === "b") return "2x2";
+    if (id === "c") return "3x2";
+    return "5x2";
+  }
+  return "3x2";
 }
 
 function highlightIntention(rank) {
@@ -2301,10 +4188,37 @@ renderSegmentTabs();
 renderIntentionSidebar();
 renderContent();
 
+// Portfolio card carousel
+function portfolioSlide(btn, dir) {
+  const card = btn.closest('.portfolio-card');
+  if (!card) return;
+  const imgs = card.querySelectorAll('.portfolio-card__image');
+  const total = imgs.length;
+  let cur = parseInt(card.dataset.slide || '0');
+  cur = (cur + dir + total) % total;
+  card.dataset.slide = cur;
+  imgs.forEach((img, i) => {
+    img.classList.toggle('portfolio-card__image--active', i === cur);
+    img.classList.toggle('portfolio-card__image--hidden', i !== cur);
+  });
+  const numEl = card.querySelector('.portfolio-card__page-current');
+  if (numEl) numEl.textContent = cur + 1;
+}
+
 // Scale magazine to fit container width
 function scaleMagazine() {
   const scaler = document.getElementById('magazineScaler');
   if (!scaler) return;
+
+  // In gallery mode, don't scale — let the scroll container handle overflow
+  if (state.galleryMode) {
+    scaler.style.transform = 'none';
+    scaler.style.height = 'auto';
+    const overlay = document.getElementById('badgeOverlay');
+    if (overlay) overlay.style.transform = 'none';
+    return;
+  }
+
   const wrapper = scaler.parentElement;
   const available = wrapper.clientWidth;
   const scale = Math.min(1, available / 1208);
