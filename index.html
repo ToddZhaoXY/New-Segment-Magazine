@@ -256,12 +256,12 @@
     }
 
     /* ===== Magazine Section ===== */
-    .magazine-section { display: flex; flex-direction: column; gap: 16px; }
+    .magazine-section { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px); }
     .magazine-header {
-      display: flex; align-items: center; gap: 12px; padding: 0 4px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-small, 12px); padding: 0 4px;
     }
     .magazine-header__query {
-      font-size: 18px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-subtitle2-fontSize, 18px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .magazine-header__template {
@@ -279,7 +279,7 @@
     }
     .card-intent-badge {
       position: absolute;
-      display: flex; gap: 4px; z-index: 10;
+      display: flex; gap: var(--smtc-gap-between-content-xx-small, 4px); z-index: 10;
       pointer-events: auto;
     }
     .card-intent-badge--hidden { display: none; }
@@ -397,10 +397,10 @@
       color: white;
     }
     .professor-photo__name {
-      font-size: 18px; font-weight: 700; line-height: 24px;
+      font-size: var(--bing-smtc-text-global-subtitle2-fontSize, 18px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700); line-height: 24px;
     }
     .professor-photo__role {
-      font-size: 13px; line-height: 18px; opacity: 0.85; margin-top: 2px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: 18px; opacity: 0.85; margin-top: 2px;
     }
 
     /* --- Template 5: Hero & Stack (5×4 + 4× 3×2 = 44u) --- */
@@ -456,7 +456,7 @@
     .answer-bar {
       display: flex;
       height: 100%;
-      background: white;
+      background: var(--smtc-background-card-on-primary-default-rest, white);
       border-radius: var(--mai-smtc-corner-card-default, 24px);
       border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1));
       overflow: hidden;
@@ -475,7 +475,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 4px;
+      gap: var(--smtc-gap-between-content-xx-small, 4px);
       min-width: 0;
     }
     .answer-bar__title-row {
@@ -484,7 +484,7 @@
       gap: 6px;
     }
     .answer-bar__title {
-      font-size: 18px;
+      font-size: var(--bing-smtc-text-global-subtitle2-fontSize, 18px);
       line-height: 24px;
       font-weight: 600;
       color: var(--smtc-foreground-content-neutral-primary, #272320);
@@ -494,8 +494,8 @@
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
     }
     .answer-bar__url {
-      font-size: 13px;
-      line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
+      line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
       text-decoration: none;
     }
@@ -504,8 +504,8 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
-      line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
+      line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
     }
     .answer-bar__rating-icon {
@@ -519,8 +519,8 @@
     .answer-bar__meta {
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      font-size: 13px;
+      gap: var(--smtc-gap-between-content-xxx-small, 2px);
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
       line-height: 20px;
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
     }
@@ -549,10 +549,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: var(--smtc-gap-between-content-xx-small, 4px);
       padding: 8px 20px;
       border-radius: var(--smtc-corner-ctrl-rest, 8px);
-      font-size: 13px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
       line-height: 20px;
       font-weight: 600;
       cursor: pointer;
@@ -636,7 +636,7 @@
       display: flex; gap: var(--smtc-gap-between-content-small, 12px); align-items: center;
     }
     .nav-deeplinks__favicon-frame {
-      width: 42px; height: 42px; border-radius: 150px; flex-shrink: 0;
+      width: 42px; height: 42px; border-radius: var(--smtc-corner-circular, 9999px); flex-shrink: 0;
       background: var(--bing-smtc-background-ctrl-neutral-rest, #f5f5f5);
       border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1));
       display: flex; align-items: center; justify-content: center; overflow: hidden;
@@ -685,7 +685,7 @@
       display: flex; flex-direction: column; flex: 1 0 0; min-width: 1px; white-space: nowrap; overflow: hidden;
     }
     .nav-deeplinks__link-title {
-      font-size: 16px; line-height: 26px;
+      font-size: var(--bing-smtc-text-global-body2-fontSize, 16px); line-height: var(--bing-smtc-text-global-body2-lineHeight, 26px);
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
       overflow: hidden; text-overflow: ellipsis;
     }
@@ -735,12 +735,12 @@
       width: 100%;
     }
     .portfolio-card__title {
-      font-size: 18px; line-height: var(--text-global-body1-lineheight, 28px);
+      font-size: var(--bing-smtc-text-global-subtitle2-fontSize, 18px); line-height: var(--text-global-body1-lineheight, 28px);
       font-weight: var(--text-style-default-header-weight, 700);
       color: white; overflow: hidden; text-overflow: ellipsis;
     }
     .portfolio-card__fact {
-      display: flex; gap: 4px; align-items: flex-start;
+      display: flex; gap: var(--smtc-gap-between-content-xx-small, 4px); align-items: flex-start;
       font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
       color: rgba(255,255,255,0.8); overflow: clip;
     }
@@ -822,7 +822,7 @@
       display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); align-items: center;
       font-size: var(--text-global-body3-fontsize, 14px); line-height: var(--text-global-body3-lineheight, 22px);
     }
-    .local-overview__rating-icon { width: 16px; height: 16px; flex-shrink: 0; border-radius: 999px; overflow: hidden; }
+    .local-overview__rating-icon { width: 16px; height: 16px; flex-shrink: 0; border-radius: var(--smtc-corner-circular, 9999px); overflow: hidden; }
     .local-overview__rating-icon img { width: 100%; height: 100%; object-fit: cover; }
     .local-overview__rating-score {
       display: flex; gap: 3px; font-weight: var(--text-style-default-header-weight, 700);
@@ -872,9 +872,9 @@
     }
 
     /* ===== Nav Anchor Card (Cocaurus review style) ===== */
-    .nav-anchor { display: flex; flex-direction: column; justify-content: space-between; height: 100%; background: white; border-radius: var(--mai-smtc-corner-card-default, 24px); border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1)); padding: 20px; }
+    .nav-anchor { display: flex; flex-direction: column; justify-content: space-between; height: 100%; background: var(--smtc-background-card-on-primary-default-rest, white); border-radius: var(--mai-smtc-corner-card-default, 24px); border: 1px solid var(--smtc-stroke-card-on-primary-rest, rgba(0,0,0,0.1)); padding: 20px; }
     .nav-anchor__images {
-      display: flex; gap: 2px; overflow: hidden;
+      display: flex; gap: var(--smtc-gap-between-content-xxx-small, 2px); overflow: hidden;
       border-radius: var(--bing-smtc-corner-flyout-popover-rest, 16px);
       height: 180px; flex-shrink: 0;
     }
@@ -883,21 +883,21 @@
     .nav-anchor__images img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .nav-anchor__img-btn {
       position: absolute; bottom: 8px; right: 8px;
-      display: flex; align-items: center; gap: 2px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xxx-small, 2px);
       background: rgba(0,0,0,0.6); color: white;
-      padding: 4px 8px 4px 4px; border-radius: 9999px;
-      font-size: 13px; line-height: 20px; border: 1px solid rgba(0,0,0,0.1);
+      padding: 4px 8px 4px 4px; border-radius: var(--smtc-corner-circular, 9999px);
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px); border: 1px solid rgba(0,0,0,0.1);
     }
     .nav-anchor__img-btn .bing-icon { fill: white; }
     .nav-anchor__info {
-      display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); flex-shrink: 0;
       padding-top: 8px;
     }
     .nav-anchor__attribution {
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-small, 12px);
     }
     .nav-anchor__favicon {
-      width: 28px; height: 28px; border-radius: 100px; flex-shrink: 0;
+      width: 28px; height: 28px; border-radius: var(--smtc-corner-circular, 9999px); flex-shrink: 0;
       background: var(--bing-smtc-background-ctrl-neutral-rest, #f5f5f5);
       border: 0.667px solid rgba(0,0,0,0.1);
       display: flex; align-items: center; justify-content: center;
@@ -906,17 +906,17 @@
     .nav-anchor__favicon img { width: 18px; height: 18px; object-fit: cover; }
     .nav-anchor__attr-text { display: flex; flex-direction: column; }
     .nav-anchor__site-name {
-      font-size: 14px; line-height: 22px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.8));
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .nav-anchor__site-url {
-      font-size: 13px; line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .nav-anchor__title {
-      font-size: 24px; line-height: 32px; font-weight: 400;
+      font-size: var(--bing-smtc-text-global-title2-fontSize, 24px); line-height: var(--bing-smtc-text-global-title2-lineHeight, 32px); font-weight: 400;
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       cursor: pointer; text-decoration: none;
@@ -926,19 +926,19 @@
     .nav-anchor__img-main:hover img,
     .nav-anchor__img-side:hover img { transform: scale(1.05); }
     .nav-anchor__desc {
-      font-size: 14px; line-height: 22px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
     .nav-anchor__desc--4line {
       -webkit-line-clamp: 4;
     }
-    .nav-anchor__links { display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; overflow: hidden; }
+    .nav-anchor__links { display: flex; flex-wrap: wrap; gap: var(--smtc-gap-between-content-x-small, 8px); flex-shrink: 0; overflow: hidden; }
     .nav-anchor__link {
-      display: flex; align-items: center; gap: 4px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px);
       height: 38px; padding: 0 12px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
       border: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.1));
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
       cursor: pointer; text-decoration: none; background: transparent;
     }
@@ -949,8 +949,8 @@
     /* Nav anchor card with logo variant (luxury brands) */
     .nav-anchor__logo {
       width: 84px; height: 84px;
-      border-radius: 9999px;
-      background: white;
+      border-radius: var(--smtc-corner-circular, 9999px);
+      background: var(--smtc-background-card-on-primary-default-rest, white);
       border: 1px solid rgba(0,0,0,0.08);
       box-shadow: -5px 4px 12px 0px rgba(0,0,0,0.1);
       display: flex; align-items: center; justify-content: center;
@@ -963,7 +963,7 @@
     }
     .nav-anchor__logo img {
       width: 76px; height: 76px;
-      border-radius: 9999px;
+      border-radius: var(--smtc-corner-circular, 9999px);
       object-fit: cover;
       display: block;
     }
@@ -995,16 +995,16 @@
     }
     .nav-anchor--immersive .nav-anchor__info {
       position: relative; z-index: 1;
-      display: flex; flex-direction: column; gap: 16px;
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px);
       padding: 20px; padding-top: 0;
       margin-top: auto;
     }
     .nav-anchor--immersive .nav-anchor__brand-row {
-      display: flex; align-items: center; gap: 16px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-medium, 16px);
     }
     .nav-anchor--immersive .nav-anchor__brand-icon {
       width: 54px; height: 54px; border-radius: var(--mai-smtc-corner-ctrl-xlg-rest, 16px);
-      background: white; overflow: hidden; flex-shrink: 0;
+      background: var(--smtc-background-card-on-primary-default-rest, white); overflow: hidden; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
     }
     .nav-anchor--immersive .nav-anchor__brand-icon img {
@@ -1016,10 +1016,10 @@
     .nav-anchor--immersive .nav-anchor__brand-name {
       font-size: var(--text-global-title1-fontsize, 36px);
       line-height: var(--text-global-title1-lineheight, 48px);
-      font-weight: 700; color: white;
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700); color: white;
     }
     .nav-anchor--immersive .nav-anchor__brand-url {
-      font-size: 13px; line-height: var(--text-global-caption1-lineheight, 20px);
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
       color: rgba(255,255,255,0.6);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
@@ -1027,17 +1027,17 @@
       color: white; -webkit-line-clamp: 3;
     }
     .nav-anchor--immersive .nav-anchor__ai-label {
-      font-size: 11px; line-height: 13px; color: rgba(255,255,255,0.6);
+      font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px); line-height: var(--bing-smtc-text-global-caption2-lineHeight, 13px); color: rgba(255,255,255,0.6);
     }
     .nav-anchor--immersive .nav-anchor__pills {
-      display: flex; gap: 8px; flex-wrap: wrap; overflow: hidden;
+      display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); flex-wrap: wrap; overflow: hidden;
     }
     .nav-anchor--immersive .nav-anchor__pill {
-      display: flex; align-items: center; gap: 4px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px);
       padding: 8px 12px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.2);
-      font-size: 13px; line-height: 20px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: white; cursor: pointer; text-decoration: none; white-space: nowrap;
     }
     .nav-anchor--immersive .nav-anchor__pill:hover {
@@ -1045,11 +1045,11 @@
     }
     .nav-anchor--immersive .nav-anchor__pill .bing-icon { fill: white; }
     .nav-anchor--immersive .nav-anchor__cta {
-      display: inline-flex; align-items: center; gap: 4px;
+      display: inline-flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px);
       padding: 8px 12px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
       background: var(--smtc-background-ctrl-active-brand-rest, #4f6bed);
-      font-size: 13px; line-height: 20px; font-weight: 700;
-      color: white; cursor: pointer; text-decoration: none;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
+      color: var(--smtc-foreground-ctrl-on-brand-rest, white); cursor: pointer; text-decoration: none;
       border: none; white-space: nowrap; align-self: flex-start;
     }
     .nav-anchor--immersive .nav-anchor__cta:hover {
@@ -1060,11 +1060,11 @@
     .hero-composite__image img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .hero-composite__body {
       padding: 16px 20px 20px; display: flex; flex-direction: column;
-      gap: 8px; flex-shrink: 0;
+      gap: var(--smtc-gap-between-content-x-small, 8px); flex-shrink: 0;
     }
-    .hero-composite__entity-row { display: flex; align-items: center; gap: 8px; }
+    .hero-composite__entity-row { display: flex; align-items: center; gap: var(--smtc-gap-between-content-x-small, 8px); }
     .hero-composite__entity-name {
-      font-size: 18px; line-height: 24px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-subtitle2-fontSize, 18px); line-height: 24px; font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .hero-composite__entity-type {
@@ -1074,12 +1074,12 @@
       padding: 2px 8px; border-radius: var(--smtc-corner-ctrl-sm-rest, 12px); flex-shrink: 0;
     }
     .hero-composite__desc {
-      font-size: 13px; line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
     .hero-composite__site-link {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-x-small, 8px);
       padding: 8px 12px;
       background: var(--bing-smtc-background-ctrl-neutral-rest, #efeae7);
       border-radius: var(--smtc-corner-ctrl-rest, 12px);
@@ -1089,13 +1089,13 @@
       background: var(--mai-smtc-background-card-on-primary-alt-selected, #e5e0dc);
     }
     .hero-composite__site-favicon {
-      width: 20px; height: 20px; border-radius: 4px;
-      background: white; display: flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: var(--smtc-corner-ctrl-sm-rest, 4px);
+      background: var(--smtc-background-card-on-primary-default-rest, white); display: flex; align-items: center; justify-content: center;
       font-size: 12px; flex-shrink: 0; overflow: hidden;
     }
     .hero-composite__site-info { display: flex; flex-direction: column; gap: 0; min-width: 0; flex: 1; }
     .hero-composite__site-name {
-      font-size: 14px; line-height: 20px; font-weight: 600;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: 20px; font-weight: 600;
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3f3935);
     }
     .hero-composite__site-url {
@@ -1104,7 +1104,7 @@
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .hero-composite__site-arrow {
-      font-size: 14px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.5));
       flex-shrink: 0;
     }
@@ -1126,18 +1126,18 @@
       overflow: hidden; border-radius: var(--mai-smtc-corner-card-default, 24px);
     }
     .news-card__content {
-      flex: 1; display: flex; flex-direction: column; gap: 8px;
+      flex: 1; display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
       padding: var(--mai-smtc-padding-card-default, 20px);
       min-width: 0;
     }
     .news-card__source {
-      display: flex; align-items: center; gap: 4px;
-      font-size: 11px; line-height: 13px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px);
+      font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px); line-height: var(--bing-smtc-text-global-caption2-lineHeight, 13px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .news-card__source-favicon {
-      width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0;
+      width: 16px; height: 16px; border-radius: var(--smtc-corner-ctrl-sm-rest, 4px); flex-shrink: 0;
       background: var(--bing-smtc-background-ctrl-neutral-rest, rgba(0,0,0,0.1));
       border: 1px solid rgba(0,0,0,0.1);
       overflow: hidden;
@@ -1150,7 +1150,7 @@
       background: currentColor; opacity: 0.6;
     }
     .news-card__title {
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
       flex: 1;
       display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
@@ -1224,7 +1224,7 @@
     }
     .image-card__brand-overlay {
       position: absolute; top: 12px; left: 14px; z-index: 2;
-      font-size: 20px; font-weight: 700; color: white;
+      font-size: var(--bing-smtc-text-global-subtitle1-fontSize, 20px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700); color: white;
       text-shadow: 0 1px 6px rgba(0,0,0,0.5);
       letter-spacing: 2px;
     }
@@ -1251,7 +1251,7 @@
       background: var(--bing-smtc-background-card-on-primary-alt-rest, #f8f4f1);
     }
     .image-site-card__site-row {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-x-small, 8px);
     }
     .image-site-card__favicon {
       width: 20px; height: 20px; border-radius: var(--smtc-corner-ctrl-sm-rest, 4px);
@@ -1274,7 +1274,7 @@
       display: flex; flex-direction: column; gap: 0; flex: 1;
     }
     .image-site-card__link {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-x-small, 8px);
       padding: 7px 0;
       border-bottom: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.06));
       text-decoration: none; color: inherit; cursor: pointer;
@@ -1291,23 +1291,23 @@
     }
     .image-site-card__link-arrow {
       margin-left: auto;
-      font-size: 14px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.4));
     }
 
     /* ===== Overview Card ===== */
     .overview-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); height: 100%; }
     .overview-card__label {
-      font-size: 11px; line-height: 13px; font-weight: 600;
+      font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px); line-height: var(--bing-smtc-text-global-caption2-lineHeight, 13px); font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.5px;
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
     }
     .overview-card__title {
-      font-size: 16px; line-height: 24px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body2-fontSize, 16px); line-height: 24px; font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .overview-card__intro {
-      font-size: 14px; line-height: 22px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
       flex: 1;
       display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
@@ -1326,12 +1326,12 @@
     .overview-card__facts--row .overview-card__fact {
       min-width: 140px;
     }
-    .overview-card__fact { display: flex; gap: 8px; font-size: 13px; line-height: 20px; }
+    .overview-card__fact { display: flex; gap: var(--smtc-gap-between-content-x-small, 8px); font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px); }
     .overview-card__fact-label { color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6)); white-space: nowrap; }
     .overview-card__fact-value { color: var(--smtc-foreground-content-neutral-primary, #272320); font-weight: 600; }
     .overview-card__source {
-      display: flex; align-items: center; gap: 4px; margin-top: auto;
-      font-size: 11px; line-height: 13px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px); margin-top: auto;
+      font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px); line-height: var(--bing-smtc-text-global-caption2-lineHeight, 13px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
     }
     .overview-card__source-dot {
@@ -1340,7 +1340,7 @@
     }
     /* Quick Actions section inside overview card */
     .overview-card__actions-label {
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
       padding-top: 4px;
     }
@@ -1348,7 +1348,7 @@
       display: flex; flex-direction: column; gap: 6px;
     }
     .overview-card__action-link {
-      font-size: 14px; line-height: 22px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
       text-decoration: none; cursor: pointer;
     }
@@ -1356,9 +1356,9 @@
       text-decoration: underline;
     }
     .overview-card__show-more {
-      font-size: 13px; line-height: 20px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #3c51b4);
-      display: flex; align-items: center; gap: 4px; cursor: pointer;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px); cursor: pointer;
     }
 
     /* ===== Details Card (Overview variant) ===== */
@@ -1471,8 +1471,39 @@
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
     .map-details-card__body {
-      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-medium, 16px);
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-small, 12px);
       flex: 1; padding: var(--mai-smtc-padding-card-default, 20px);
+    }
+    .map-details-card__contact-title {
+      font-size: var(--bing-smtc-text-global-body2-fontSize, 14px);
+      line-height: var(--bing-smtc-text-global-body2-lineHeight, 20px);
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+    }
+    .map-details-card__contact-list {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .map-details-card__contact-item {
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-x-small, 8px);
+      padding: var(--smtc-gap-between-content-x-small, 8px) 0;
+      border-bottom: 1px solid var(--smtc-stroke-divider-default, rgba(0,0,0,0.08));
+      text-decoration: none; cursor: pointer;
+    }
+    .map-details-card__contact-item:last-child { border-bottom: none; }
+    .map-details-card__contact-icon {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      color: var(--smtc-foreground-content-neutral-secondary, rgba(0,0,0,0.65));
+    }
+    .map-details-card__contact-text {
+      font-size: var(--bing-smtc-text-global-body2-fontSize, 14px);
+      line-height: var(--bing-smtc-text-global-body2-lineHeight, 20px);
+      color: var(--smtc-foreground-content-neutral-primary, #272320);
+      flex: 1;
+    }
+    .map-details-card__contact-meta {
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
+      line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
+      color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.45));
     }
 
     /* ===== Location/Contact Card ===== */
@@ -1488,8 +1519,8 @@
     }
     .location-card__map-badge {
       position: absolute; top: 12px; left: 12px;
-      font-size: 13px; line-height: 20px;
-      padding: 2px 8px; border-radius: 8px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
+      padding: 2px 8px; border-radius: var(--smtc-corner-ctrl-rest, 8px);
       background: var(--smtc-status-informative-tint-background, #f5f5f5);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
@@ -1501,15 +1532,15 @@
       display: flex; align-items: center; justify-content: space-between;
     }
     .location-card__title {
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .location-card__details {
-      display: flex; flex-direction: column; gap: 8px;
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px);
     }
     .location-card__detail {
-      display: flex; align-items: flex-start; gap: 4px;
-      font-size: 14px; line-height: 22px;
+      display: flex; align-items: flex-start; gap: var(--smtc-gap-between-content-xx-small, 4px);
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
     }
     .location-card__detail-icon {
       width: 20px; height: 22px; flex-shrink: 0;
@@ -1521,12 +1552,12 @@
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #4007a2);
     }
     .location-card__cta {
-      display: inline-flex; align-items: center; gap: 4px;
+      display: inline-flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px);
       padding: 8px 12px;
       border-radius: var(--smtc-corner-ctrl-rest, 8px);
       background: var(--bing-smtc-background-ctrl-brand-rest, #4f6bed);
       color: var(--smtc-foreground-ctrl-on-brand-rest, #fffbf8);
-      font-size: 13px; line-height: 20px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       border: none; cursor: pointer; text-decoration: none;
       width: fit-content;
     }
@@ -1540,7 +1571,7 @@
       display: flex;
       align-items: center;
       gap: var(--smtc-gap-between-content-x-small, 8px);
-      font-size: 14px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
       line-height: 22px;
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
     }
@@ -1551,10 +1582,10 @@
     .location-card__more {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 13px;
+      gap: var(--smtc-gap-between-content-xx-small, 4px);
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
       line-height: 20px;
-      font-weight: 700;
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--bing-smtc-ctrl-link-foreground-brand-rest, #202020);
       cursor: pointer;
       text-decoration: none;
@@ -1568,7 +1599,7 @@
     /* ===== List Card ===== */
     .list-card { display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); height: 100%; }
     .list-card__header {
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .list-card__items { display: flex; flex-direction: column; gap: 0; flex: 1; justify-content: space-between; }
@@ -1586,7 +1617,7 @@
     }
     .list-card__item-icon {
       width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 14px;
+      flex-shrink: 0; font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, #6e6a67);
     }
     .bing-icon {
@@ -1594,7 +1625,7 @@
       fill: currentColor;
     }
     .list-card__item-text {
-      flex: 1; font-size: 14px; line-height: 22px;
+      flex: 1; font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
       display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
     }
@@ -1613,7 +1644,7 @@
       width: 100%; height: 100%;
     }
     .subdivided-card__header {
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
       padding: 12px 16px 0; flex-shrink: 0;
     }
@@ -1648,11 +1679,11 @@
       padding: var(--smtc-padding-ctrl-sm-text-top, 8px) var(--smtc-padding-ctrl-sm-horizontal-default, 12px) var(--smtc-padding-ctrl-sm-text-bottom, 8px);
     }
     .subdivided-card__cell-label {
-      font-size: 14px; line-height: var(--text-global-body3-lineheight, 22px); font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--text-global-body3-lineheight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .subdivided-card__cell-value {
-      font-size: 13px; line-height: var(--text-global-caption1-lineheight, 20px); font-weight: 400;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--text-global-caption1-lineheight, 20px); font-weight: 400;
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.75));
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
@@ -1660,7 +1691,7 @@
     /* ===== SERP Value Annotation ===== */
 
     .serp-value {
-      font-size: 13px; line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-secondary-alt, rgba(0,0,0,0.65));
       padding: 4px 4px 0; font-style: italic;
     }
@@ -1687,11 +1718,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: var(--smtc-gap-between-content-xx-small, 4px);
       padding: 8px 16px;
       border-radius: var(--smtc-corner-ctrl-rest, 8px);
       background: var(--bing-smtc-background-ctrl-subtle-rest, #f8f4f1);
-      font-size: 13px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
       line-height: 20px;
       font-weight: 400;
       color: var(--bing-smtc-foreground-ctrl-neutral-primary-rest, rgba(0,0,0,0.6));
@@ -1740,7 +1771,7 @@
     .pole-slide__card {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: var(--smtc-gap-between-content-x-small, 8px);
       width: 200px;
       height: 200px;
       flex-shrink: 0;
@@ -1748,7 +1779,7 @@
     }
     .pole-slide__card-img-wrap {
       flex: 1; min-height: 0; width: 100%;
-      border-radius: 16px;
+      border-radius: var(--smtc-corner-card-rest, 16px);
       overflow: hidden;
       padding: 12px;
       display: flex; align-items: center; justify-content: center;
@@ -1762,19 +1793,19 @@
     }
     .pole-slide__card-meta {
       display: flex; flex-direction: column;
-      gap: 2px; padding: 0 4px;
+      gap: var(--smtc-gap-between-content-xxx-small, 2px); padding: 0 4px;
     }
     .pole-slide__card-title {
-      font-size: 14px;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
       line-height: var(--text-global-body3-lineheight, 22px);
-      font-weight: 700;
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, black);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .pole-slide__card-subtitle {
-      font-size: 13px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
       line-height: var(--text-global-caption1-lineheight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -1855,7 +1886,7 @@
       flex: 1;
       min-height: 0;
       width: 100%;
-      border-radius: 16px;
+      border-radius: var(--smtc-corner-card-rest, 16px);
       overflow: hidden;
       position: relative;
     }
@@ -1870,27 +1901,27 @@
       position: absolute;
       inset: 0;
       background: rgba(0,0,0,0.05);
-      border-radius: 16px;
+      border-radius: var(--smtc-corner-card-rest, 16px);
       pointer-events: none;
     }
     .photo-carousel__card-meta {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: var(--smtc-gap-between-content-xxx-small, 2px);
       padding: 0 4px;
     }
     .photo-carousel__card-title {
-      font-size: 14px;
-      line-height: 22px;
-      font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px);
+      line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px);
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, black);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .photo-carousel__card-subtitle {
-      font-size: 13px;
-      line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px);
+      line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1948,7 +1979,7 @@
     }
     .video-card__play {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 32px; height: 32px; border-radius: 9999px;
+      width: 32px; height: 32px; border-radius: var(--smtc-corner-circular, 9999px);
       background: var(--mai-smtc-background-ctrl-on-image-rest, rgba(0,0,0,0.6));
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
@@ -1957,24 +1988,24 @@
     .video-card__badge {
       position: absolute; top: 8px; left: 8px;
       background: var(--mai-smtc-background-ctrl-on-image-rest, rgba(0,0,0,0.6));
-      color: white; font-size: 11px; line-height: 13px; font-weight: 700;
-      padding: 2px 4px; border-radius: 4px;
+      color: white; font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px); line-height: var(--bing-smtc-text-global-caption2-lineHeight, 13px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
+      padding: 2px 4px; border-radius: var(--smtc-corner-ctrl-sm-rest, 4px);
     }
     .video-card__overlay {
       position: absolute; bottom: 0; left: 0; right: 0;
       padding: 20px 12px 12px;
       background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.85) 43%);
-      display: flex; flex-direction: column; gap: 2px;
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-xxx-small, 2px);
     }
     .video-card__title {
-      font-size: 16px; line-height: 26px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body2-fontSize, 16px); line-height: var(--bing-smtc-text-global-body2-lineHeight, 26px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .video-card__meta {
-      display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px); flex-wrap: wrap;
     }
     .video-card__meta-item {
-      display: flex; align-items: center; gap: 4px; font-size: 11px; line-height: 13px;
+      display: flex; align-items: center; gap: var(--smtc-gap-between-content-xx-small, 4px); font-size: var(--bing-smtc-text-global-caption2-fontSize, 11px); line-height: var(--bing-smtc-text-global-caption2-lineHeight, 13px);
       color: rgba(255,255,255,0.6); white-space: nowrap;
     }
     .video-card__meta-item--source { color: white; }
@@ -1992,7 +2023,7 @@
     }
     .floorplan-carousel__title {
       font-size: var(--text-global-caption1-fontsize, 13px); line-height: var(--text-global-caption1-lineheight, 20px);
-      font-weight: 700;
+      font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, #272320);
     }
     .card:has(.floorplan-carousel) {
@@ -2038,15 +2069,15 @@
       display: flex; flex-direction: column; flex: 1; min-width: 0; height: 100%;
     }
     .floorplan-carousel__card-lines {
-      display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; white-space: nowrap;
+      display: flex; flex-direction: column; gap: var(--smtc-gap-between-content-x-small, 8px); flex: 1; min-height: 0; white-space: nowrap;
     }
     .floorplan-carousel__card-line {
-      font-size: 14px; line-height: 22px; font-weight: 700;
+      font-size: var(--bing-smtc-text-global-body3-fontSize, 14px); line-height: var(--bing-smtc-text-global-body3-lineHeight, 22px); font-weight: var(--bing-smtc-text-style-default-header-weight, 700);
       color: var(--smtc-foreground-content-neutral-primary, black);
       overflow: hidden; text-overflow: ellipsis;
     }
     .floorplan-carousel__card-sub {
-      font-size: 13px; line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
       overflow: hidden; text-overflow: ellipsis;
     }
@@ -2058,7 +2089,7 @@
     }
     .floorplan-carousel__card-favicon img { width: 100%; height: 100%; object-fit: cover; }
     .floorplan-carousel__card-url {
-      font-size: 13px; line-height: 20px;
+      font-size: var(--bing-smtc-text-global-caption1-fontSize, 13px); line-height: var(--bing-smtc-text-global-caption1-lineHeight, 20px);
       color: var(--bing-smtc-foreground-content-neutral-tertiary, rgba(0,0,0,0.6));
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
     }
@@ -2119,7 +2150,7 @@
     .magazine-scroll-container {
       display: flex;
       align-items: flex-start;
-      gap: 24px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
       overflow-x: auto;
       overflow-y: hidden;
       scroll-behavior: smooth;
@@ -2142,7 +2173,7 @@
 
     .alternates-track {
       display: flex;
-      gap: 24px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
       flex-shrink: 0;
       animation: altTrackSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
@@ -2153,7 +2184,7 @@
 
     .alt-column {
       display: flex;
-      gap: 24px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
       flex-shrink: 0;
     }
     .alt-column__tall {
@@ -2164,7 +2195,7 @@
     .alt-column__stack {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: var(--smtc-gap-between-content-x-large, 24px);
       width: 312px;
       flex-shrink: 0;
     }
@@ -2834,8 +2865,8 @@ const SEGMENTS = {
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;gap:var(--smtc-gap-between-content-xx-small, 4px);">
-                <a class="nav-deeplinks__title" href="https://www.avaloncommunities.com/new-york/fort-greene-apartments/avalon-fort-greene" target="_blank">Avalon Fort Greene Apartments</a>
-                <p class="nav-deeplinks__snippet">Luxury rental community by AvalonBay in Fort Greene, Brooklyn. Modern studio, 1-bed, and 2-bed apartments with floor-to-ceiling windows, in-unit washer/dryer, and premium finishes...</p>
+                <a class="nav-deeplinks__title" href="https://www.avaloncommunities.com/new-york/fort-greene-apartments/avalon-fort-greene" target="_blank">Avalon Fort Greene</a>
+                <p class="nav-deeplinks__snippet">Luxury rental community by AvalonBay in Fort Greene, Brooklyn. Modern studio, 1-bed, and 2-bed residences with floor-to-ceiling windows, in-unit washer/dryer, and premium finishes...</p>
               </div>
               <div class="nav-deeplinks__links">
                 <a class="nav-deeplinks__link" href="#">
@@ -2897,15 +2928,23 @@ const SEGMENTS = {
                     <img src="images/realestate/map.png" alt="Avalon Fort Greene Map">
                   </div>
                   <div class="location-card__body">
-                    <div class="location-card__amenities">
-                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M2.5 11.5h11M4 11.5V8.75a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75V11.5M9 11.5V8.75a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75V11.5M5.5 8V5.5a2.5 2.5 0 015 0V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Parking</div>
-                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2v2M8 12v2M2 8h2M12 8h2M4.93 4.93l1.41 1.41M9.66 9.66l1.41 1.41M4.93 11.07l1.41-1.41M9.66 6.34l1.41-1.41M8 5.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>AC</div>
-                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M8 14c-1.7 0-3.2-.7-4.2-1.8M8 14c1.7 0 3.2-.7 4.2-1.8M8 14v-3M5 4a3 3 0 016 0M5 4H4l-1 7h2M11 4h1l1 7h-2M5 4v7m6-7v7M5 11h6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Wheelchair accessible</div>
-                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M3.5 10h3M9.5 10h3M3.5 10V8.5a1 1 0 011-1h1a1 1 0 011 1V10M9.5 10V8.5a1 1 0 011-1h1a1 1 0 011 1V10M6.5 10V7a2 2 0 012-2h0a2 2 0 012 2v3M2 10h12" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Fitness center</div>
-                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M12 10c0 2.2-1.8 4-4 4s-4-1.8-4-4c0-3 4-8 4-8s4 5 4 8z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Spa</div>
-                      <div class="location-card__amenity"><svg class="location-card__amenity-icon" viewBox="0 0 16 16" fill="none"><path d="M5.5 13V8M10.5 13V8M3 8h10M4.5 5h7l-1-3h-5l-1 3z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Family Friendly</div>
+                    <div class="map-details-card__contact-title">Contact</div>
+                    <div class="map-details-card__contact-list">
+                      <a class="map-details-card__contact-item">
+                        <span class="map-details-card__contact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg></span>
+                        <span class="map-details-card__contact-text">(718) 643-0399</span>
+                        <span class="map-details-card__contact-meta">Leasing Office</span>
+                      </a>
+                      <a class="map-details-card__contact-item">
+                        <span class="map-details-card__contact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.24848 8.99696C5.66186 8.99696 5.99696 8.66186 5.99696 8.24848C5.99696 7.83511 5.66186 7.5 5.24848 7.5C4.83511 7.5 4.5 7.83511 4.5 8.24848C4.5 8.66186 4.83511 8.99696 5.24848 8.99696ZM14 4.5C14 3.11929 12.8807 2 11.5 2H4.5C3.11929 2 2 3.11929 2 4.5V11.5C2 12.8807 3.11929 14 4.5 14H11.5C12.8807 14 14 12.8807 14 11.5V4.5ZM3 6H13V11.5C13 12.3284 12.3284 13 11.5 13H4.5C3.67157 13 3 12.3284 3 11.5V6ZM4.5 3H11.5C12.3284 3 13 3.67157 13 4.5V5H3V4.5C3 3.67157 3.67157 3 4.5 3Z" fill="currentColor"/></svg></span>
+                        <span class="map-details-card__contact-text">Mon\u2013Sat 9am\u20136pm</span>
+                        <span class="map-details-card__contact-meta">Office Hours</span>
+                      </a>
+                      <a class="map-details-card__contact-item">
+                        <span class="map-details-card__contact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.03807V11C2 12.1046 2.89543 13 4 13H12C13.1046 13 14 12.1046 14 11V5C14 3.89543 13.1046 3 12 3H4C2.89543 3 2 3.89543 2 5V6.03807ZM4 4H12C12.5523 4 13 4.44772 13 5V5.73987L8.0001 8.43212L3 5.73976V5C3 4.44772 3.44772 4 4 4ZM3 6.87552L7.76305 9.44024C7.91104 9.51992 8.08916 9.51992 8.23715 9.44024L13 6.87562V11C13 11.5523 12.5523 12 12 12H4C3.44772 12 3 11.5523 3 11V6.87552Z" fill="currentColor"/></svg></span>
+                        <span class="map-details-card__contact-text">leasing@avalonfortgreene.com</span>
+                      </a>
                     </div>
-                    <a class="location-card__more">More details <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
                     <div class="location-card__buttons">
                       <a class="location-card__cta" href="https://www.avaloncommunities.com" target="_blank" style="flex:1;justify-content:center;">Website</a>
                       <a class="location-card__cta" style="flex:1;justify-content:center;">Reserve</a>
@@ -2919,12 +2958,12 @@ const SEGMENTS = {
             id: "c", type: "subdivided", servesIntentions: [1, 4],
             html: `<div class="subdivided-card">
               <div class="subdivided-card__row">
-                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Studio</span><span class="subdivided-card__cell-value">$2,850</span></div></div>
-                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">1-Bed</span><span class="subdivided-card__cell-value">$3,450</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Listings</span><span class="subdivided-card__cell-value">385 properties</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Price Range</span><span class="subdivided-card__cell-value">$2,850 – $4,950/mo</span></div></div>
               </div>
               <div class="subdivided-card__row">
-                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">2-Bed</span><span class="subdivided-card__cell-value">$4,950</span></div></div>
-                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Available</span><span class="subdivided-card__cell-value">12 units</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Rating</span><span class="subdivided-card__cell-value">4.1/5 (38 reviews)</span></div></div>
+                <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Neighborhood</span><span class="subdivided-card__cell-value">Fort Greene, Brooklyn</span></div></div>
               </div>
             </div>`
           },
@@ -2937,7 +2976,7 @@ const SEGMENTS = {
                 <span class="video-card__badge">3:45</span>
               </div>
               <div class="video-card__overlay">
-                <span class="video-card__title">Tour Avalon Fort Greene Apartments</span>
+                <span class="video-card__title">Tour Avalon Fort Greene</span>
                 <div class="video-card__meta">
                   <span class="video-card__meta-item video-card__meta-item--source"><span class="video-card__meta-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="3" fill="#FF0000"/><path d="M6.5 5L11 8L6.5 11V5Z" fill="white"/></svg></span>YouTube</span>
                   <span class="video-card__meta-dot"></span>
@@ -3161,8 +3200,39 @@ const SEGMENTS = {
             </div>`
           },
           {
-            id: "b", type: "details-card", servesIntentions: [5, 6],
-            html: `<div class="details-card">
+            id: "b", type: "map-details", servesIntentions: [6, 5],
+            html: `<div class="map-details-card">
+                  <div class="map-details-card__map">
+                    <img src="images/apartment/map.png" alt="Map of One Manhattan Square area">
+                  </div>
+                  <div class="map-details-card__body">
+                    <div class="map-details-card__contact-title">Contact</div>
+                    <div class="map-details-card__contact-list">
+                      <a class="map-details-card__contact-item">
+                        <span class="map-details-card__contact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg></span>
+                        <span class="map-details-card__contact-text">(212) 252-1560</span>
+                        <span class="map-details-card__contact-meta">Sales Gallery</span>
+                      </a>
+                      <a class="map-details-card__contact-item">
+                        <span class="map-details-card__contact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.24848 8.99696C5.66186 8.99696 5.99696 8.66186 5.99696 8.24848C5.99696 7.83511 5.66186 7.5 5.24848 7.5C4.83511 7.5 4.5 7.83511 4.5 8.24848C4.5 8.66186 4.83511 8.99696 5.24848 8.99696ZM14 4.5C14 3.11929 12.8807 2 11.5 2H4.5C3.11929 2 2 3.11929 2 4.5V11.5C2 12.8807 3.11929 14 4.5 14H11.5C12.8807 14 14 12.8807 14 11.5V4.5ZM3 6H13V11.5C13 12.3284 12.3284 13 11.5 13H4.5C3.67157 13 3 12.3284 3 11.5V6ZM4.5 3H11.5C12.3284 3 13 3.67157 13 4.5V5H3V4.5C3 3.67157 3.67157 3 4.5 3Z" fill="currentColor"/></svg></span>
+                        <span class="map-details-card__contact-text">Mon\u2013Sat 10am\u20136pm</span>
+                        <span class="map-details-card__contact-meta">Gallery Hours</span>
+                      </a>
+                      <a class="map-details-card__contact-item">
+                        <span class="map-details-card__contact-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.03807V11C2 12.1046 2.89543 13 4 13H12C13.1046 13 14 12.1046 14 11V5C14 3.89543 13.1046 3 12 3H4C2.89543 3 2 3.89543 2 5V6.03807ZM4 4H12C12.5523 4 13 4.44772 13 5V5.73987L8.0001 8.43212L3 5.73976V5C3 4.44772 3.44772 4 4 4ZM3 6.87552L7.76305 9.44024C7.91104 9.51992 8.08916 9.51992 8.23715 9.44024L13 6.87562V11C13 11.5523 12.5523 12 12 12H4C3.44772 12 3 11.5523 3 11V6.87552Z" fill="currentColor"/></svg></span>
+                        <span class="map-details-card__contact-text">info@onemanhattansquare.com</span>
+                      </a>
+                    </div>
+                    <div class="details-card__buttons">
+                      <a class="details-card__btn" href="https://www.onemanhattansquare.com" target="_blank">Website</a>
+                      <a class="details-card__btn">Reserve</a>
+                    </div>
+                  </div>
+                </div>`,
+            alternates: [
+              {
+                type: "details-card", label: "Details", servesIntentions: [5, 6],
+                html: `<div class="details-card">
               <div class="details-card__header">
                 <span class="details-card__header-title">Details</span>
                 <span class="details-card__header-more"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="3" r="1.5" fill="currentColor"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="13" r="1.5" fill="currentColor"/></svg></span>
@@ -3232,66 +3302,31 @@ const SEGMENTS = {
                 <a class="details-card__btn" href="https://www.onemanhattansquare.com" target="_blank">Website</a>
                 <a class="details-card__btn">Reserve</a>
               </div>
-            </div>`,
-            alternates: [
-              {
-                type: "map-details", servesIntentions: [6, 5],
-                html: `<div class="map-details-card">
-                  <div class="map-details-card__map">
-                    <img src="images/realestate/imagemap.png" alt="Map of One Manhattan Square area">
-                  </div>
-                  <div class="map-details-card__body">
-                    <div class="details-card__amenities-grid">
-                      <div class="details-card__amenities-col">
-                        <div class="details-card__amenity">
-                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 9C3.22 9 3 9.22 3 9.5S3.22 10 3.5 10h9c.28 0 .5-.22.5-.5S12.78 9 12.5 9h-9ZM1 12.5c0-.28.22-.5.5-.5h13c.28 0 .5.22.5.5s-.22.5-.5.5h-13c-.28 0-.5-.22-.5-.5ZM5.5 6C5.22 6 5 6.22 5 6.5S5.22 7 5.5 7h5c.28 0 .5-.22.5-.5S10.78 6 10.5 6h-5ZM7 3.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5S8.78 4 8.5 4h-1c-.28 0-.5-.22-.5-.5Z" fill="currentColor"/></svg></span>
-                          <span class="details-card__amenity-text">Pool</span>
-                        </div>
-                        <div class="details-card__amenity">
-                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6V3.5C13 2.67 12.33 2 11.5 2h-7C3.67 2 3 2.67 3 3.5V6c-1.1 0-2 .9-2 2v5.5c0 .28.22.5.5.5s.5-.22.5-.5V13h12v.5c0 .28.22.5.5.5s.5-.22.5-.5V8c0-1.1-.9-2-2-2ZM4 3.5c0-.28.22-.5.5-.5h7c.28 0 .5.22.5.5V6H4V3.5ZM14 12H2V8c0-.55.45-1 1-1h10c.55 0 1 .45 1 1v4Z" fill="currentColor"/></svg></span>
-                          <span class="details-card__amenity-text">Concierge</span>
-                        </div>
-                        <div class="details-card__amenity">
-                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C12 6.43 10.21 8 8 8S4 6.43 4 4.5 5.79 1 8 1s4 1.57 4 3.5ZM2 13c0-2.21 2.69-4 6-4s6 1.79 6 4v1H2v-1Z" fill="currentColor"/></svg></span>
-                          <span class="details-card__amenity-text">Doorman</span>
-                        </div>
-                      </div>
-                      <div class="details-card__amenities-col">
-                        <div class="details-card__amenity">
-                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 2.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM4 6a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm8 1.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm0-3a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" fill="currentColor"/><path d="M1.5 13.5c0-2.49 2.24-4.5 5-4.5s5 2.01 5 4.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-1.93-1.79-3.5-4-3.5S3 11.57 3 13.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5Z" fill="currentColor"/></svg></span>
-                          <span class="details-card__amenity-text">Valet Parking</span>
-                        </div>
-                        <div class="details-card__amenity">
-                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3.5 12.5c.28 0 .5-.22.5-.5 0-1.93 1.79-3.5 4-3.5s4 1.57 4 3.5c0 .28.22.5.5.5s.5-.22.5-.5c0-2.49-2.24-4.5-5-4.5S3 9.51 3 12c0 .28.22.5.5.5Z" fill="currentColor"/></svg></span>
-                          <span class="details-card__amenity-text">Fitness Center</span>
-                        </div>
-                        <div class="details-card__amenity">
-                          <span class="details-card__amenity-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 3H3c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1ZM3 12V4h10v8H3Z" fill="currentColor"/><path d="M5 5.5h6v1H5zM5 7.5h4v1H5z" fill="currentColor"/></svg></span>
-                          <span class="details-card__amenity-text">Rooftop Terrace</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="details-card__more">
-                      <span class="details-card__more-text">More details</span>
-                      <span class="details-card__more-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                    </div>
-                    <div class="details-card__buttons">
-                      <a class="details-card__btn" href="https://www.onemanhattansquare.com" target="_blank">Website</a>
-                      <a class="details-card__btn">Reserve</a>
-                    </div>
-                  </div>
-                </div>`
+            </div>`
               }
             ]
           },
           {
-            id: "c", type: "video-card", servesIntentions: [5],
+            id: "c", type: "subdivided", servesIntentions: [5, 6],
+            html: `<div class="subdivided-card">
+                  <div class="subdivided-card__row">
+                    <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Pool & Fitness</span><span class="subdivided-card__cell-value">Outdoor pool · Fitness center</span></div></div>
+                    <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Entertainment</span><span class="subdivided-card__cell-value">IMAX theater · Bowling alley</span></div></div>
+                  </div>
+                  <div class="subdivided-card__row">
+                    <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Services</span><span class="subdivided-card__cell-value">24h doorman · Concierge · Valet</span></div></div>
+                    <div class="subdivided-card__cell"><div class="subdivided-card__cell-bg"></div><div class="subdivided-card__cell-content"><span class="subdivided-card__cell-label">Outdoor</span><span class="subdivided-card__cell-value">Rooftop terrace · Garden</span></div></div>
+                  </div>
+                </div>`
+          },
+          {
+            id: "d", type: "video-card", servesIntentions: [5],
             html: `<div class="video-card">
               <div class="video-card__thumb"><img src="images/apartment/video.png" alt="One Manhattan Square video tour"></div>
               <span class="video-card__badge">12:34</span>
               <div class="video-card__play"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3L12.5 8L5.5 13V3Z" fill="white"/></svg></div>
               <div class="video-card__overlay">
-                <span class="video-card__title">One Manhattan Square | Full Residence Tour</span>
+                <span class="video-card__title">One Manhattan Square | Full Resid...</span>
                 <div class="video-card__meta">
                   <span class="video-card__meta-item video-card__meta-item--source"><span class="video-card__meta-icon"><img src="https://www.youtube.com/s/desktop/12d6b690/img/favicon_32x32.png" alt="YouTube"></span>YouTube</span>
                   <span class="video-card__meta-dot"></span>
@@ -3302,11 +3337,11 @@ const SEGMENTS = {
                   <span class="video-card__meta-item">2 yr ago</span>
                 </div>
               </div>
-            </div>`
-          },
-          {
-            id: "d", type: "list", servesIntentions: [3, 7],
-            html: `<div class="list-card">
+            </div>`,
+            alternates: [
+              {
+                type: "list", label: "Contact", servesIntentions: [3, 7],
+                html: `<div class="list-card">
               <div class="list-card__header">Contact Info</div>
               <div class="list-card__items">
                 <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.64648 1.64648C4.84174 1.45122 5.15832 1.45122 5.35359 1.64648L7.85359 4.14648C8.04885 4.34174 8.04885 4.65833 7.85359 4.85359C7.65833 5.04885 7.34174 5.04885 7.14648 4.85359L5.50003 3.20714V9.50001C5.50003 9.77615 5.27618 10 5.00003 10C4.72389 10 4.50003 9.77615 4.50003 9.50001V3.20714L2.85359 4.85359C2.65833 5.04885 2.34174 5.04885 2.14648 4.85359C1.95122 4.65833 1.95122 4.34174 2.14648 4.14648L4.64648 1.64648Z" fill="currentColor"/></svg></span><span class="list-card__item-text">(212) 252-1560</span><span class="list-card__item-meta">Sales Gallery</span></a>
@@ -3314,6 +3349,12 @@ const SEGMENTS = {
                 <a class="list-card__item"><span class="list-card__item-icon"><svg class="bing-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 6.03807V11C2 12.1046 2.89543 13 4 13H12C13.1046 13 14 12.1046 14 11V5C14 3.89543 13.1046 3 12 3H4C2.89543 3 2 3.89543 2 5V6.03807ZM4 4H12C12.5523 4 13 4.44772 13 5V5.73987L8.0001 8.43212L3 5.73976V5C3 4.44772 3.44772 4 4 4ZM3 6.87552L7.76305 9.44024C7.91104 9.51992 8.08916 9.51992 8.23715 9.44024L13 6.87562V11C13 11.5523 12.5523 12 12 12H4C3.44772 12 3 11.5523 3 11V6.87552Z" fill="currentColor"/></svg></span><span class="list-card__item-text">info@onemanhattansquare.com</span></a>
               </div>
             </div>`
+              },
+              {
+                type: "map", label: "Map", servesIntentions: [6],
+                html: `<div class="map-card"><img src="images/apartment/map.png" alt="One Manhattan Square map" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:var(--mai-smtc-corner-card-default,24px);"></div>`
+              }
+            ]
           },
           {
             id: "e", type: "floorplan-carousel", servesIntentions: [1, 4],
@@ -3412,58 +3453,6 @@ const SEGMENTS = {
     ]
   },
 
-  agency: {
-    id: "agency",
-    label: "RE Agency",
-    icon: "\u{1F3E2}",
-    description: "Real estate agency / brokerage",
-    hasStrongNavIntent: true,
-    intentions: [
-      { rank: 1, label: "Browse agency portfolio", type: "navigational", isPrimary: true,
-        trigger: "Evaluating an agency — wants to see their listings and past work",
-        nextAction: "Browse portfolio, check property types and areas served",
-        serpValue: "Portfolio card shows key projects at a glance",
-        cardSuggestion: "Portfolio card (11x2)" },
-      { rank: 2, label: "Visit agency website", type: "navigational", isPrimary: true,
-        trigger: "Knows the agency, wants official site",
-        nextAction: "Navigate to agency site",
-        serpValue: "Nav anchor with deep links to key sections",
-        cardSuggestion: "Nav deeplinks (5x4)" },
-      { rank: 3, label: "Get contact info", type: "navigational", isPrimary: false,
-        trigger: "Ready to reach out to the agency",
-        nextAction: "Call, email, or visit office",
-        serpValue: "Contact card with map, address, phone",
-        cardSuggestion: "Contact card (3x4)" },
-      { rank: 4, label: "Check certifications / credentials", type: "informational", isPrimary: false,
-        trigger: "Verifying agency qualifications",
-        nextAction: "Review certifications and highlights",
-        serpValue: "Fact card shows key differentiators",
-        cardSuggestion: "Fact list card (3x2)" },
-      { rank: 5, label: "Watch agency video", type: "informational", isPrimary: false,
-        trigger: "Wants to get a feel for the agency",
-        nextAction: "Watch intro or testimonial video",
-        serpValue: "Video card for agency overview",
-        cardSuggestion: "Video card (3x2)" }
-    ],
-    queries: [
-      {
-        label: "RE Agency (TBD)",
-        template: "hero-left",
-        templateDesc: "Hero Left \u00B7 5\u00D74 + 3\u00D74 + 3\u00D72 + 3\u00D72 = 44u",
-        serpValue: "Placeholder \u2014 content will be provided by Boss.",
-        slots: [
-          { id: "a", type: "nav-anchor", servesIntentions: [2, 1],
-            html: `<div class="nav-anchor"><div class="nav-anchor__info" style="padding:24px;display:flex;align-items:center;justify-content:center;height:100%;"><span style="font-size:14px;color:rgba(0,0,0,0.35);font-weight:600;">5\u00D74 Nav Deeplinks \u2014 Placeholder</span></div></div>` },
-          { id: "b", type: "overview", servesIntentions: [3, 4],
-            html: `<div class="overview-card"><span class="overview-card__label">AGENCY</span><h2 class="overview-card__title">Agency Contact & Facts</h2><p class="overview-card__intro">Placeholder \u2014 3\u00D74 Contact card with map + address + phone. Boss will provide details.</p><div class="overview-card__facts"><div class="overview-card__fact"><span class="overview-card__fact-label">Phone</span><span class="overview-card__fact-value">TBD</span></div><div class="overview-card__fact"><span class="overview-card__fact-label">Address</span><span class="overview-card__fact-value">TBD</span></div></div></div>` },
-          { id: "c", type: "list", servesIntentions: [5],
-            html: `<div class="list-card"><div class="list-card__header">Video</div><div class="list-card__items"><a class="list-card__item"><span class="list-card__item-text">3\u00D72 Video \u2014 Placeholder</span></a></div></div>` },
-          { id: "d", type: "list", servesIntentions: [4],
-            html: `<div class="list-card"><div class="list-card__header">Highlights & Certifications</div><div class="list-card__items"><a class="list-card__item"><span class="list-card__item-text">3\u00D72 Fact List \u2014 Placeholder</span></a></div></div>` }
-        ]
-      }
-    ]
-  }
 };
 
 // ============================================================
